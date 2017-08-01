@@ -2,6 +2,8 @@
 
 #/hadoop/cms/store/user/rebassoo/
 
+#python histos_mue.py MuonEG crab_runG/170703_221817/0000
+
 python histos_mue.py ExclusiveWW SM_Madgraph
 
 python histos_mue.py MuonEG crab_runBv3/170703_221255/0000
