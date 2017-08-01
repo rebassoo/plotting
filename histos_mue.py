@@ -91,6 +91,8 @@ h_fvtx_numtracks_Leptons_PPS=TH1F("h_fvtx_numtracks_Leptons_PPS",";Num Extra Tra
 h_fvtx_numtracks_Leptons_pt_0_30=TH1F("h_fvtx_numtracks_Leptons_pt_0_30",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_mass=TH1F("h_fvtx_mass",";Mass [GeV];",50,0,500)
 h_fvtx_ptemu=TH1F("h_fvtx_ptemu",";p_{T}(e#mu) [GeV];",20,0,200)
+h_fvtx_mass_pt30=TH1F("h_fvtx_mass_pt30",";Mass [GeV];",50,0,500)
+h_fvtx_ptemu_pt30=TH1F("h_fvtx_ptemu_pt30",";p_{T}(e#mu) [GeV];",20,0,200)
 h_fvtx_ptemu_0tracks=TH1F("h_fvtx_ptemu_0tracks",";p_{T}(e#mu) [GeV];",20,0,200)
 
 h_tkdist_0tracks=TH1F("h_tkdist_0tracks",";Track distance (cm);",200,0,1)
@@ -157,54 +159,50 @@ for e in chain:
             numEHighPt=numEHighPt+1
 
     #if( (numMuHighPt==1 and e.electron_pt.size()==1) or (numEHighPt==1 and e.muon_pt.size()==1)):
+    passVertexRequirements=False
+    fvertex_numtracks=1000
+    numCloseLeptons=0
     if( numMuHighPt==1 and numEHighPt==1 and e.muon_tkdist.size() > 0 and e.electron_tkdist.size() > 0):
-        twoLeptons=True
-        l1 = TLorentzVector(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
-        l2 = TLorentzVector(e.electron_px[0],e.electron_py[0],e.electron_pz[0],e.electron_e[0])
-        lcombined=l1+l2
-        xi_cms_1=lcombined.M()/m.sqrt(13000.*13000.*m.exp(2*lcombined.Rapidity()))
-        xi_cms_2=xi_cms_1*m.exp(2*lcombined.Rapidity())
+        if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15:
+            passVertexRequirements=True
+            fvertex_numtracks=0
+            numCloseLeptons=e.fvertex_ntracks
+            for tkdist in e.fvertex_tkdist:
+                if tkdist < 0.05:
+                    fvertex_numtracks=fvertex_numtracks+1
+
+        if passVertexRequirements ==True:
+            twoLeptons=True
+            l1 = TLorentzVector(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
+            l2 = TLorentzVector(e.electron_px[0],e.electron_py[0],e.electron_pz[0],e.electron_e[0])
+            lcombined=l1+l2
+            xi_cms_1=lcombined.M()/m.sqrt(13000.*13000.*m.exp(2*lcombined.Rapidity()))
+            xi_cms_2=xi_cms_1*m.exp(2*lcombined.Rapidity())
         #print lcombined.M()
-        if lcombined.M() > 50: iMass = True
-        if e.muon_tkdist[0] < 0.05 and e.electron_tkdist[0] < 0.05: tkdist_pair = True
-        mass=lcombined.M()
-        ptemu=lcombined.Pt()
+            if lcombined.M() > 50: iMass = True
+            h_muon_dist.Fill(e.muon_tkdist[0])
+            h_electron_dist.Fill(e.electron_tkdist[0])
+            if e.muon_tkdist[0] < 0.05 and e.electron_tkdist[0] < 0.05: tkdist_pair = True
+            mass=lcombined.M()
+            ptemu=lcombined.Pt()
         #print "Muon charge: {0}".format(e.muon_charge[0])
         #print "Electron charge: {0}".format(e.electron_charge[0])
-        if e.muon_charge[0] * e.electron_charge[0] < 0: oppCharge=True
-        if iMass and oppCharge:
-            h_muon_pt.Fill(e.muon_pt[0])            
-            h_muon_eta.Fill(e.muon_eta[0])
-            h_e_pt.Fill(e.electron_pt[0])
-            h_e_eta.Fill(e.electron_eta[0])
+            if e.muon_charge[0] * e.electron_charge[0] < 0: oppCharge=True
+            if iMass and oppCharge:
+                h_muon_pt.Fill(e.muon_pt[0])            
+                h_muon_eta.Fill(e.muon_eta[0])
+                h_e_pt.Fill(e.electron_pt[0])
+                h_e_eta.Fill(e.electron_eta[0])
+                h_mass.Fill(mass)
+                h_ptemu.Fill(ptemu)
+                h_num_tracks.Fill(e.vertex_ntracks-2)
+                h_num_vertices.Fill(e.vertex_nvtxs)
 
-    if twoLeptons and oppCharge and iMass:
-        h_mass.Fill(mass)
-        h_ptemu.Fill(ptemu)
-        h_num_tracks.Fill(e.vertex_ntracks-2)
-        #h_num_ftracks.Fill(fvertex_numtracks-2)
-        h_num_vertices.Fill(e.vertex_nvtxs)
 
     vertex_numtracks = e.vertex_ntracks
 
     if twoLeptons and oppCharge and iMass and vertex_numtracks < 15 and abs(e.vertex_z) < 15 and ptemu > 30:
         h_vtx_numtracks.Fill(e.vertex_ntracks-2)
-        if sample_name =="MuonEG":
-            h_vtx_numtracks.SetBinContent(1,0)
-
-    #if e.vertex_ntracks is 2: vertexing = True
-    #if e.fvertex_ntracks is 2: vertexingNew = True
-    fvertex_numtracks=1000
-    numCloseLeptons=0
-    if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15:
-        fvertex_numtracks=0
-        numCloseLeptons=e.fvertex_ntracks
-        for tkdist in e.fvertex_tkdist:
-            if tkdist < 0.05:
-                fvertex_numtracks=fvertex_numtracks+1
-        #print fvertex_numtracks
-
-    
 
     if twoLeptons and oppCharge and iMass:
         if (fvertex_numtracks-numCloseLeptons) == 0:
@@ -224,62 +222,97 @@ for e in chain:
 
     #Looking at extra tracks <17
     if twoLeptons and oppCharge and iMass and fvertex_numtracks < 17 and (tkdist_pair == True):
-
+        lessthan6=False
+        if fvertex_numtracks-numCloseLeptons < 6:
+            lessthan6=True
         #PPS requirements
         left=False
         right=False
         passesPPS=False
+        xi_left=[]
+        xi_right=[]
+        xi_2=[]
+        xi_3=[]
+        xi_102=[]
+        xi_103=[]
         if DATA:
+            i=0
+
             for detId_rp in e.rp_tracks_detId:
                     #print detId_rp
-                if detId_rp == 2: left=True
-                    #print left
-                if detId_rp == 3: left=True
-                if detId_rp == 102: right=True
-                if detId_rp == 103: right=True
+                if detId_rp == 2: 
+                    left=True
+                    #if lessthan6: print "DetId 2, Xi: {0}".format(e.rp_tracks_xi[i])
+                    xi_2=e.rp_tracks_xi[i]
+                if detId_rp == 3: 
+                    left=True
+                    #if lessthan6: print "DetId 3, Xi: {0}".format(e.rp_tracks_xi[i])
+                    xi_3=e.rp_tracks_xi[i]
+                if detId_rp == 102: 
+                    right=True
+                    #xi_right.append(float(e.rp_tracks_xi))
+                    #if lessthan6: print "DetId 102, Xi: {0}".format(e.rp_tracks_xi[i])
+                    xi_102=e.rp_tracks_xi[i]
+                if detId_rp == 103: 
+                    right=True
+                    #xi_right.append(float(e.rp_tracks_xi))
+                    #if lessthan6: print "DetId 103, Xi: {0}".format(e.rp_tracks_xi[i])
+                    xi_103=e.rp_tracks_xi[i]
+                i=i+1
+
         if (left == True) and (right == True):
             passesPPS=True
+            if lessthan6 and ptemu > 30:
+                print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks-numCloseLeptons,ptemu)
+                print "Xi_2:",xi_2,"Xi_3:",xi_3,"Xi_102:",xi_102,"Xi_103:",xi_103
 
         #Plotting zero tracks and no ptemu requirement
         if (fvertex_numtracks-numCloseLeptons) < 1:
             h_fvtx_ptemu_0tracks.Fill(ptemu)
-            if passesPPS:
-                h_ftx_ptemu_0tracks_PPS.Fill(ptemu)
+            #if passesPPS:
+            #    h_ftx_ptemu_0tracks_PPS.Fill(ptemu)
         
         #Plotting ptem<30 for number tracks <17
         if ptemu < 30:
              h_fvtx_numtracks_Leptons_pt_0_30.Fill(fvertex_numtracks-numCloseLeptons)
 
+        h_fvtx_mass.Fill(mass)
+        h_fvtx_ptemu.Fill(ptemu)
         if ptemu > 30:
             #Plot number of tracks
             h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks-numCloseLeptons)
+            h_fvtx_mass_pt30.Fill(mass)
+            h_fvtx_ptemu_pt30.Fill(ptemu)
 
             #Plots with PPS requirements
-            if (fvertex_numtracks-numCloseLeptons) > 0:
-                if passesPPS:
+            if passesPPS:
+                for l in xi_left:
+                    for r in xi_right:
+                        #print e.rp_tracks_detId
+                        #h_xi.Fill(xi_rp,xi_cms_1)
+                        #h_xi.Fill(xi_rp,xi_cms_2)
+                        h_xi.Fill(l,r)
+                if (fvertex_numtracks-numCloseLeptons) > 0:
                     count_1_15_tracks=count_1_15_tracks+1
                     h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks-numCloseLeptons)
-                    #print count_1_15_tracks
-                if DATA:
-                    for xi_rp in e.rp_tracks_xi:
-                        #print e.rp_tracks_detId
-                        h_xi.Fill(xi_rp,xi_cms_1)
-                        h_xi.Fill(xi_rp,xi_cms_2)
-            else:
-                if passesPPS:
+                else:
                     count_zero_tracks=count_zero_tracks+1
                     h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks-numCloseLeptons)
 
+
+            #Looking for closest track to electron/muon
+            #There is a problem with this line because tkdist and electron_tkdist not calculated the same
             closest_track=1000
             for tkdist in e.fvertex_tkdist:
+                #There is a problem with this line because tkdist and electron_tkdist not calculated the same
                 if tkdist < closest_track and tkdist != e.muon_tkdist[0] and tkdist != e.electron_tkdist[0]:
                     closest_track=tkdist
             h_closest_track.Fill(closest_track)
-            h_fvtx_mass.Fill(mass)
-            h_fvtx_ptemu.Fill(ptemu)
+
+            #Looking at muon and electron track distance
             if e.muon_tkdist.size() > 0  and e.electron_tkdist.size() > 0:
-                h_muon_dist.Fill(e.muon_tkdist[0])
-                h_electron_dist.Fill(e.electron_tkdist[0])
+                #h_muon_dist.Fill(e.muon_tkdist[0])
+                #h_electron_dist.Fill(e.electron_tkdist[0])
                 h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0])
                 h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0])
                 if (fvertex_numtracks-numCloseLeptons)==0:
@@ -292,10 +325,6 @@ for e in chain:
                 print "There is an issue with this event, tk dist size is 0"
                 print "run, event: {0}, {1}".format(run,event)
                 print "fvertex_numtracks: {0}".format(fvertex_numtracks)
-            #if numCloseLeptons==2:
-            h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks-numCloseLeptons)
-            #if sample_name =="MuonEG":
-            #    h_fvtx_numtracks_Leptons.SetBinContent(1,0)
             if (fvertex_numtracks-numCloseLeptons)==0:
                 h_electron_pt_0tracks_closeTracks.Fill(e.electron_tkpt[0])
 
