@@ -1,4 +1,4 @@
-v#!/usr/bin/env python
+#!/usr/bin/env python
 #Finn Rebassoo, LLNL 12-01-2016
 from os import listdir
 from os.path import isfile, join
@@ -130,6 +130,7 @@ for e in chain:
         continue
     run=e.run
     event=e.event
+    pileupw=e.pileupWeight
     #print "run, event: {0}, {1}".format(run,event)
 
     #if it > 100:
@@ -185,21 +186,21 @@ for e in chain:
         mass=lcombined.M()
         ptemu=lcombined.Pt()
         if iMass and oppCharge and e.vertex_ntracks<17 and abs(e.vertex_z) < 15 and ptemu>30: 
-            h_num_tracks.Fill(e.vertex_ntracks-2)
+            h_num_tracks.Fill(e.vertex_ntracks-2,pileupw)
         if passVertexRequirements ==True:                
-            h_muon_dist.Fill(e.muon_tkdist[0])
-            h_electron_dist.Fill(e.electron_tkdist[0])
+            h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
+            h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
             if e.muon_tkdist[0] < 0.05 and e.electron_tkdist[0] < 0.05: tkdist_pair = True
             #print "Muon charge: {0}".format(e.muon_charge[0])
             #print "Electron charge: {0}".format(e.electron_charge[0])
             if iMass and oppCharge:
-                h_muon_pt.Fill(e.muon_pt[0])            
-                h_muon_eta.Fill(e.muon_eta[0])
-                h_e_pt.Fill(e.electron_pt[0])
-                h_e_eta.Fill(e.electron_eta[0])
-                h_mass.Fill(mass)
-                h_ptemu.Fill(ptemu)
-                h_num_vertices.Fill(e.vertex_nvtxs)
+                h_muon_pt.Fill(e.muon_pt[0],pileupw)            
+                h_muon_eta.Fill(e.muon_eta[0],pileupw)
+                h_e_pt.Fill(e.electron_pt[0],pileupw)
+                h_e_eta.Fill(e.electron_eta[0],pileupw)
+                h_mass.Fill(mass,pileupw)
+                h_ptemu.Fill(ptemu,pileupw)
+                h_num_vertices.Fill(e.vertex_nvtxs,pileupw)
 
 
 
@@ -210,11 +211,11 @@ for e in chain:
             if numCloseLeptons==1:
                 count_one=count_one+1
                 for tkdist in e.fvertex_tkdist:
-                    h_tkdist_0tracks.Fill(tkdist)
+                    h_tkdist_0tracks.Fill(tkdist,pileupw)
                 for tkpt in e.fvertex_tkpt:
-                    h_tkpt_0tracks.Fill(tkpt)
+                    h_tkpt_0tracks.Fill(tkpt,pileupw)
                 for tketa in e.fvertex_tketa:
-                    h_tketa_0tracks.Fill(tketa)
+                    h_tketa_0tracks.Fill(tketa,pileupw)
             if numCloseLeptons==2:
                 count_two=count_two+1
 
@@ -267,36 +268,36 @@ for e in chain:
 
         #Plotting zero tracks and no ptemu requirement
         if (fvertex_numtracks) < 1:
-            h_fvtx_ptemu_0tracks.Fill(ptemu)
+            h_fvtx_ptemu_0tracks.Fill(ptemu,pileupw)
             #if passesPPS:
-            #    h_ftx_ptemu_0tracks_PPS.Fill(ptemu)
+            #    h_ftx_ptemu_0tracks_PPS.Fill(ptemu,pileupw)
         
         #Plotting ptem<30 for number tracks <17
         if ptemu < 30:
-             h_fvtx_numtracks_Leptons_pt_0_30.Fill(fvertex_numtracks)
+             h_fvtx_numtracks_Leptons_pt_0_30.Fill(fvertex_numtracks,pileupw)
 
-        h_fvtx_mass.Fill(mass)
-        h_fvtx_ptemu.Fill(ptemu)
+        h_fvtx_mass.Fill(mass,pileupw)
+        h_fvtx_ptemu.Fill(ptemu,pileupw)
         if ptemu > 30:
             #Plot number of tracks
-            h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks)
-            h_fvtx_mass_pt30.Fill(mass)
-            h_fvtx_ptemu_pt30.Fill(ptemu)
+            h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
+            h_fvtx_mass_pt30.Fill(mass,pileupw)
+            h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
 
             #Plots with PPS requirements
             if passesPPS:
                 for l in xi_left:
                     for r in xi_right:
                         #print e.rp_tracks_detId
-                        #h_xi.Fill(xi_rp,xi_cms_1)
-                        #h_xi.Fill(xi_rp,xi_cms_2)
-                        h_xi.Fill(l,r)
+                        #h_xi.Fill(xi_rp,xi_cms_1,pileupw)
+                        #h_xi.Fill(xi_rp,xi_cms_2,pileupw)
+                        h_xi.Fill(l,r,pileupw)
                 if (fvertex_numtracks) > 0:
                     count_1_15_tracks=count_1_15_tracks+1
-                    h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks)
+                    h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
                 else:
                     count_zero_tracks=count_zero_tracks+1
-                    h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks)
+                    h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
 
 
             #Looking for closest track to electron/muon
@@ -306,26 +307,26 @@ for e in chain:
                 #There is a problem with this line because tkdist and electron_tkdist not calculated the same
                 if tkdist < closest_track and tkdist != e.muon_tkdist[0] and tkdist != e.electron_tkdist[0]:
                     closest_track=tkdist
-            h_closest_track.Fill(closest_track)
+            h_closest_track.Fill(closest_track,pileupw)
 
             #Looking at muon and electron track distance
             if e.muon_tkdist.size() > 0  and e.electron_tkdist.size() > 0:
-                #h_muon_dist.Fill(e.muon_tkdist[0])
-                #h_electron_dist.Fill(e.electron_tkdist[0])
-                h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0])
-                h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0])
+                #h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
+                #h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
+                h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0],pileupw)
+                h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0],pileupw)
                 if (fvertex_numtracks)==0:
-                    h_muon_dist_0tracks.Fill(e.muon_tkdist[0])
-                    h_electron_dist_0tracks.Fill(e.electron_tkdist[0])
-                    h_muon_pt_0tracks.Fill(e.muon_tkpt[0])
-                    h_electron_pt_0tracks.Fill(e.electron_tkpt[0])
-                    h_electron_pt_vs_dist_0tracks.Fill(e.electron_tkdist[0],e.electron_tkpt[0])
+                    h_muon_dist_0tracks.Fill(e.muon_tkdist[0],pileupw)
+                    h_electron_dist_0tracks.Fill(e.electron_tkdist[0],pileupw)
+                    h_muon_pt_0tracks.Fill(e.muon_tkpt[0],pileupw)
+                    h_electron_pt_0tracks.Fill(e.electron_tkpt[0],pileupw)
+                    h_electron_pt_vs_dist_0tracks.Fill(e.electron_tkdist[0],e.electron_tkpt[0],pileupw)
             else:
                 print "There is an issue with this event, tk dist size is 0"
                 print "run, event: {0}, {1}".format(run,event)
                 print "fvertex_numtracks: {0}".format(fvertex_numtracks)
             if (fvertex_numtracks)==0:
-                h_electron_pt_0tracks_closeTracks.Fill(e.electron_tkpt[0])
+                h_electron_pt_0tracks_closeTracks.Fill(e.electron_tkpt[0],pileupw)
 
 
 print "Total number of data in 1-15 extra tracks bin, PPS: {0}".format(count_1_15_tracks)
