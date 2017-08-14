@@ -112,10 +112,10 @@ for i in range(min,max+1):
     maxhisto=hstack.GetMaximum()
     if maxhisto > maxhisto_data:
         #hstack.Draw()
-        h_data.GetYaxis().SetRangeUser(0,maxhisto*1.1)
+        h_data.GetYaxis().SetRangeUser(0.01,maxhisto*1.1)
         #h_data.Draw("e")
     h_data.Draw("e")
-    hstack.Draw("same")
+    hstack.Draw("hist same")
     h_data.Draw("esame")
 
     print maxhisto
