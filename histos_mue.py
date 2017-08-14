@@ -74,10 +74,11 @@ print("--- %s seconds ---" % (time.time() - start_time))
 #h=TH2F("h","",200,0,1,200,0,1)
 #h_numV=TH1F("h_numV","",100,-0.5,99.5)
 #h_pvz=TH1F("h_pvz","",300,-15,15)
-h_muon_pt=TH1F("h_muon_pt",";p_{T} (#mu) [GeV];",200,0,200)
+h_muon_pt=TH1F("h_muon_pt",";p_{T} (#mu) [GeV];",100,0,500)
 h_muon_eta=TH1F("h_muon_eta",";#eta_{#mu};",60,-3,3)
-h_e_pt=TH1F("h_e_pt",";p_{T} (e) [GeV];",100,0,200)
+h_e_pt=TH1F("h_e_pt",";p_{T} (e) [GeV];",100,0,500)
 h_e_eta=TH1F("h_e_eta",";#eta_{e};",60,-3,3)
+h_chi2=TH1F("h_chi2",";#chi^{2}/ndof;",100,0,50)
 
 h_mass=TH1F("h_mass",";Mass [GeV];",100,0,1000)
 h_ptemu=TH1F("h_ptemu",";p_{T} (e#mu) [GeV];",100,0,1000)
@@ -90,10 +91,10 @@ h_fvtx_numtracks_Leptons=TH1F("h_fvtx_numtracks_Leptons",";Num Extra Tracks at v
 h_fvtx_numtracks_Leptons_PPS=TH1F("h_fvtx_numtracks_Leptons_PPS",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_numtracks_Leptons_pt_0_30=TH1F("h_fvtx_numtracks_Leptons_pt_0_30",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_mass=TH1F("h_fvtx_mass",";Mass [GeV];",50,0,500)
-h_fvtx_ptemu=TH1F("h_fvtx_ptemu",";p_{T}(e#mu) [GeV];",20,0,200)
+h_fvtx_ptemu=TH1F("h_fvtx_ptemu",";p_{T}(e#mu) [GeV];",20,0,300)
 h_fvtx_mass_pt30=TH1F("h_fvtx_mass_pt30",";Mass [GeV];",50,0,500)
 h_fvtx_ptemu_pt30=TH1F("h_fvtx_ptemu_pt30",";p_{T}(e#mu) [GeV];",20,0,200)
-h_fvtx_ptemu_0tracks=TH1F("h_fvtx_ptemu_0tracks",";p_{T}(e#mu) [GeV];",40,0,400)
+h_fvtx_ptemu_0tracks=TH1F("h_fvtx_ptemu_0tracks",";p_{T}(e#mu) [GeV];",20,0,300)
 
 h_tkdist_0tracks=TH1F("h_tkdist_0tracks",";Track distance (cm);",200,0,1)
 h_tkpt_0tracks=TH1F("h_tkpt_0tracks",";Track p_{T} [GeV];",200,0,100)
@@ -101,9 +102,9 @@ h_tketa_0tracks=TH1F("h_tketa_0tracks",";Track #eta;",60,-3,3)
 
 h_muon_dist=TH1F("h_muon_dist",";#mu distance to vertex (cm);",200,0,5)
 h_electron_dist=TH1F("h_electron_dist",";e distance to vertex (cm);",200,0,5)
-h_closest_track=TH1F("h_closest_track",";closest track to vertex (cm);",200,0,1)
-h_closest_track_15tracks=TH1F("h_closest_track_15tracks",";closest track to vertex (cm);",200,0,1)
-h_closest_track_ptemu30=TH1F("h_closest_track_ptemu30",";closest track to vertex (cm);",200,0,1)
+h_closest_track=TH1F("h_closest_track",";closest track to vertex (cm);",100,0,1)
+h_closest_track_15tracks=TH1F("h_closest_track_15tracks",";closest track to vertex (cm);",100,0,1)
+h_closest_track_ptemu30=TH1F("h_closest_track_ptemu30",";closest track to vertex (cm);",100,0,1)
 
 h_muon_dist_vs_chi2=TH2F("h_muon_dist_vs_chi2","",200,0,20,200,0,5)
 h_electron_dist_vs_chi2=TH2F("h_electron_dist_vs_chi2","",200,0,20,200,0,5)
@@ -171,7 +172,8 @@ for e in chain:
     fvertex_numtracks=1000
     numCloseLeptons=0
     if( numMuHighPt==1 and numEHighPt==1 ):
-        if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15 and e.muon_tkdist.size() > 0 and e.electron_tkdist.size() > 0:
+        #if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15 and e.muon_tkdist.size() > 0 and e.electron_tkdist.size() > 0:
+        if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15:
             passVertexRequirements=True
             fvertex_numtracks=0
             numCloseLeptons=e.fvertex_ntracks
@@ -193,6 +195,8 @@ for e in chain:
         ptemu=lcombined.Pt()
         if iMass and oppCharge and e.vertex_ntracks<17 and abs(e.vertex_z) < 15 and ptemu>30: 
             h_num_tracks.Fill(e.vertex_ntracks-2,pileupw)
+        if iMass and oppCharge and abs(e.fvertex_z) < 15: 
+            h_chi2.Fill(e.fvertex_chi2ndof,pileupw)
         if passVertexRequirements and iMass and oppCharge:                
             h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
             h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
@@ -217,9 +221,9 @@ for e in chain:
                 if tkdist < closest_track:
                     closest_track=tkdist
             #if dist_myvtx_pv <0.05:
-            h_closest_track.Fill(closest_track,pileupw)
-
-
+            if ptemu > 30:
+                h_closest_track.Fill(closest_track,pileupw)
+                                
 
     if twoLeptons and oppCharge and iMass:
         if (fvertex_numtracks) == 0:
