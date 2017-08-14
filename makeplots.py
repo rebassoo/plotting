@@ -5,9 +5,8 @@ from tools import *
 from ROOT import *
 import datetime
 
-#MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"]
-MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
-#MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"]
+#MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
+MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
 
 gStyle.SetOptStat(0)
 
@@ -74,8 +73,10 @@ for i in range(min,max+1):
     else:    h_data=f_data.Get(u)
     h_data.SetMarkerStyle(8)
     h_data.SetMarkerColor(1)
+    h_data.SetMarkerSize(0.5)
     h_data.SetLineColor(1)
     #h_data.Scale(0.5)
+    #h_data.Rebin(2)
     maxhisto_data=h_data.GetMaximum()
     print maxhisto_data
     #hstack.GetYaxis().SetRangeUser(0,maxhisto_data*1.15)
@@ -102,12 +103,13 @@ for i in range(min,max+1):
         else: hMC.append(fMC[it].Get(u))
         ModifyHisto(hMC[it],sample)
         #Scale MC to data for PPS numextra tracks plot
+        #hMC[it].Rebin(2)
         hMC[it].Scale(PPSMCScale)
         leg.AddEntry(hMC[it],legend_name(sample),"f")
         hstack.Add(hMC[it])
         it=it+1
 
-    hstack.Draw()
+    #hstack.Draw()
     #f_data.Draw("samee")
     maxhisto=hstack.GetMaximum()
     if maxhisto > maxhisto_data:
@@ -117,6 +119,7 @@ for i in range(min,max+1):
     h_data.Draw("e")
     hstack.Draw("hist same")
     h_data.Draw("esame")
+    gPad.RedrawAxis()
 
     print maxhisto
 
