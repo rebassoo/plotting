@@ -102,6 +102,7 @@ h_tketa_0tracks=TH1F("h_tketa_0tracks",";Track #eta;",60,-3,3)
 h_muon_dist=TH1F("h_muon_dist",";#mu distance to vertex (cm);",200,0,5)
 h_electron_dist=TH1F("h_electron_dist",";e distance to vertex (cm);",200,0,5)
 h_closest_track=TH1F("h_closest_track",";closest track to vertex (cm);",200,0,1)
+h_closest_track_15tracks=TH1F("h_closest_track_15tracks",";closest track to vertex (cm);",200,0,1)
 h_closest_track_ptemu30=TH1F("h_closest_track_ptemu30",";closest track to vertex (cm);",200,0,1)
 
 h_muon_dist_vs_chi2=TH2F("h_muon_dist_vs_chi2","",200,0,20,200,0,5)
@@ -149,6 +150,7 @@ for e in chain:
     mass=0
     ptemu=0
     dist_myvtx_pv=0
+    closest_track=1000
     if e.muon_pt.size()+e.electron_pt.size() > 2:
         #print "Event has 3 good leptons, skip"
         continue
@@ -196,8 +198,8 @@ for e in chain:
             h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
             h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0],pileupw)
             h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0],pileupw)
-            if e.muon_tkdist[0] < 0.05 and e.electron_tkdist[0] < 0.05: tkdist_pair = True
-            tkdist_pair = True
+            #if e.muon_tkdist[0] < 0.05 and e.electron_tkdist[0] < 0.05: tkdist_pair = True
+            #tkdist_pair = True
             #print "Muon charge: {0}".format(e.muon_charge[0])
             #print "Electron charge: {0}".format(e.electron_charge[0])
             #if iMass and oppCharge:
@@ -211,6 +213,11 @@ for e in chain:
             h_mass.Fill(mass,pileupw)
             h_ptemu.Fill(ptemu,pileupw)
             h_num_vertices.Fill(e.vertex_nvtxs,pileupw)
+            for tkdist in e.fvertex_tkdist:
+                if tkdist < closest_track:
+                    closest_track=tkdist
+            #if dist_myvtx_pv <0.05:
+            h_closest_track.Fill(closest_track,pileupw)
 
 
 
@@ -231,7 +238,8 @@ for e in chain:
 
 
     #Looking at extra tracks <17
-    if twoLeptons and oppCharge and iMass and fvertex_numtracks < 15 and (tkdist_pair == True):
+    #if twoLeptons and oppCharge and iMass and fvertex_numtracks < 15 and (tkdist_pair == True):
+    if twoLeptons and oppCharge and iMass and fvertex_numtracks < 15:
         lessthan6=False
         if fvertex_numtracks < 6:
             lessthan6=True
@@ -276,6 +284,7 @@ for e in chain:
                 print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
                 print "Xi_2:",xi_2,"Xi_3:",xi_3,"Xi_102:",xi_102,"Xi_103:",xi_103
                 print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
+                print "Closest track: {0}".format(closest_track)
                 print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
                 print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
 
@@ -313,16 +322,8 @@ for e in chain:
                 else:
                     count_zero_tracks=count_zero_tracks+1
                     
-
-            #Looking for closest track to electron/muon
-            #There is a problem with this line because tkdist and electron_tkdist not calculated the same
-            closest_track=1000
-            for tkdist in e.fvertex_tkdist:
-                #There is a problem with this line because tkdist and electron_tkdist not calculated the same
-                if tkdist < closest_track and tkdist != e.muon_tkdist[0] and tkdist != e.electron_tkdist[0]:
-                    closest_track=tkdist
             #if dist_myvtx_pv <0.05:
-            h_closest_track.Fill(closest_track,pileupw)
+            h_closest_track_15tracks.Fill(closest_track,pileupw)
             if ptemu > 30:
                 h_closest_track_ptemu30.Fill(closest_track,pileupw)
             #Looking at muon and electron track distance
