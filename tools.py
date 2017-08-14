@@ -29,10 +29,10 @@ def ModifyHisto(h,sample):
     if sample =="ExclusiveWW":
         #This cross section is from Doug's notes 92.83+/-0.10 for Madgraph 5.2.4.2. But this sample is only leptons so smaller cross section. Used %10.61 from Doug's notes. Should be 10.71% from 2014 PDG. 
         #numevents=5000
-        numevents=25000
+        numevents=50000
         #0.0098903 is value calculated in Madgraph and is in the file unweighted_events.lhe
-        cross_section_pb=4.1*0.0098903
-        #cross_section_pb=0.0098903
+        #cross_section_pb=4.1*0.0098903
+        cross_section_pb=0.0098903
         linecolor=7
     if sample =="WWTo2L2Nu_13TeV-powheg":
         #numevents=1999000
