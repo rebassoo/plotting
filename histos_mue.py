@@ -93,7 +93,7 @@ h_fvtx_mass=TH1F("h_fvtx_mass",";Mass [GeV];",50,0,500)
 h_fvtx_ptemu=TH1F("h_fvtx_ptemu",";p_{T}(e#mu) [GeV];",20,0,200)
 h_fvtx_mass_pt30=TH1F("h_fvtx_mass_pt30",";Mass [GeV];",50,0,500)
 h_fvtx_ptemu_pt30=TH1F("h_fvtx_ptemu_pt30",";p_{T}(e#mu) [GeV];",20,0,200)
-h_fvtx_ptemu_0tracks=TH1F("h_fvtx_ptemu_0tracks",";p_{T}(e#mu) [GeV];",20,0,200)
+h_fvtx_ptemu_0tracks=TH1F("h_fvtx_ptemu_0tracks",";p_{T}(e#mu) [GeV];",40,0,400)
 
 h_tkdist_0tracks=TH1F("h_tkdist_0tracks",";Track distance (cm);",200,0,1)
 h_tkpt_0tracks=TH1F("h_tkpt_0tracks",";Track p_{T} [GeV];",200,0,100)
@@ -102,6 +102,7 @@ h_tketa_0tracks=TH1F("h_tketa_0tracks",";Track #eta;",60,-3,3)
 h_muon_dist=TH1F("h_muon_dist",";#mu distance to vertex (cm);",200,0,5)
 h_electron_dist=TH1F("h_electron_dist",";e distance to vertex (cm);",200,0,5)
 h_closest_track=TH1F("h_closest_track",";closest track to vertex (cm);",200,0,1)
+h_closest_track_ptemu30=TH1F("h_closest_track_ptemu30",";closest track to vertex (cm);",200,0,1)
 
 h_muon_dist_vs_chi2=TH2F("h_muon_dist_vs_chi2","",200,0,20,200,0,5)
 h_electron_dist_vs_chi2=TH2F("h_electron_dist_vs_chi2","",200,0,20,200,0,5)
@@ -115,6 +116,8 @@ h_electron_pt_0tracks_closeTracks=TH1F("h_electron_pt_0tracks_closeTracks","",20
 h_electron_pt_vs_dist_0tracks=TH2F("h_electron_pt_vs_dist_0tracks","",200,0,5,200,0,200)
 
 h_xi=TH2F("h_xi","",200,0,1,200,0,1)
+h_dist_myVertex_pv=TH1F("h_dist_myVertex_pv","",80,0,2)
+h_dist_myVertex_0tracks_ptemu30=TH1F("h_dist_myVertex_pv_0tracks_ptemu30","",80,0,2)
 
 runPPSCuts=False
 
@@ -145,6 +148,7 @@ for e in chain:
     numEHighPt=0
     mass=0
     ptemu=0
+    dist_myvtx_pv=0
     if e.muon_pt.size()+e.electron_pt.size() > 2:
         #print "Event has 3 good leptons, skip"
         continue
@@ -187,20 +191,26 @@ for e in chain:
         ptemu=lcombined.Pt()
         if iMass and oppCharge and e.vertex_ntracks<17 and abs(e.vertex_z) < 15 and ptemu>30: 
             h_num_tracks.Fill(e.vertex_ntracks-2,pileupw)
-        if passVertexRequirements ==True:                
+        if passVertexRequirements and iMass and oppCharge:                
             h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
             h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
+            h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0],pileupw)
+            h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0],pileupw)
             if e.muon_tkdist[0] < 0.05 and e.electron_tkdist[0] < 0.05: tkdist_pair = True
+            tkdist_pair = True
             #print "Muon charge: {0}".format(e.muon_charge[0])
             #print "Electron charge: {0}".format(e.electron_charge[0])
-            if iMass and oppCharge:
-                h_muon_pt.Fill(e.muon_pt[0],pileupw)            
-                h_muon_eta.Fill(e.muon_eta[0],pileupw)
-                h_e_pt.Fill(e.electron_pt[0],pileupw)
-                h_e_eta.Fill(e.electron_eta[0],pileupw)
-                h_mass.Fill(mass,pileupw)
-                h_ptemu.Fill(ptemu,pileupw)
-                h_num_vertices.Fill(e.vertex_nvtxs,pileupw)
+            #if iMass and oppCharge:
+            #if tkdist_pair:
+            dist_myvtx_pv=m.sqrt( (e.vertex_x-e.fvertex_x)*(e.vertex_x-e.fvertex_x) + (e.vertex_y-e.fvertex_y)*(e.vertex_y-e.fvertex_y) + (e.vertex_z-e.fvertex_z)*(e.vertex_z-e.fvertex_z) )
+            h_dist_myVertex_pv.Fill(dist_myvtx_pv,pileupw)
+            h_muon_pt.Fill(e.muon_pt[0],pileupw)            
+            h_muon_eta.Fill(e.muon_eta[0],pileupw)
+            h_e_pt.Fill(e.electron_pt[0],pileupw)
+            h_e_eta.Fill(e.electron_eta[0],pileupw)
+            h_mass.Fill(mass,pileupw)
+            h_ptemu.Fill(ptemu,pileupw)
+            h_num_vertices.Fill(e.vertex_nvtxs,pileupw)
 
 
 
@@ -221,7 +231,7 @@ for e in chain:
 
 
     #Looking at extra tracks <17
-    if twoLeptons and oppCharge and iMass and fvertex_numtracks < 17 and (tkdist_pair == True):
+    if twoLeptons and oppCharge and iMass and fvertex_numtracks < 15 and (tkdist_pair == True):
         lessthan6=False
         if fvertex_numtracks < 6:
             lessthan6=True
@@ -262,9 +272,12 @@ for e in chain:
         if (left == True) and (right == True):
             passesPPS=True
             if lessthan6 and ptemu > 30:
-                print "Run: {0}, Event: {1}".format(run,event)
+                print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
                 print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
                 print "Xi_2:",xi_2,"Xi_3:",xi_3,"Xi_102:",xi_102,"Xi_103:",xi_103
+                print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
+                print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
+                print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
 
         #Plotting zero tracks and no ptemu requirement
         if (fvertex_numtracks) < 1:
@@ -272,7 +285,7 @@ for e in chain:
             #if passesPPS:
             #    h_ftx_ptemu_0tracks_PPS.Fill(ptemu,pileupw)
         
-        #Plotting ptem<30 for number tracks <17
+        #Plotting ptem<30 for number tracks <15
         if ptemu < 30:
              h_fvtx_numtracks_Leptons_pt_0_30.Fill(fvertex_numtracks,pileupw)
 
@@ -280,6 +293,8 @@ for e in chain:
         h_fvtx_ptemu.Fill(ptemu,pileupw)
         if ptemu > 30:
             #Plot number of tracks
+            if (fvertex_numtracks) < 1: 
+                h_dist_myVertex_0tracks_ptemu30.Fill(dist_myvtx_pv,pileupw)
             h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
             h_fvtx_mass_pt30.Fill(mass,pileupw)
             h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
@@ -292,13 +307,12 @@ for e in chain:
                         #h_xi.Fill(xi_rp,xi_cms_1,pileupw)
                         #h_xi.Fill(xi_rp,xi_cms_2,pileupw)
                         h_xi.Fill(l,r,pileupw)
+                h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
                 if (fvertex_numtracks) > 0:
                     count_1_15_tracks=count_1_15_tracks+1
-                    h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
                 else:
                     count_zero_tracks=count_zero_tracks+1
-                    h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
-
+                    
 
             #Looking for closest track to electron/muon
             #There is a problem with this line because tkdist and electron_tkdist not calculated the same
@@ -307,14 +321,14 @@ for e in chain:
                 #There is a problem with this line because tkdist and electron_tkdist not calculated the same
                 if tkdist < closest_track and tkdist != e.muon_tkdist[0] and tkdist != e.electron_tkdist[0]:
                     closest_track=tkdist
+            #if dist_myvtx_pv <0.05:
             h_closest_track.Fill(closest_track,pileupw)
-
+            if ptemu > 30:
+                h_closest_track_ptemu30.Fill(closest_track,pileupw)
             #Looking at muon and electron track distance
             if e.muon_tkdist.size() > 0  and e.electron_tkdist.size() > 0:
                 #h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
                 #h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
-                h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0],pileupw)
-                h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0],pileupw)
                 if (fvertex_numtracks)==0:
                     h_muon_dist_0tracks.Fill(e.muon_tkdist[0],pileupw)
                     h_electron_dist_0tracks.Fill(e.electron_tkdist[0],pileupw)
