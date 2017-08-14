@@ -31,8 +31,8 @@ def ModifyHisto(h,sample):
         #numevents=5000
         numevents=50000
         #0.0098903 is value calculated in Madgraph and is in the file unweighted_events.lhe
-        #cross_section_pb=4.1*0.0098903
-        cross_section_pb=0.0098903
+        cross_section_pb=4.1*0.0098903
+        #cross_section_pb=0.0098903
         linecolor=7
     if sample =="WWTo2L2Nu_13TeV-powheg":
         #numevents=1999000
@@ -74,6 +74,7 @@ def ModifyHisto(h,sample):
         linecolor=6
     h.Scale((luminosity_fb*cross_section_pb*1000.)/numevents)
     h.SetFillColor(linecolor)
+    h.SetLineColor(linecolor)
 
 
 def legend_name(sample):
