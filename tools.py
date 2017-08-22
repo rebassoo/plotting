@@ -26,13 +26,23 @@ def ModifyHisto(h,sample):
     cross_section_pb=0
     numevents=0
     linecolor=0
+    if sample =="ExclusiveWWNonElastic":
+        #This cross section is from Doug's notes 92.83+/-0.10 for Madgraph 5.2.4.2. But this sample is only leptons so smaller cross section. Used %10.61 from Doug's notes. Should be 10.71% from 2014 PDG. 
+        #numevents=5000
+        numevents=50000
+        #0.0098903 is value calculated in Madgraph and is in the file unweighted_events.lhe
+        #This does no include elastic
+        cross_section_pb=3.11*0.0098903
+        #cross_section_pb=0.0098903
+        #linecolor=8
+        linecolor=429
     if sample =="ExclusiveWW":
         #This cross section is from Doug's notes 92.83+/-0.10 for Madgraph 5.2.4.2. But this sample is only leptons so smaller cross section. Used %10.61 from Doug's notes. Should be 10.71% from 2014 PDG. 
         #numevents=5000
         numevents=50000
         #0.0098903 is value calculated in Madgraph and is in the file unweighted_events.lhe
-        cross_section_pb=4.1*0.0098903
-        #cross_section_pb=0.0098903
+        #cross_section_pb=4.1*0.0098903
+        cross_section_pb=0.0098903
         linecolor=7
     if sample =="WWTo2L2Nu_13TeV-powheg":
         #numevents=1999000
@@ -84,6 +94,7 @@ def legend_name(sample):
     if sample=="WWTo2L2Nu_13TeV-powheg":name="WW"
     if sample=="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 10-50 GeV"
     if sample=="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 50+ GeV"
-    if sample=="ExclusiveWW": name="SM Exclusive WW"
+    if sample=="ExclusiveWW": name="Elastic SM Exclusive WW"
+    if sample=="ExclusiveWWNonElastic": name="Non-Elastic SM Exclusive WW"
     return name
 
