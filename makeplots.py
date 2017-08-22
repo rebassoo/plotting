@@ -6,7 +6,7 @@ from ROOT import *
 import datetime
 
 #MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
-MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
+MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
 
 gStyle.SetOptStat(0)
 
@@ -95,7 +95,10 @@ for i in range(min,max+1):
 
     for sample in MCsamples:
         print "Get to beginning of MC samples"
-        fMC.append(TFile("histos/"+sample+".root"))
+        if sample == "ExclusiveWWNonElastic":
+            fMC.append(TFile("histos/"+"ExclusiveWW"+".root"))
+        else:
+            fMC.append(TFile("histos/"+sample+".root"))
         fMC[it].cd()
         #This is if specified a range of histos
         if digits:
