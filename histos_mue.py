@@ -291,6 +291,7 @@ for e in chain:
                 print "Closest track: {0}".format(closest_track)
                 print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
                 print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
+                print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
 
         #Plotting zero tracks and no ptemu requirement
         if (fvertex_numtracks) < 1:
