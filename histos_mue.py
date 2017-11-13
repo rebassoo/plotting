@@ -3,6 +3,7 @@
 from os import listdir
 from os.path import isfile, join
 from ROOT import *
+#import ROOT
 import math as m
 from htools import *
 import sys
@@ -54,6 +55,12 @@ for file in ListOfFiles:
     h=f.Get("demo/h_trueNumInteractions")
     #print h.GetEntries()
     num_events=num_events+h.GetEntries()
+    #t=TTree()
+    #t=f.Get("demo/SlimmedNtuple")
+    #for e in t:
+    #    if e.lumiblock == 1700:
+    #        if e.run == 279841:
+    #            print file
     #if i > 1:
     #    break
 
@@ -118,14 +125,20 @@ count_two=0
 it=0
 run=0.
 event=0.
+print chain.GetEntries()
 for e in chain:
     it=it+1
     if run == e.run and event == e.event:
         continue
+    #if e.lumiblock != 1700:
+    #    continue
     run=e.run
     event=e.event
+    lumi=e.lumiblock
     pileupw=e.pileupWeight
-    #print "run, event: {0}, {1}".format(run,event)
+    #print "run, lumi event: {0}, {1}, {2}".format(run,e.lumiblock,event)
+    #if e.fvertex_chi2ndof:
+    #    print e.fvertex_chi2ndof
 
     #if it > 100:
     #    break
@@ -264,9 +277,9 @@ for e in chain:
         print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
         print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
         print "Number of vertices in event: {0}".format(e.vertex_nvtxs)
-
-
-
+        print "Muon pt: {0}".format(e.muon_pt[0])
+        print "Electron pt: {0}".format(e.electron_pt[0])
+        
 
 print "Total number of data in 1-15 extra tracks bin, PPS: {0}".format(count_1_15_tracks)
 print "Total number of data in 0 extra tracks bin, PPS: {0}".format(count_zero_tracks)
