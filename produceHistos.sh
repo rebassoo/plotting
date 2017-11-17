@@ -2,7 +2,9 @@
 
 #/hadoop/cms/store/user/rebassoo/
 
-python histos_mue.py ExclusiveWW SM_Madgraph/2017-08-11
+#python histos_mue.py TestFiles SlimmedNtupler/Data/RunG
+
+#python histos_mue.py ExclusiveWW SM_Madgraph/2017-08-11
 
 python histos_mue.py MuonEG crab_runBv3/170801_234828/0000
 python histos_mue.py MuonEG crab_runBv3/170801_234828/0001
@@ -14,10 +16,10 @@ python histos_mue.py MuonEG crab_runG/170801_234956/0000
 python histos_mue.py MuonEG crab_runHv2/170801_235031/0000
 python histos_mue.py MuonEG crab_runHv3/170801_235051/0000
 
-python histos_mue.py WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 crab_WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/170801_235248/0000
-python histos_mue.py DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 crab_DY-50-up/170801_235158/0000
-python histos_mue.py WWTo2L2Nu_13TeV-powheg crab_WWTo2L2Nu_13TeV-powheg/170801_235215/0000
-python histos_mue.py TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 crab_TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/170801_235232/0000
+#python histos_mue.py WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 crab_WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/170801_235248/0000
+#python histos_mue.py DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 crab_DY-50-up/170801_235158/0000
+#python histos_mue.py WWTo2L2Nu_13TeV-powheg crab_WWTo2L2Nu_13TeV-powheg/170801_235215/0000
+#python histos_mue.py TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 crab_TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/170801_235232/0000
 
 
 #MC
