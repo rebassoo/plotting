@@ -28,45 +28,51 @@ file_dir=sys.argv[3]
 
 #print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir))
 
-output_name=sample_name
+
 DATA=False
 if sample_name == "MuonEG":
     DATA=True
-    
-fout = TFile('histos/{0}.root'.format(output_name),'recreate')
-fout.cd()
 
+mypath_prefix='/hadoop/cms/store/user/rebassoo/'
 print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
 #Chain together root files for data
 ListOfFiles=[]
 if sys.argv[1] == 'latest':
+    output_name=sample_name+'_'+file_dir.split('_')[1]
     m_date=0.
     m_time=0.
     for d in os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir)):
         date=int(d.split('_')[0])
-        time=int(d.split('_')[1])
+        t=int(d.split('_')[1])
         if date >= m_date: 
             m_date=date
-            m_time=time
-            if time > m_time: m_time=time
+            m_time=t
+            if t > m_time: m_time=t
 
     print m_date
     print m_time        
     sub_dir=str(m_date)+"_"+str(m_time)
     print sub_dir
-    for i in os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)):
-        mypath='/hadoop/cms/store/user/rebassoo/{0}/{1}/{2}/{3}'.format(sample_name,file_dir,sub_dir,i)
-        ListOfFiles += [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    itt = 0
+    for i in os.listdir(mypath_prefix+'/{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)):
+        mypath=mypath_prefix+'{0}/{1}/{2}/{3}/'.format(sample_name,file_dir,sub_dir,i)
+        ListOfFiles += [mypath_prefix+'{0}/{1}/{2}/{3}/{4}'.format(sample_name,file_dir,sub_dir,i,f) for f in listdir(mypath) if isfile(join(mypath, f))]
 
 if sys.argv[1] == 'specific':
-    mypath='/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir)
-    ListOfFiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    mypath=mypath_prefix+'{0}/{1}/'.format(sample_name,file_dir)
+    ListOfFiles = [mypath_prefix+'{0}/{1}/{2}'.format(sample_name,file_dir,f) for f in listdir(mypath) if isfile(join(mypath, f))]
+    output_name=sample_name+'_'+file_dir.split('_')[1].split('/')[0]+'_'+file_dir.split('/')[2]
 
-print ListOfFiles
+    
+fout = TFile('histos/{0}.root'.format(output_name),'recreate')
+fout.cd()
+
+
+#print ListOfFiles
 chain = TChain('demo/SlimmedNtuple')
 i=0
 
-files = [f for f in listdir('.') if isfile(f)]
+#files = [f for f in listdir('.') if isfile(f)]
 #for f in files:
     #print f
 
@@ -76,9 +82,10 @@ num_events=0
 for file in ListOfFiles:
     i=i+1
     #print file
-    chain.Add(mypath+file)
+    chain.Add(file)
     entries=chain.GetEntries()
-    f=TFile(mypath+file)
+    #print entries
+    f=TFile(file)
     h=TH1F()
     h=f.Get("demo/h_trueNumInteractions")
     #print h.GetEntries()
