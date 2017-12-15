@@ -24,7 +24,7 @@ output_name=sample_name
 DATA=False
 if sample_name == "MuonEG":
     DATA=True
-    if file_dir =="crab_runBv3/170801_234828/0001":
+    if file_dir =="crab_runBv3/171116_215828/0001":
         output_name="MuonEG_{0}_2nd".format(file_dir.split('/')[0].split('_')[1])
     else:
         output_name="MuonEG_{0}".format(file_dir.split('/')[0].split('_')[1])
@@ -98,7 +98,8 @@ h_fvtx_ptemu_0tracks=TH1F("h_fvtx_ptemu_0tracks",";p_{T}(e#mu) [GeV];",20,0,300)
 
 h_muon_dist=TH1F("h_muon_dist",";#mu distance to vertex (cm);",200,0,5)
 h_electron_dist=TH1F("h_electron_dist",";e distance to vertex (cm);",200,0,5)
-h_closest_track=TH1F("h_closest_track",";closest track to vertex (cm);",100,0,1)
+h_closest_track_ts=TH1F("h_closest_track_ts",";closest track to vertex (cm);",100,0,1)
+h_closest_track_cms=TH1F("h_closest_track_cms",";closest track to vertex (cm);",100,0,1)
 #h_closest_track_15tracks=TH1F("h_closest_track_15tracks",";closest track to vertex (cm);",100,0,1)
 #h_closest_track_ptemu30=TH1F("h_closest_track_ptemu30",";closest track to vertex (cm);",100,0,1)
 
@@ -116,6 +117,9 @@ h_electron_dist_vs_chi2=TH2F("h_electron_dist_vs_chi2","",200,0,20,200,0,5)
 #h_xi=TH2F("h_xi","",200,0,1,200,0,1)
 h_dist_myVertex_pv=TH1F("h_dist_myVertex_pv","",80,0,2)
 h_dist_myVertex_0tracks_ptemu30=TH1F("h_dist_myVertex_pv_0tracks_ptemu30","",80,0,2)
+
+h_fvtx_ts_vs_cms_p5mm=TH2F("h_fvtx_ts_vs_cms_p5mm","",100,-0.5,99.5,100,-0.5,99.5)
+h_closest_track_ts_vs_cms=TH2F("h_closest_track_ts_vs_cms","",100,0,1,100,0,1)
 
 runPPSCuts=False
 
@@ -148,22 +152,32 @@ for e in chain:
     mass=0
     ptemu=0
     dist_myvtx_pv=0
-    closest_track=1000
-    if e.muon_pt.size()+e.electron_pt.size() > 2:
-        #print "Event has 3 good leptons, skip"
-        continue
-    
+    closest_track_ts=1000
+    closest_track_cms=1000
+    #if e.muon_pt.size()+e.electron_pt.size() > 2:
+    #    #print "Event has 3 good leptons, skip"
+    #    continue
+
+    imu=0
+    lepton_count=0
     for muon_pt in e.muon_pt:
         #print "Muon pt: {0}".format(muon_pt)
+        #if e.muon_dxy[imu]<0.2 and e.muon_dz[imu]<0.5:
+        lepton_count=lepton_count+1
         if muon_pt>40:
             numMuHighPt=numMuHighPt+1
-    iip=0
+        imu=imu+1
+    ie=0
     for e_pt in e.electron_pt:
         #print "Electron pt: {0}".format(muon_pt)
-        if e_pt>40 and e.electron_passip[iip]:
+        lepton_count=lepton_count+1
+        #if e_pt>40 and e.electron_passip[ie]:
+        if e_pt>40:
             numEHighPt=numEHighPt+1
-        iip=iip+1
+        ie=ie+1
 
+    if lepton_count > 2:
+        continue
 
     fvertex_numtracks=1000
     numCloseLeptons=0
@@ -171,11 +185,12 @@ for e in chain:
         if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15:
             c["fittedVertexPassRequirements"]=True
             fvertex_numtracks=0
-            numCloseLeptons=e.fvertex_ntracks
+            #numCloseLeptons=e.fvertex_ntracks
             #This does count muon and electron
-            for tkdist in e.fvertex_tkdist:
-                if tkdist < 0.05:
-                    fvertex_numtracks=fvertex_numtracks+1
+            fvertex_numtracks=e.fvertex_ntracks_ts_p5mm
+            #for tkdist in e.fvertex_tkdist:
+            #    if tkdist < 0.05:
+            #        fvertex_numtracks=fvertex_numtracks+1
             if fvertex_numtracks < 15:
                 c["fittedVertexTracks15"]=True
             if fvertex_numtracks < 1:
@@ -194,10 +209,11 @@ for e in chain:
         ptemu=lcombined.Pt()
         if ptemu > 30:
             c["ptemug30"]=True
-        for tkdist in e.fvertex_tkdist:
-            if tkdist < closest_track:
-                closest_track=tkdist
-
+        #for tkdist in e.fvertex_tkdist:
+        #    if tkdist < closest_track:
+        #        closest_track=tkdist
+        closest_track_ts=e.fvertex_closest_trk_ts
+        closest_track_cms=e.fvertex_closest_trk_cms
 
     #Old vertexing plot
     if c["twoLeptons"] and c["iMass"] and c["oppCharge"] and e.vertex_ntracks<17 and abs(e.vertex_z) < 15 and c["ptemug30"]: 
@@ -225,7 +241,10 @@ for e in chain:
 
     #Plot of closest track for ptemu>30, no tracking requirement
     if c["twoLeptons"] and c["fittedVertexPassRequirements"] and c["iMass"] and c["oppCharge"] and c["ptemug30"]:
-        h_closest_track.Fill(closest_track,pileupw)
+        h_closest_track_ts.Fill(closest_track_ts,pileupw)
+        h_closest_track_cms.Fill(closest_track_cms,pileupw)
+        h_closest_track_ts_vs_cms.Fill(closest_track_cms,closest_track_ts,pileupw)
+        h_fvtx_ts_vs_cms_p5mm.Fill(e.fvertex_ntracks_cms_p5mm,e.fvertex_ntracks_ts_p5mm,pileupw)
         
     #All plots below here have less than 15 extra tracks at the vertex
 
@@ -272,7 +291,7 @@ for e in chain:
         print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
         print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
         print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
-        print "Closest track: {0}".format(closest_track)
+        print "Closest track: {0}".format(closest_track_ts)
         print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
         print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
         print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
