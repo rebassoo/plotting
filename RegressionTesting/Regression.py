@@ -27,7 +27,7 @@ if sys.argv[1] == 'compare':
         if tfile1.Get(hname).ClassName() == "TH1F":
             h=TH1F()
             h=tfile1.Get(hname)
-            h.Draw()
+            h.Draw("hist")
             print hname
             i=0
             for hname2 in names2:
