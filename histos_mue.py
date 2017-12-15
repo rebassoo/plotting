@@ -63,7 +63,6 @@ if sys.argv[1] == 'specific':
     ListOfFiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
 print ListOfFiles
-sys.exit()
 chain = TChain('demo/SlimmedNtuple')
 i=0
 
