@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #Finn Rebassoo, LLNL 12-01-2016
+import os
 from os import listdir
 from os.path import isfile, join
 from ROOT import *
@@ -12,29 +13,57 @@ import time
 #python histos_mue.py WWTo2L2Nu_13TeV-powheg crab_WWTo2L2Nu_13TeV-powheg/170426_181453/0000/
 
 
+if len(sys.argv) < 4:
+    print "Need to specify 4 inputs parameters, i.e.:"
+    print "  python histos_mue.py latest MuonEG crab_runBv3"
+    print "  or"
+    print "  python histos_mue.py specific MuonEG crab_runBv3/171116_215828/0001"
+    sys.exit()
+
 start_time = time.time()
-sample_name=sys.argv[1]
+sample_name=sys.argv[2]
 #sample_name="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"
 print sample_name
-file_dir=sys.argv[2]
-#file_dir="crab_DY-50-up/170220_225226/0000/"
-print file_dir
+file_dir=sys.argv[3]
+
+#print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir))
 
 output_name=sample_name
 DATA=False
 if sample_name == "MuonEG":
     DATA=True
-    if file_dir =="crab_runBv3/171116_215828/0001":
-        output_name="MuonEG_{0}_2nd".format(file_dir.split('/')[0].split('_')[1])
-    else:
-        output_name="MuonEG_{0}".format(file_dir.split('/')[0].split('_')[1])
     
 fout = TFile('histos/{0}.root'.format(output_name),'recreate')
 fout.cd()
 
+print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
 #Chain together root files for data
-mypath="/hadoop/cms/store/user/rebassoo/{0}/{1}/".format(sample_name,file_dir)
-ListOfFiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+ListOfFiles=[]
+if sys.argv[1] == 'latest':
+    m_date=0.
+    m_time=0.
+    for d in os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir)):
+        date=int(d.split('_')[0])
+        time=int(d.split('_')[1])
+        if date >= m_date: 
+            m_date=date
+            m_time=time
+            if time > m_time: m_time=time
+
+    print m_date
+    print m_time        
+    sub_dir=str(m_date)+"_"+str(m_time)
+    print sub_dir
+    for i in os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)):
+        mypath='/hadoop/cms/store/user/rebassoo/{0}/{1}/{2}/{3}'.format(sample_name,file_dir,sub_dir,i)
+        ListOfFiles += [f for f in listdir(mypath) if isfile(join(mypath, f))]
+
+if sys.argv[1] == 'specific':
+    mypath='/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir)
+    ListOfFiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+
+print ListOfFiles
+sys.exit()
 chain = TChain('demo/SlimmedNtuple')
 i=0
 
