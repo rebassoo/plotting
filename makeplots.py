@@ -135,9 +135,9 @@ for i in range(min,max+1):
     latex.DrawLatex(0.12,0.92,"CMS")
     #latex.DrawLatex(0.67,0.92,"37.2 fb^{-1} (13 TeV)")
     #All runs
-    latex.DrawLatex(0.67,0.92,"35.8 fb^{-1} (13 TeV)")
+    #latex.DrawLatex(0.67,0.92,"35.8 fb^{-1} (13 TeV)")
     #RunBCG
-    #latex.DrawLatex(0.67,0.92,"15.9 fb^{-1} (13 TeV)")
+    latex.DrawLatex(0.67,0.92,"15.9 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"4.39 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"12.19 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"7.8 fb^{-1} (13 TeV)")

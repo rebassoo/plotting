@@ -16,9 +16,9 @@ def ModifyHisto(h,sample):
     #luminosity_fb=12.19
     #luminosity_fb=7.8
     #Runs BCG
-    #luminosity_fb=15.9
+    luminosity_fb=15.9
     #Full run
-    luminosity_fb=35.8
+    #luminosity_fb=35.8
     #This is luminosity without runD
     #luminosity_fb=32.8
     print sample
