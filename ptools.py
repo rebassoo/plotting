@@ -18,7 +18,12 @@ def ModifyHisto(h,sample):
     #Runs BCG
     #luminosity_fb=15.9
     #Full run
-    luminosity_fb=35.8
+    #luminosity_fb=35.8
+    #Runs BCG
+    luminosity_fb=15.9
+    #Runs BG
+    #luminosity_fb=13.8
+    #luminosity_fb=13
     #This is luminosity without runD
     #luminosity_fb=32.8
     print sample
@@ -54,11 +59,11 @@ def ModifyHisto(h,sample):
         cross_section_pb=12.178
         linecolor=5
     if sample =="TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
-        #numevents=6105137.
+        numevents=6105137.
         #numevents=5865278
         #numevents=5997301
         #numevents=6055403
-        numevents=5967259.0
+        #numevents=5967259.0
         #From UCSB table (3*0.108)^2*815.96
         cross_section_pb=85.66
         linecolor=4
@@ -66,7 +71,8 @@ def ModifyHisto(h,sample):
         #Differs slightly from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#DY_Z. Where is 1.23 factor from that is in UCSB table?
         #numevents=47943922
         #numevents=49748967
-        numevents=49620546.0
+        numevents=49582723.0
+        #numevents=49620546.0
         cross_section_pb=4895*1.23
         linecolor=2
     if sample =="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
@@ -78,10 +84,15 @@ def ModifyHisto(h,sample):
     #From UCBS table, NNLO from Lesya's summary table
     if sample=="WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8":
         #numevents=24120319
-        numevents=24083399.0
+        #numevents=24083399.0
         #numevents=23183722
+        numevents=2317615.0
         cross_section_pb=61526.7
         linecolor=6
+    print sample
+    print luminosity_fb
+    print cross_section_pb
+    print numevents
     h.Scale((luminosity_fb*cross_section_pb*1000.)/numevents)
     h.SetFillColor(linecolor)
     h.SetLineColor(linecolor)
