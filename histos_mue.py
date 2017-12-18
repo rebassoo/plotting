@@ -38,20 +38,35 @@ print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,fi
 #Chain together root files for data
 ListOfFiles=[]
 if sys.argv[1] == 'latest':
-    output_name=sample_name+'_'+file_dir.split('_')[1]
+    if DATA: output_name=sample_name+'_'+file_dir.split('_')[1]
+    else: output_name=sample_name
     m_date=0.
+    m_date_string=0.
     m_time=0.
+    m_time_string=0.
     for d in os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir)):
         date=int(d.split('_')[0])
-        t=int(d.split('_')[1])
+        date_string=d.split('_')[0]
+        t=0
+        t_string=''
+        if '_' in d:
+            t=int(d.split('_')[1])
+            t_string=d.split('_')[1]
         if date >= m_date: 
             m_date=date
+            m_date_string=date_string
             m_time=t
-            if t > m_time: m_time=t
+            m_time_string=t_string
+            if t > m_time: 
+                m_time=t
+                m_time_string=t_string
 
     print m_date
     print m_time        
-    sub_dir=str(m_date)+"_"+str(m_time)
+    if m_time > 0:
+        sub_dir=str(m_date_string)+"_"+str(m_time_string)
+    else:
+        sub_dir=str(m_date_string)
     print sub_dir
     itt = 0
     for i in os.listdir(mypath_prefix+'/{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)):
@@ -121,6 +136,7 @@ h_num_vertices=TH1F("h_num_vertices",";Num vertices;",100,-0.5,99.5)
 h_fvtx_numtracks_Leptons=TH1F("h_fvtx_numtracks_Leptons",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_numtracks_Leptons_PPS=TH1F("h_fvtx_numtracks_Leptons_PPS",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_numtracks_Leptons_pt_0_30=TH1F("h_fvtx_numtracks_Leptons_pt_0_30",";Num Extra Tracks at vertex;",15,-0.5,14.5)
+h_fvtx_numtracks_Leptons_0jets=TH1F("h_fvtx_numtracks_Leptons_0jets",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_mass=TH1F("h_fvtx_mass",";Mass [GeV];",50,0,500)
 h_fvtx_ptemu=TH1F("h_fvtx_ptemu",";p_{T}(e#mu) [GeV];",20,0,300)
 h_fvtx_mass_pt30=TH1F("h_fvtx_mass_pt30",";Mass [GeV];",50,0,500)
@@ -134,6 +150,7 @@ h_fvtx_ptemu_0tracks=TH1F("h_fvtx_ptemu_0tracks",";p_{T}(e#mu) [GeV];",20,0,300)
 h_muon_dist=TH1F("h_muon_dist",";#mu distance to vertex (cm);",200,0,5)
 h_electron_dist=TH1F("h_electron_dist",";e distance to vertex (cm);",200,0,5)
 h_closest_track_ts=TH1F("h_closest_track_ts",";closest track to vertex (cm);",100,0,1)
+h_closest_track_ts_0jets=TH1F("h_closest_track_ts_0jets",";closest track to vertex (cm);",100,0,1)
 h_closest_track_cms=TH1F("h_closest_track_cms",";closest track to vertex (cm);",100,0,1)
 #h_closest_track_15tracks=TH1F("h_closest_track_15tracks",";closest track to vertex (cm);",100,0,1)
 #h_closest_track_ptemu30=TH1F("h_closest_track_ptemu30",";closest track to vertex (cm);",100,0,1)
@@ -155,6 +172,12 @@ h_dist_myVertex_0tracks_ptemu30=TH1F("h_dist_myVertex_pv_0tracks_ptemu30","",80,
 
 h_fvtx_ts_vs_cms_p5mm=TH2F("h_fvtx_ts_vs_cms_p5mm","",100,-0.5,99.5,100,-0.5,99.5)
 h_closest_track_ts_vs_cms=TH2F("h_closest_track_ts_vs_cms","",100,0,1,100,0,1)
+
+h_jets_25=TH1F("h_jets_25","Number of jets",15,-0.5,14.5)
+h_jets_30=TH1F("h_jets_30","Number of jets",15,-0.5,14.5)
+h_jets_30_closestTrackRequirements=TH1F("h_jets_30_closestTrackRequirements","Number of jets",15,-0.5,14.5)
+h_jets_30_15extraTracks=TH1F("h_jets_30_15extraTracks","Number of jets",15,-0.5,14.5)
+
 
 runPPSCuts=False
 
@@ -258,6 +281,8 @@ for e in chain:
     if c["twoLeptons"] and c["iMass"] and c["oppCharge"] and abs(e.fvertex_z) < 15: 
         h_chi2.Fill(e.fvertex_chi2ndof,pileupw)
 
+    num_jets_25=0
+    num_jets_30=0
     #Plots without any track requirements, but fitted vertex requirements
     if c["twoLeptons"] and c["fittedVertexPassRequirements"] and c["iMass"] and c["oppCharge"]:                
         h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
@@ -273,6 +298,15 @@ for e in chain:
         h_mass.Fill(mass,pileupw)
         h_ptemu.Fill(ptemu,pileupw)
         h_num_vertices.Fill(e.vertex_nvtxs,pileupw)
+        h_jets_25.Fill(e.jet_pt.size(),pileupw)
+        num_jets_25=e.jet_pt.size()
+        jet_i=0
+        for jet_pt in e.jet_pt:
+            if jet_pt>30 and abs(e.jet_eta[jet_i])<2.4:
+                num_jets_30=num_jets_30+1
+            jet_i=jet_i+1
+        h_jets_30.Fill(num_jets_30,pileupw)
+
 
     #Plot of closest track for ptemu>30, no tracking requirement
     if c["twoLeptons"] and c["fittedVertexPassRequirements"] and c["iMass"] and c["oppCharge"] and c["ptemug30"]:
@@ -280,7 +314,10 @@ for e in chain:
         h_closest_track_cms.Fill(closest_track_cms,pileupw)
         h_closest_track_ts_vs_cms.Fill(closest_track_cms,closest_track_ts,pileupw)
         h_fvtx_ts_vs_cms_p5mm.Fill(e.fvertex_ntracks_cms_p5mm,e.fvertex_ntracks_ts_p5mm,pileupw)
-        
+        h_jets_30_closestTrackRequirements.Fill(num_jets_30,pileupw)
+        if num_jets_30 < 1:
+            h_closest_track_ts_0jets.Fill(closest_track_ts,pileupw)
+
     #All plots below here have less than 15 extra tracks at the vertex
 
     #Looking at extra tracks <15, no ptemu requirement. Also, does pass PPS requirements
@@ -311,6 +348,9 @@ for e in chain:
         h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
         h_fvtx_mass_pt30.Fill(mass,pileupw)
         h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
+        h_jets_30_15extraTracks.Fill(num_jets_30,pileupw)
+        if num_jets_30 < 1:
+            h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
 
     #Plots with PPS requirements, ptemu>30, number of tracks <15
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
@@ -324,6 +364,7 @@ for e in chain:
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and fvertex_numtracks < 6 and c["ptemug30"] and c["passesPPS"]:
         print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
         print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
+        print "Num jets: ADD THIS"
         print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
         print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
         print "Closest track: {0}".format(closest_track_ts)
