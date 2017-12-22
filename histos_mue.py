@@ -178,6 +178,10 @@ h_jets_30=TH1F("h_jets_30","Number of jets",15,-0.5,14.5)
 h_jets_30_closestTrackRequirements=TH1F("h_jets_30_closestTrackRequirements","Number of jets",15,-0.5,14.5)
 h_jets_30_15extraTracks=TH1F("h_jets_30_15extraTracks","Number of jets",15,-0.5,14.5)
 
+h_jets_30_eta=TH1F("h_jets_30_eta","jet #eta",60,-3,3)
+h_jets_30_phi=TH1F("h_jets_30_phi","jet #phi",60,2*3.14,3)
+h_jets_30_ptemu30=TH1F("h_jets_30_ptemu30","Number of jets",15,-0.5,14.5)
+
 
 runPPSCuts=False
 
@@ -304,8 +308,11 @@ for e in chain:
         for jet_pt in e.jet_pt:
             if jet_pt>30 and abs(e.jet_eta[jet_i])<2.4:
                 num_jets_30=num_jets_30+1
+                h_jets_30_eta.Fill(e.jet_eta[jet_i],pileupw)
+                h_jets_30_phi.Fill(e.jet_phi[jet_i],pileupw)
             jet_i=jet_i+1
         h_jets_30.Fill(num_jets_30,pileupw)
+
 
 
     #Plot of closest track for ptemu>30, no tracking requirement
@@ -317,6 +324,7 @@ for e in chain:
         h_jets_30_closestTrackRequirements.Fill(num_jets_30,pileupw)
         if num_jets_30 < 1:
             h_closest_track_ts_0jets.Fill(closest_track_ts,pileupw)
+        h_jets_30_ptemu30.Fill(num_jets_30,pileupw)
 
     #All plots below here have less than 15 extra tracks at the vertex
 
