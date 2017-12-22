@@ -6,7 +6,8 @@ from ROOT import *
 import datetime
 
 #MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
-MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
+#MCsamples=["WZ_TuneCUETP8M1_13TeV-pythia8","ZZTo4L_13TeV_powheg_pythia8","WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8","WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
+MCsamples=["ZZ_TuneCUETP8M1_13TeV-pythia8","WZ_TuneCUETP8M1_13TeV-pythia8","WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8","WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
 
 gStyle.SetOptStat(0)
 

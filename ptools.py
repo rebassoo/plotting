@@ -89,6 +89,38 @@ def ModifyHisto(h,sample):
         numevents=2317615.0
         cross_section_pb=61526.7
         linecolor=6
+    if sample=="WW_DoubleScattering_13TeV-pythia8":
+        numevents=10000
+        cross_section_pb=1.64
+        linecolor=7
+    if sample=="WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8":
+        numevents=149681.
+        cross_section_pb=0.03711
+        linecolor=7
+    if sample=="ZZTo4L_13TeV_powheg_pythia8":
+        numevents=6669988.
+        cross_section_pb=1.256
+        linecolor=8
+    if sample=="WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
+        numevents=6103817
+        cross_section_pb=405.271
+        linecolor=9
+    if sample=="ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8":
+        #This samples is for M>30
+        numevents=2307158.0
+        cross_section_pb=117.864
+        linecolor=11
+    if sample=="WZ_TuneCUETP8M1_13TeV-pythia8":
+        numevents=1000000.0
+        cross_section_pb=47.13
+        linecolor=12
+    if sample=="ZZ_TuneCUETP8M1_13TeV-pythia8":
+        numevents=990064.0
+        cross_section_pb=16.523
+        linecolor=13
+
+        
+
     print sample
     print luminosity_fb
     print cross_section_pb
@@ -102,11 +134,18 @@ def legend_name(sample):
     name="No legend name yet"
     if sample=="WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8":name="W+Jets"
     if sample=="TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":name="t#bar{t}"
-    if sample=="WWTo2L2Nu_13TeV-powheg":name="WW"
+    if sample=="WWTo2L2Nu_13TeV-powheg":name="inclusive WW"
     if sample=="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 10-50 GeV"
     if sample=="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 50+ GeV"
     if sample=="ExclusiveWW": name="Elastic SM Exclusive WW"
     if sample=="ExclusiveWWNonElastic": name="Non-Elastic SM Exclusive WW"
+    if sample=="WW_DoubleScattering_13TeV-pythia8": name="WW_DoubleScattering"
+    if sample=="WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8": name="WpWpJJ_EWK-QCD"
+    if sample=="ZZTo4L_13TeV_powheg_pythia8": name="ZZTo4L"
+    if sample=="ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8": name="ZGTo2LG"
+    if sample=="WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="WGToLNuG"
+    if sample=="ZZ_TuneCUETP8M1_13TeV-pythia8": name="ZZ"
+    if sample=="WZ_TuneCUETP8M1_13TeV-pythia8": name="WZ"
     return name
 
 
