@@ -176,9 +176,12 @@ h_closest_track_ts_vs_cms=TH2F("h_closest_track_ts_vs_cms","",100,0,1,100,0,1)
 
 h_jets_25=TH1F("h_jets_25","Number of jets",15,-0.5,14.5)
 h_jets_30=TH1F("h_jets_30","Number of jets",15,-0.5,14.5)
+h_jets_40=TH1F("h_jets_40","Number of jets",15,-0.5,14.5)
+h_jets_50=TH1F("h_jets_50","Number of jets",15,-0.5,14.5)
 h_jets_30_closestTrackRequirements=TH1F("h_jets_30_closestTrackRequirements","Number of jets",15,-0.5,14.5)
 h_jets_30_15extraTracks=TH1F("h_jets_30_15extraTracks","Number of jets",15,-0.5,14.5)
 
+h_jets_pt=TH1F("h_jets_pt","jet p_{T} (GeV)",60,0,300)
 h_jets_30_eta=TH1F("h_jets_30_eta","jet #eta",60,-3,3)
 h_jets_30_phi=TH1F("h_jets_30_phi","jet #phi",60,2*3.14,3)
 h_jets_30_ptemu30=TH1F("h_jets_30_ptemu30","Number of jets",15,-0.5,14.5)
@@ -288,6 +291,8 @@ for e in chain:
 
     num_jets_25=0
     num_jets_30=0
+    num_jets_40=0
+    num_jets_50=0
     #Plots without any track requirements, but fitted vertex requirements
     if c["twoLeptons"] and c["fittedVertexPassRequirements"] and c["iMass"] and c["oppCharge"]:                
         h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
@@ -307,12 +312,20 @@ for e in chain:
         num_jets_25=e.jet_pt.size()
         jet_i=0
         for jet_pt in e.jet_pt:
+            if abs(e.jet_eta[jet_i])<2.4:
+                h_jets_pt.Fill(jet_pt,pileupw)
             if jet_pt>30 and abs(e.jet_eta[jet_i])<2.4:
                 num_jets_30=num_jets_30+1
                 h_jets_30_eta.Fill(e.jet_eta[jet_i],pileupw)
                 h_jets_30_phi.Fill(e.jet_phi[jet_i],pileupw)
+                if jet_pt > 40:
+                    num_jets_40=num_jets_40+1
+                if jet_pt > 50:
+                    num_jets_50=num_jets_50+1
             jet_i=jet_i+1
         h_jets_30.Fill(num_jets_30,pileupw)
+        h_jets_40.Fill(num_jets_40,pileupw)
+        h_jets_50.Fill(num_jets_50,pileupw)
 
 
 
@@ -331,7 +344,8 @@ for e in chain:
 
     #Looking at extra tracks <15, no ptemu requirement. Also, does pass PPS requirements
     xi = {"2":[],"3":[],"102":[],"103":[]}
-    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
+    #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
+    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"]:
         h_fvtx_mass.Fill(mass,pileupw)
         h_fvtx_ptemu.Fill(ptemu,pileupw)
         if DATA:
@@ -362,8 +376,11 @@ for e in chain:
             h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
 
     #Plots with PPS requirements, ptemu>30, number of tracks <15
-    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
+    #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
+    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["ptemug30"] and c["passesPPS"]:
         h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
+        if num_jets_30<1:
+            h_fvtx_numtracks_Leptons_0jets_PPS.Fill(fvertex_numtracks,pileupw)
         if (fvertex_numtracks) > 0:
             count_1_15_tracks=count_1_15_tracks+1
         else:
