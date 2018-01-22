@@ -332,7 +332,8 @@ for e in chain:
 
     #Looking at extra tracks <15, no ptemu requirement. Also, does pass PPS requirements
     xi = {"2":[],"3":[],"102":[],"103":[]}
-    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
+    #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
+    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"]:
         h_fvtx_mass.Fill(mass,pileupw)
         h_fvtx_ptemu.Fill(ptemu,pileupw)
         if DATA:
@@ -358,12 +359,13 @@ for e in chain:
         h_fvtx_mass_pt30.Fill(mass,pileupw)
         h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
         h_jets_30_15extraTracks.Fill(num_jets_30,pileupw)
-        if num_jets_30 < 1:
-            h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
 
     #Plots with PPS requirements, ptemu>30, number of tracks <15
-    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
+    #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
+    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["ptemug30"] and c["passesPPS"]:
         h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
+        if num_jets_30 < 1:
+            h_fvtx_numtracks_Leptons_0jets_PPS.Fill(fvertex_numtracks,pileupw) 
         if (fvertex_numtracks) > 0:
             count_1_15_tracks=count_1_15_tracks+1
         else:

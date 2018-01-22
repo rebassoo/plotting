@@ -3,13 +3,12 @@
 #/hadoop/cms/store/user/rebassoo/
 
 
-python histos_mumu.py DoubleMuon crab_runBv3/171116_220409/0000
-python histos_mumu.py DoubleMuon crab_runBv3/171116_220409/0001
+python histos_mumu.py latest DoubleMuon crab_runBv3
 #Need to wait until get this job finished
-#python histos_mumu.py DoubleMuon crab_runC/171109_004357/0000
-python histos_mumu.py DoubleMuon crab_runG/171116_220554/0000
+python histos_mumu.py latest DoubleMuon crab_runC
+python histos_mumu.py latest DoubleMuon crab_runG
 
-python histos_mumu.py DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 crab_DY-50-up-mumu/171116_220638/0000
+python histos_mumu.py latest DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 crab_DY-50-up-mumu
 
 #MC
 #python histos_mue.py WWTo2L2Nu_13TeV-powheg crab_WWTo2L2Nu_13TeV-powheg/170428_214517/0000/
