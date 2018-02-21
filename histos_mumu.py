@@ -135,9 +135,13 @@ h_num_vertices=TH1F("h_num_vertices",";Num vertices;",100,-0.5,99.5)
 #h_vtx_numtracks=TH1F("h_vtx_numtracks",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_numtracks_Leptons=TH1F("h_fvtx_numtracks_Leptons",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_PPS=TH1F("h_fvtx_numtracks_Leptons_PPS",";Num Extra Tracks at vertex;",85,-0.5,84.5)
+h_fvtx_numtracks_Leptons_Mass160=TH1F("h_fvtx_numtracks_Leptons_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
+h_fvtx_numtracks_Leptons_PPS_Mass160=TH1F("h_fvtx_numtracks_Leptons_PPS_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_pt_0_30=TH1F("h_fvtx_numtracks_Leptons_pt_0_30",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_0jets=TH1F("h_fvtx_numtracks_Leptons_0jets",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_0jets_PPS=TH1F("h_fvtx_numtracks_Leptons_0jets_PPS",";Num Extra Tracks at vertex;",85,-0.5,84.5)
+h_fvtx_numtracks_Leptons_0jets_Mass160=TH1F("h_fvtx_numtracks_Leptons_0jets_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
+h_fvtx_numtracks_Leptons_0jets_PPS_Mass160=TH1F("h_fvtx_numtracks_Leptons_0jets_PPS_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_mass=TH1F("h_fvtx_mass",";Mass [GeV];",50,0,500)
 h_fvtx_ptemu=TH1F("h_fvtx_ptemu",";p_{T}(e#mu) [GeV];",20,0,300)
 h_fvtx_mass_pt30=TH1F("h_fvtx_mass_pt30",";Mass [GeV];",50,0,500)
@@ -326,6 +330,10 @@ for e in chain:
             h_closest_track_ts_0jets.Fill(closest_track_ts,pileupw)
             h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
         h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
+        if mass > 160:
+            h_fvtx_numtracks_Leptons_Mass160.Fill(fvertex_numtracks,pileupw)
+            if num_jets_30 < 1:
+                h_fvtx_numtracks_Leptons_0jets_Mass160.Fill(fvertex_numtracks,pileupw)         
         h_jets_30_ptemu30.Fill(num_jets_30,pileupw)
 
     #All plots below here have less than 15 extra tracks at the vertex
@@ -364,8 +372,11 @@ for e in chain:
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["ptemug30"] and c["passesPPS"]:
         h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
+        if mass > 160: h_fvtx_numtracks_Leptons_PPS_Mass160.Fill(fvertex_numtracks,pileupw)
         if num_jets_30 < 1:
             h_fvtx_numtracks_Leptons_0jets_PPS.Fill(fvertex_numtracks,pileupw) 
+            if mass > 160:
+                h_fvtx_numtracks_Leptons_0jets_PPS_Mass160.Fill(fvertex_numtracks,pileupw)     
         if (fvertex_numtracks) > 0:
             count_1_15_tracks=count_1_15_tracks+1
         else:
