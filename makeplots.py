@@ -8,8 +8,10 @@ import sys
 
 #MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
 #MCsamples=["WZ_TuneCUETP8M1_13TeV-pythia8","ZZTo4L_13TeV_powheg_pythia8","WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8","WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
+
 #MCsamples=["ZZ_TuneCUETP8M1_13TeV-pythia8","WZ_TuneCUETP8M1_13TeV-pythia8","WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8","WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
-MCsamples=["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"]
+MCsamples=["WWTo2L2Nu_13TeV-powheg"]
+#MCsamples=["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"]
 
 gStyle.SetOptStat(0)
 
@@ -69,13 +71,14 @@ for i in range(min,max+1):
 
     #Plot Data
     #f_data=TFile("histos/MuonEG_total.root")
-    f_data=TFile("histos/DoubleMuon_total.root")
-    #f_data=TFile("histos/MuonEG_runBCG.root")
+    #f_data=TFile("histos/DoubleMuon_total.root")
+    f_data=TFile("histos/MuonEG_runBCG.root")
     f_data.cd()
     if digits:
         h_data=f_data.Get(histo_list[i-1])
     else:    h_data=f_data.Get(u)
     h_data.SetMarkerStyle(8)
+    h_data.SetMinimum(0)
     h_data.SetMarkerColor(1)
     h_data.SetMarkerSize(0.5)
     h_data.SetLineColor(1)
@@ -96,13 +99,13 @@ for i in range(min,max+1):
     if u == "h_fvtx_numtracks_Leptons_0jets_PPS":
         u="h_fvtx_numtracks_Leptons_0jets"
         #PPSMCScale=(64./2111)
-        PPSMCScale=(0.0448)
-        h_data2=f_data.Get(u)
-        h_data.Draw("e")
-        h_data2.SetLineColor(2)
-        h_data2.Sumw2()
-        h_data2.Scale(0.0448)
-        h_data2.Draw("Same")
+        PPSMCScale=(0.045)
+        #h_data2=f_data.Get(u)
+        #h_data.Draw("e")
+        #h_data2.SetLineColor(2)
+        #h_data2.Sumw2()
+        #h_data2.Scale(0.0448)
+        #h_data2.Draw("Same")
 
     #h_fvtx_numtracks_Leptons_0jets.Draw("same")
     #sys.exit()
