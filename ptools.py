@@ -96,7 +96,7 @@ def ModifyHisto(h,sample):
     if sample=="WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8":
         numevents=149681.
         cross_section_pb=0.03711
-        linecolor=7
+        linecolor=14
     if sample=="ZZTo4L_13TeV_powheg_pythia8":
         numevents=6669988.
         cross_section_pb=1.256
