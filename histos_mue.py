@@ -409,7 +409,7 @@ for e in chain:
                 h_mass_PPS.Fill(mass)
                 h_ptemu_PPS.Fill(ptemu)
                 h_pte_PPS.Fill(e.electron_pt[0])
-                h_pte_PPS.Fill(e.muon_pt[0])
+                h_ptmu_PPS.Fill(e.muon_pt[0])
         if (fvertex_numtracks) > 0:
             count_1_15_tracks=count_1_15_tracks+1
         else:
