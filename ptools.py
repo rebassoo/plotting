@@ -62,6 +62,14 @@ def ModifyHisto(h,sample):
         numevents=200000
         cross_section_pb=0.1352*0.7
         linecolor=9
+    if sample =="ExclusiveWW-a0w-2e-5-withXiCut":
+        numevents=200000
+        cross_section_pb=1.610*0.7
+        linecolor=10
+    if sample =="ExclusiveWW-a0w-5e-5-withXiCut":
+        numevents=200000
+        cross_section_pb=9.859*0.7
+        linecolor=11
     if sample =="WWTo2L2Nu_13TeV-powheg":
         #numevents=1999000
         #numevents=1236906
@@ -151,6 +159,10 @@ def legend_name(sample):
     if sample=="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 10-50 GeV"
     if sample=="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 50+ GeV"
     if sample=="ExclusiveWW": name="Elastic SM Exclusive WW"
+    if sample=="ExclusiveWW-a0w-5e-6": name="Elastic SM Exclusive WW a0w = 5e-6"
+    if sample=="ExclusiveWW-a0w-5e-6-withXiCut": name="Elastic SM Exclusive WW a0w = 5e-6"
+    if sample=="ExclusiveWW-a0w-2e-6-withXiCut": name="Elastic SM Exclusive WW a0w = 2e-6"
+    if sample=="ExclusiveWW-a0w-5e-5-withXiCut": name="Elastic SM Exclusive WW a0w = 5e-5"
     if sample=="ExclusiveWWNonElastic": name="Non-Elastic SM Exclusive WW"
     if sample=="WW_DoubleScattering_13TeV-pythia8": name="WW_DoubleScattering"
     if sample=="WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8": name="WpWpJJ_EWK-QCD"
