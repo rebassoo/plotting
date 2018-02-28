@@ -98,10 +98,10 @@ for i in range(min,max+1):
     print "Get out of data samples"
 
     PPSMCScale=1.
-    if u == "h_fvtx_numtracks_Leptons_0jets_PPS":
-        u="h_fvtx_numtracks_Leptons_0jets"
+    #if u == "h_fvtx_numtracks_Leptons_0jets_PPS":
+    #    u="h_fvtx_numtracks_Leptons_0jets"
         #PPSMCScale=(64./2111)
-        PPSMCScale=(0.045)
+    #    PPSMCScale=(0.045)
         #h_data2=f_data.Get(u)
         #h_data.Draw("e")
         #h_data2.SetLineColor(2)
