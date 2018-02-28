@@ -198,6 +198,8 @@ h_jets_30_ptemu30=TH1F("h_jets_30_ptemu30","Number of jets",15,-0.5,14.5)
 
 h_mass_PPS=TH1F("h_mass_PPS",";Mass [GeV];",10,0,1000)
 h_ptemu_PPS=TH1F("h_ptemu_PPS",";p_{T} (e#mu) [GeV];",20,0,600)
+h_pte_PPS=TH1F("h_pte_PPS",";p_{T} (e) [GeV];",20,0,600)
+h_ptmu_PPS=TH1F("h_ptmu_PPS",";p_{T} (#mu) [GeV];",20,0,600)
 
 
 runPPSCuts=False
@@ -403,9 +405,11 @@ for e in chain:
         h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
         if num_jets_30<1:
             h_fvtx_numtracks_Leptons_0jets_PPS.Fill(fvertex_numtracks,pileupw)
-            if fvertex_numtracks < 4:
+            if fvertex_numtracks < 2:
                 h_mass_PPS.Fill(mass)
                 h_ptemu_PPS.Fill(ptemu)
+                h_pte_PPS.Fill(e.electron_pt[0])
+                h_pte_PPS.Fill(e.muon_pt[0])
         if (fvertex_numtracks) > 0:
             count_1_15_tracks=count_1_15_tracks+1
         else:
