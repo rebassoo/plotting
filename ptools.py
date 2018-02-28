@@ -20,7 +20,8 @@ def ModifyHisto(h,sample):
     #Full run
     #luminosity_fb=35.8
     #Runs BCG
-    luminosity_fb=15.9
+    #luminosity_fb=15.9
+    luminosity_fb=9.4
     #Runs BG
     #luminosity_fb=13.8
     #luminosity_fb=13
@@ -49,6 +50,18 @@ def ModifyHisto(h,sample):
         #cross_section_pb=4.1*0.0098903
         cross_section_pb=0.0098903
         linecolor=7
+    if sample =="ExclusiveWW-FPMC":
+        numevents=199132
+        cross_section_pb=0.036744*0.7
+        linecolor=7
+    if sample =="ExclusiveWW-a0w-5e-6":
+        numevents=199132
+        cross_section_pb=2.228*0.7
+        linecolor=8
+    if sample =="ExclusiveWW-a0w-5e-6-withXiCut":
+        numevents=200000
+        cross_section_pb=0.1352*0.7
+        linecolor=9
     if sample =="WWTo2L2Nu_13TeV-powheg":
         #numevents=1999000
         #numevents=1236906
