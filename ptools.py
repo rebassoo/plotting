@@ -20,7 +20,8 @@ def ModifyHisto(h,sample):
     #Full run
     #luminosity_fb=35.8
     #Runs BCG
-    luminosity_fb=15.9
+    #luminosity_fb=37.1
+    luminosity_fb=9.7
     #Runs BG
     #luminosity_fb=13.8
     #luminosity_fb=13
@@ -67,13 +68,27 @@ def ModifyHisto(h,sample):
         #From UCSB table (3*0.108)^2*815.96
         cross_section_pb=85.66
         linecolor=4
-    if sample =="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
+#    if sample =="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
+    if sample =="DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8":
+        numevents=45352295
+        #numevents=49620546.0
+        #cross_section_pb=4895*1.23
+        #From https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
+        cross_section_pb=5765.4
+        linecolor=2
+    if sample =="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #Differs slightly from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#DY_Z. Where is 1.23 factor from that is in UCSB table?
         #numevents=47943922
         #numevents=49748967
-        numevents=49582723.0
+        #numevents=49582723.0
+        #numevents=27244008.0
+        #numevents=27435948
+        #numevents=20270155
+        numevents=27365539
         #numevents=49620546.0
-        cross_section_pb=4895*1.23
+        #cross_section_pb=4895*1.23
+        #From https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
+        cross_section_pb=5765.4
         linecolor=2
     if sample =="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
         #Differs slightly from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#DY_Z. Where is 1.23 factor from?
@@ -136,6 +151,7 @@ def legend_name(sample):
     if sample=="TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":name="t#bar{t}"
     if sample=="WWTo2L2Nu_13TeV-powheg":name="inclusive WW"
     if sample=="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 10-50 GeV"
+    if sample=="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8": name="Drell-Yan 50+ GeV"
     if sample=="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 50+ GeV"
     if sample=="ExclusiveWW": name="Elastic SM Exclusive WW"
     if sample=="ExclusiveWWNonElastic": name="Non-Elastic SM Exclusive WW"
