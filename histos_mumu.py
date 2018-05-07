@@ -94,6 +94,10 @@ i=0
 count_1_15_tracks=0
 count_zero_tracks=0
 num_events=0
+Num_event_cut_0=0
+Num_event_cut_1=0
+Num_event_cut_2=0
+Num_event_cut_3=0
 for file in ListOfFiles:
     i=i+1
     #print file
@@ -120,17 +124,40 @@ print "Number of events: {0}".format(num_events)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
+h_muon1_pt=TH1F("h_muon1_pt",";p_{T} (#mu) [GeV];",100,0,500)
+h_muon2_pt=TH1F("h_muon2_pt",";p_{T} (#mu) [GeV];",100,0,500)
+
+h_muon1_pt_Zmass=TH1F("h_muon1_pt_Zmass",";p_{T} (#mu) [GeV];",100,0,500)
+h_muon2_pt_Zmass=TH1F("h_muon2_pt_Zmass",";p_{T} (#mu) [GeV];",100,0,500)
+
+h_muon1_iso_Zmass=TH1F("h_muon1_iso_Zmass",";Iso (#mu) [GeV];",50,0,1)
+h_muon2_iso_Zmass=TH1F("h_muon2_iso_Zmass",";Iso (#mu) [GeV];",50,0,1)
+
+h_muon1_dxy_Zmass=TH1F("h_muon1_dxy_Zmass",";dxy [cm];",100,0,5)
+h_muon2_dxy_Zmass=TH1F("h_muon2_dxy_Zmass",";dxy [cm];",100,0,5)
+
+h_muon1_dz_Zmass=TH1F("h_muon1_dz_Zmass",";dz [cm];",100,0,5)
+h_muon2_dz_Zmass=TH1F("h_muon2_dz_Zmass",";dz [cm];",100,0,5)
+
+h_eta1_minus_eta2=TH1F("h_eta1_minus_eta2",";|#eta_{1}-#eta_{2}|;",100,0,5)
+h_phi1_minus_phi2=TH1F("h_phi1_minus_phi2",";|#phi_{1}-#phi_{2}|;",100,0,6.5)
+
+h_muon1_pt_g110=TH1F("h_muon1_pt_g110",";p_{T} (#mu) [GeV];",100,0,500)
+h_muon2_pt_g110=TH1F("h_muon2_pt_g110",";p_{T} (#mu) [GeV];",100,0,500)
+
 h_muon_pt=TH1F("h_muon_pt",";p_{T} (#mu) [GeV];",100,0,500)
 h_muon_eta=TH1F("h_muon_eta",";#eta_{#mu};",60,-3,3)
 h_e_pt=TH1F("h_e_pt",";p_{T} (e) [GeV];",100,0,500)
 h_e_eta=TH1F("h_e_eta",";#eta_{e};",60,-3,3)
 h_chi2=TH1F("h_chi2",";#chi^{2}/ndof;",100,0,50)
 
+h_mass_nofvtx=TH1F("h_mass_nofvtx",";Mass [GeV];",100,0,1000)
 h_mass=TH1F("h_mass",";Mass [GeV];",100,0,1000)
 h_ptemu=TH1F("h_ptemu",";p_{T} (e#mu) [GeV];",100,0,1000)
 h_num_tracks=TH1F("h_num_tracks",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 #h_num_ftracks=TH1F("h_num_ftracks",";Num Extra Tracks at vertex;",100,-0.5,99.5)
 h_num_vertices=TH1F("h_num_vertices",";Num vertices;",100,-0.5,99.5)
+h_z_vertex=TH1F("h_z_vertex",";z vertex [cm];",120,-15,15)
 
 #h_vtx_numtracks=TH1F("h_vtx_numtracks",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_numtracks_Leptons=TH1F("h_fvtx_numtracks_Leptons",";Num Extra Tracks at vertex;",85,-0.5,84.5)
@@ -191,17 +218,26 @@ count_two=0
 it=0
 run=0.
 event=0.
-print chain.GetEntries()
+Num_events_cut_0=0
+Num_events_cut_1=0
+Num_events_cut_2=0
+Num_events_cut_3=0
+Num_events_cut_4=0
+Num_events_cut_5=0
+print "Chain get Entries: ",chain.GetEntries()
 for e in chain:
     it=it+1
+    Num_events_cut_0=Num_events_cut_0+1
     if run == e.run and event == e.event:
         continue
     #if e.lumiblock != 1700:
     #    continue
+    Num_events_cut_1=Num_events_cut_1+1
     run=e.run
     event=e.event
     lumi=e.lumiblock
-    pileupw=e.pileupWeight
+    #pileupw=e.pileupWeight
+    pileupw=1.
     #print "run, lumi event: {0}, {1}, {2}".format(run,e.lumiblock,event)
     #if e.fvertex_chi2ndof:
     #    print e.fvertex_chi2ndof
@@ -222,13 +258,24 @@ for e in chain:
 
     imu=0
     lepton_count=0
+    muon_pt_high=0
+    muon_pt_low=10000
+    if e.muon_pt.size() > 2:
+        continue
     for muon_pt in e.muon_pt:
         #print "Muon pt: {0}".format(muon_pt)
         #if e.muon_dxy[imu]<0.2 and e.muon_dz[imu]<0.5:
         lepton_count=lepton_count+1
-        if muon_pt>40:
+        if muon_pt>35 and e.muon_iso[imu]<0.15:
             numMuHighPt=numMuHighPt+1
+        if muon_pt > muon_pt_high:
+            muon_pt_high=muon_pt
+        if muon_pt < muon_pt_low:
+            muon_pt_low=muon_pt
         imu=imu+1
+            
+    h_muon1_pt.Fill(muon_pt_high)
+    h_muon2_pt.Fill(muon_pt_low)    
     ie=0
     for e_pt in e.electron_pt:
         #print "Electron pt: {0}".format(muon_pt)
@@ -244,7 +291,10 @@ for e in chain:
     fvertex_numtracks=1000
     numCloseLeptons=0
     #if( numMuHighPt==1 and numEHighPt==1 ):
-    if( numMuHighPt==2 and numEHighPt==0 ):
+    #if( numMuHighPt==2 and numEHighPt==0 ):
+    #if( numMuHighPt>1):
+    if( numMuHighPt==2):
+        Num_events_cut_2=Num_events_cut_2+1
         if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15:
             c["fittedVertexPassRequirements"]=True
             fvertex_numtracks=0
@@ -266,9 +316,20 @@ for e in chain:
         xi_cms_1=lcombined.M()/m.sqrt(13000.*13000.*m.exp(2*lcombined.Rapidity()))
         xi_cms_2=xi_cms_1*m.exp(2*lcombined.Rapidity())
         #print lcombined.M()
-        if lcombined.M() > 50: c["iMass"] = True
-        if e.muon_charge[0] * e.muon_charge[1] < 0: c["oppCharge"]=True
+        if lcombined.M() > 50: 
+            c["iMass"] = True
+            Num_events_cut_3=Num_events_cut_3+1
+        coshf = m.cosh(e.muon_eta[0]-e.muon_eta[1])
+        cosf = m.cos(e.muon_phi[0]-e.muon_phi[1])
+        mass_squared = 2*e.muon_pt[0]*e.muon_pt[1]*(coshf-cosf)
+        if e.muon_charge[0] * e.muon_charge[1] < 0: 
+            c["oppCharge"]=True
+            Num_events_cut_4=Num_events_cut_4+1
+        if c["fittedVertexPassRequirements"]==True:
+            Num_events_cut_5=Num_events_cut_5+1
         mass=lcombined.M()
+        #print "Mass: ",mass
+        #print "Mass squared ",m.sqrt(mass_squared)
         ptemu=lcombined.Pt()
         if ptemu > 30:
             c["ptemug30"]=True
@@ -286,13 +347,31 @@ for e in chain:
     if c["twoLeptons"] and c["iMass"] and c["oppCharge"] and abs(e.fvertex_z) < 15: 
         h_chi2.Fill(e.fvertex_chi2ndof,pileupw)
 
+    #Plots with no fitted vertex
+    if c["twoLeptons"] and mass > 70 and mass < 110 and c["oppCharge"]:                
+        h_muon1_pt_Zmass.Fill(e.muon_pt[0],pileupw)            
+        h_muon2_pt_Zmass.Fill(e.muon_pt[1],pileupw)            
+        h_muon1_iso_Zmass.Fill(e.muon_iso[0],pileupw)            
+        h_muon2_iso_Zmass.Fill(e.muon_iso[1],pileupw)            
+        h_muon1_dxy_Zmass.Fill(e.muon_dxy[0],pileupw)                    
+        h_muon2_dxy_Zmass.Fill(e.muon_dxy[1],pileupw)                    
+        h_muon1_dz_Zmass.Fill(e.muon_dz[0],pileupw)                    
+        h_muon2_dz_Zmass.Fill(e.muon_dz[1],pileupw)                    
+        h_eta1_minus_eta2.Fill(abs(e.muon_eta[0]-e.muon_eta[1]))
+        h_phi1_minus_phi2.Fill(abs(e.muon_phi[0]-e.muon_phi[1]))
+
+    if c["twoLeptons"] and mass > 110 and c["oppCharge"]:                
+        h_muon1_pt_g110.Fill(e.muon_pt[0],pileupw)            
+        h_muon2_pt_g110.Fill(e.muon_pt[1],pileupw)            
+
+
     num_jets_25=0
     num_jets_30=0
     #Plots without any track requirements, but fitted vertex requirements
     if c["twoLeptons"] and c["fittedVertexPassRequirements"] and c["iMass"] and c["oppCharge"]:                
-        h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
+        #h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
         #h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
-        h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0],pileupw)
+        #h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0],pileupw)
         #h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0],pileupw)
         dist_myvtx_pv=m.sqrt( (e.vertex_x-e.fvertex_x)*(e.vertex_x-e.fvertex_x) + (e.vertex_y-e.fvertex_y)*(e.vertex_y-e.fvertex_y) + (e.vertex_z-e.fvertex_z)*(e.vertex_z-e.fvertex_z) )
         h_dist_myVertex_pv.Fill(dist_myvtx_pv,pileupw)
@@ -303,6 +382,8 @@ for e in chain:
         h_mass.Fill(mass,pileupw)
         h_ptemu.Fill(ptemu,pileupw)
         h_num_vertices.Fill(e.vertex_nvtxs,pileupw)
+        for z in e.allvertices_z:
+            h_z_vertex.Fill(z,pileupw)
         h_jets_25.Fill(e.jet_pt.size(),pileupw)
         num_jets_25=e.jet_pt.size()
         jet_i=0
@@ -331,7 +412,7 @@ for e in chain:
     #All plots below here have less than 15 extra tracks at the vertex
 
     #Looking at extra tracks <15, no ptemu requirement. Also, does pass PPS requirements
-    xi = {"2":[],"3":[],"102":[],"103":[]}
+    xi = {"2023227392":[],"3":[],"2040004608":[],"103":[]}
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"]:
         h_fvtx_mass.Fill(mass,pileupw)
@@ -386,6 +467,13 @@ for e in chain:
         print "Muon pt: {0}".format(e.muon_pt[0])
         #print "Electron pt: {0}".format(e.electron_pt[0])
         
+
+print "Num_events_cut_0: ",Num_events_cut_0 
+print "Num_events_cut_1: ",Num_events_cut_1 
+print "Num_events_cut_2: ",Num_events_cut_2 
+print "Num_events_cut_3: ",Num_events_cut_3 
+print "Num_events_cut_4: ",Num_events_cut_4 
+print "Num_events_cut_5: ",Num_events_cut_5 
 
 print "Total number of data in 1-15 extra tracks bin, PPS: {0}".format(count_1_15_tracks)
 print "Total number of data in 0 extra tracks bin, PPS: {0}".format(count_zero_tracks)
