@@ -9,7 +9,9 @@ import sys
 #MCsamples=["WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW"]
 #MCsamples=["WZ_TuneCUETP8M1_13TeV-pythia8","ZZTo4L_13TeV_powheg_pythia8","WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8","WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
 #MCsamples=["ZZ_TuneCUETP8M1_13TeV-pythia8","WZ_TuneCUETP8M1_13TeV-pythia8","WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8","WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8","WWTo2L2Nu_13TeV-powheg","TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","ExclusiveWW","ExclusiveWWNonElastic"]
-MCsamples=["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"]
+#MCsamples=["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"]
+MCsamples=["DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
+#MCsamples=["DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8"]
 
 gStyle.SetOptStat(0)
 
@@ -69,7 +71,8 @@ for i in range(min,max+1):
 
     #Plot Data
     #f_data=TFile("histos/MuonEG_total.root")
-    f_data=TFile("histos/DoubleMuon_total.root")
+    #f_data=TFile("histos/DoubleMuon_total.root")
+    f_data=TFile("histos/DoubleMuon_Run2017C.root")
     #f_data=TFile("histos/MuonEG_runBCG.root")
     f_data.cd()
     if digits:
@@ -150,7 +153,9 @@ for i in range(min,max+1):
     #All runs
     #latex.DrawLatex(0.67,0.92,"35.8 fb^{-1} (13 TeV)")
     #RunBCG
-    latex.DrawLatex(0.67,0.92,"15.9 fb^{-1} (13 TeV)")
+    #latex.DrawLatex(0.67,0.92,"15.9 fb^{-1} (13 TeV)")
+    #latex.DrawLatex(0.67,0.92,"37.1 fb^{-1} (13 TeV)")
+    latex.DrawLatex(0.67,0.92,"9.7 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"4.39 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"12.19 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"7.8 fb^{-1} (13 TeV)")
