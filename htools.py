@@ -9,19 +9,19 @@ def passPPS(e,xi):
     #xi2,xi3,xi102,xi103=[],[],[],[]
     for detId_rp in e.rp_tracks_detId:
                     #print detId_rp
-        if detId_rp == 2: 
+        if detId_rp == 2023227392: 
             left=True
                     #if lessthan6: print "DetId 2, Xi: {0}".format(e.rp_tracks_xi[i])
-            xi["2"].append(e.rp_tracks_xi[ii])
+            xi["2023227392"].append(e.rp_tracks_xi[ii])
         if detId_rp == 3: 
             left=True
                     #if lessthan6: print "DetId 3, Xi: {0}".format(e.rp_tracks_xi[i])
             xi["3"].append(e.rp_tracks_xi[ii])
-        if detId_rp == 102: 
+        if detId_rp == 2040004608: 
             right=True
                     #xi_right.append(float(e.rp_tracks_xi))
                     #if lessthan6: print "DetId 102, Xi: {0}".format(e.rp_tracks_xi[i])
-            xi["102"].append(e.rp_tracks_xi[ii])
+            xi["2040004608"].append(e.rp_tracks_xi[ii])
         if detId_rp == 103: 
             right=True
                     #xi_right.append(float(e.rp_tracks_xi))
