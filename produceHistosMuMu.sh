@@ -4,16 +4,13 @@
 
 #2017 data
 
-#python histos_mumu.py latest DoubleMuon crab_Run2017B
-#python histos_mumu.py specific DoubleMuon crab_Run2017C/180202_232539/0000
-#python histos_mumu.py specific DoubleMuon crab_Run2017C/180202_232539/0001
-python histos_mumu.py latest DoubleMuon crab_Run2017B
-python histos_mumu.py latest DoubleMuon crab_Run2017C
-python histos_mumu.py latest DoubleMuon crab_Run2017D
 #python histos_mumu.py latest DoubleMuon crab_Run2017D
+#python histos_mumu.py specific DoubleMuon crab_Run2017C/180504_211422/0000
 #python histos_mumu.py latest DoubleMuon crab_Run2017E
 #python histos_mumu.py latest DoubleMuon crab_Run2017F
 python histos_mumu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DY-50-up-94x-mumu
+
+#python histos_mumu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DY-50-up-94x-mumu
 #python histos_mumu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8 crab_DY-50-up-94x-Madgraph-ext1-mumu
 #python histos_mumu.py specific DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8 crab_DY-50-up-94x-Madgraph-ext1-mumu/180202_232841/0000
 
