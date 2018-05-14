@@ -209,6 +209,15 @@ h_jets_30_eta=TH1F("h_jets_30_eta","jet #eta",60,-3,3)
 h_jets_30_phi=TH1F("h_jets_30_phi","jet #phi",60,2*3.14,3)
 h_jets_30_ptemu30=TH1F("h_jets_30_ptemu30","Number of jets",15,-0.5,14.5)
 
+h_xi_cms_vs_xi_RP_left=TH2F("h_xi_cms_vs_xi_RP_left","",1000,0,1,1000,0,1)
+h_xi_cms_vs_xi_RP_right=TH2F("h_xi_cms_vs_xi_RP_right","",1000,0,1,1000,0,1)
+
+h_xi_cms_vs_xi_RP_left_wrong=TH2F("h_xi_cms_vs_xi_RP_left_wrong","",1000,0,1,1000,0,1)
+h_xi_cms_vs_xi_RP_right_wrong=TH2F("h_xi_cms_vs_xi_RP_right_wrong","",1000,0,1,1000,0,1)
+
+h_M_cms_vs_M_RP=TH2F("h_M_cms_vs_M_RP","",9000,0,3000,9000,0,3000)
+h_Y_cms_vs_Y_RP=TH2F("h_Y_cms_vs_Y_RP","",640,-4,4,640,-4,4)
+
 
 runPPSCuts=False
 
@@ -225,11 +234,20 @@ Num_events_cut_3=0
 Num_events_cut_4=0
 Num_events_cut_5=0
 print "Chain get Entries: ",chain.GetEntries()
+
+crossAngleDict=GetCrossingAngles()
+#print crossAngleDict
+
 for e in chain:
     it=it+1
     Num_events_cut_0=Num_events_cut_0+1
-    if run == e.run and event == e.event:
-        continue
+    #run=302229#, Lumi: 115, Event: 116170160
+    #event=116170160
+    #if run == e.run and event == e.event:
+    #    #continue
+    #    print "Got to proper event"
+    #else:
+    #    continue
     #if e.lumiblock != 1700:
     #    continue
     Num_events_cut_1=Num_events_cut_1+1
@@ -248,10 +266,14 @@ for e in chain:
     numMuHighPt=0
     numEHighPt=0
     mass=0
+    rapidity=0
     ptemu=0
     dist_myvtx_pv=0
     closest_track_ts=1000
     closest_track_cms=1000
+    acopl=-999.
+    xi_cms_1=-999.
+    xi_cms_2=-999.
     #if e.muon_pt.size()+e.electron_pt.size() > 2:
     #    #print "Event has 3 good leptons, skip"
     #    continue
@@ -313,9 +335,17 @@ for e in chain:
         l1 = TLorentzVector(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
         l2 = TLorentzVector(e.muon_px[1],e.muon_py[1],e.muon_pz[1],e.muon_e[1])
         lcombined=l1+l2
-        xi_cms_1=lcombined.M()/m.sqrt(13000.*13000.*m.exp(2*lcombined.Rapidity()))
-        xi_cms_2=xi_cms_1*m.exp(2*lcombined.Rapidity())
+        #xi_cms_1=lcombined.M()/m.sqrt(13000.*13000.*m.exp(2*lcombined.Rapidity()))
+        #xi_cms_2=xi_cms_1*m.exp(2*lcombined.Rapidity())
+        #This is towards +45
+        xi_cms_1=(e.muon_pt[0]*m.exp(e.muon_eta[0])+e.muon_pt[1]*m.exp(e.muon_eta[1])) / (13000.)
+        #This is towards +56
+        xi_cms_2=(e.muon_pt[0]*m.exp(-e.muon_eta[0])+e.muon_pt[1]*m.exp(-e.muon_eta[1])) / (13000.)
+        #print "Phi1, Phi2: ",e.muon_phi[0]," ",e.muon_phi[1]
+        dphi=GetDphi(e.muon_phi[0],e.muon_phi[1])
+        acopl=1. - abs(dphi/m.pi)
         #print lcombined.M()
+        rapidity=lcombined.Rapidity()
         if lcombined.M() > 50: 
             c["iMass"] = True
             Num_events_cut_3=Num_events_cut_3+1
@@ -412,14 +442,16 @@ for e in chain:
     #All plots below here have less than 15 extra tracks at the vertex
 
     #Looking at extra tracks <15, no ptemu requirement. Also, does pass PPS requirements
-    xi = {"2023227392":[],"3":[],"2040004608":[],"103":[]}
+    xi = {"2023227392":[],"1981284352":[],"2070937600":[],"2040004608":[],"1998061568":[],"2054160384":[]}
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"]:
         h_fvtx_mass.Fill(mass,pileupw)
         h_fvtx_ptemu.Fill(ptemu,pileupw)
         if DATA:
             #xi = dict.fromkeys(["2","3","102","103"],[])
-            c["passesPPS"]=passPPS(e,xi)
+            crossingAngle=crossAngleDict['{0}:{1}'.format(run,lumi)]
+            #print float(crossingAngle)
+            c["passesPPS"]=passPPS(e,xi,float(crossingAngle))
 
 
     #Plotting zero tracks and no ptemu requirement
@@ -441,6 +473,22 @@ for e in chain:
         h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
         h_jets_30_15extraTracks.Fill(num_jets_30,pileupw)
 
+    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["passesPPS"]:
+        if fvertex_numtracks < 1 and acopl < 0.006:
+            #print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
+            #print xi["1981284352"][0]
+            #print xi["1998061568"][0]
+            h_xi_cms_vs_xi_RP_left.Fill(abs(xi["1981284352"][0]),xi_cms_1)
+            h_xi_cms_vs_xi_RP_right.Fill(abs(xi["1998061568"][0]),xi_cms_2)
+            h_xi_cms_vs_xi_RP_left_wrong.Fill(abs(xi["1981284352"][0]),xi_cms_2)
+            h_xi_cms_vs_xi_RP_right_wrong.Fill(abs(xi["1998061568"][0]),xi_cms_1)
+            M_RP=m.sqrt(169000000*xi["1981284352"][0]*xi["1998061568"][0])
+            Y_RP=0.5*m.log(xi["1981284352"][0]/xi["1998061568"][0])
+            h_M_cms_vs_M_RP.Fill(M_RP,mass)
+            h_Y_cms_vs_Y_RP.Fill(Y_RP,rapidity)
+            #if event == 116170160:
+            #    break
+
     #Plots with PPS requirements, ptemu>30, number of tracks <15
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["ptemug30"] and c["passesPPS"]:
@@ -453,18 +501,18 @@ for e in chain:
             count_zero_tracks=count_zero_tracks+1
 
     #Printing out, ptemu > 30 for number tracks <7 passing PPS
-    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and fvertex_numtracks < 6 and c["ptemug30"] and c["passesPPS"]:
-        print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
-        print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
-        print "Num jets: ADD THIS"
-        print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
-        print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
-        print "Closest track: {0}".format(closest_track_ts)
-        print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
-        print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
-        print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
-        print "Number of vertices in event: {0}".format(e.vertex_nvtxs)
-        print "Muon pt: {0}".format(e.muon_pt[0])
+    #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and fvertex_numtracks < 6 and c["ptemug30"] and c["passesPPS"]:
+        #print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
+        #print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
+        #print "Num jets: ADD THIS"
+        #print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
+        #print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
+        #print "Closest track: {0}".format(closest_track_ts)
+        #print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
+        #print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
+        #print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
+        #print "Number of vertices in event: {0}".format(e.vertex_nvtxs)
+        #print "Muon pt: {0}".format(e.muon_pt[0])
         #print "Electron pt: {0}".format(e.electron_pt[0])
         
 
