@@ -84,7 +84,8 @@ def ModifyHisto(h,sample):
         #numevents=27244008.0
         #numevents=27435948
         #numevents=20270155
-        numevents=27365539
+        #numevents=27365539
+        numevents=24265115.0
         #numevents=49620546.0
         #cross_section_pb=4895*1.23
         #From https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat13TeV
