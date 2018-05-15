@@ -21,7 +21,8 @@ def ModifyHisto(h,sample):
     #luminosity_fb=35.8
     #Runs BCG
     #luminosity_fb=37.1
-    luminosity_fb=9.7
+    #luminosity_fb=9.7
+    luminosity_fb=37.5
     #Runs BG
     #luminosity_fb=13.8
     #luminosity_fb=13
