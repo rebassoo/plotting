@@ -71,8 +71,8 @@ for i in range(min,max+1):
 
     #Plot Data
     #f_data=TFile("histos/MuonEG_total.root")
-    #f_data=TFile("histos/DoubleMuon_total.root")
-    f_data=TFile("histos/DoubleMuon_Run2017C.root")
+    f_data=TFile("histos/DoubleMuonTotal.root")
+    #f_data=TFile("histos/DoubleMuon_Run2017C.root")
     #f_data=TFile("histos/MuonEG_runBCG.root")
     f_data.cd()
     if digits:
@@ -155,7 +155,8 @@ for i in range(min,max+1):
     #RunBCG
     #latex.DrawLatex(0.67,0.92,"15.9 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"37.1 fb^{-1} (13 TeV)")
-    latex.DrawLatex(0.67,0.92,"9.7 fb^{-1} (13 TeV)")
+    #latex.DrawLatex(0.67,0.92,"9.7 fb^{-1} (13 TeV)")
+    latex.DrawLatex(0.67,0.92,"37.5 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"4.39 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"12.19 fb^{-1} (13 TeV)")
     #latex.DrawLatex(0.67,0.92,"7.8 fb^{-1} (13 TeV)")
