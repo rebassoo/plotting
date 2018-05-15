@@ -339,8 +339,10 @@ for e in chain:
         #xi_cms_2=xi_cms_1*m.exp(2*lcombined.Rapidity())
         #This is towards +45
         xi_cms_1=(e.muon_pt[0]*m.exp(e.muon_eta[0])+e.muon_pt[1]*m.exp(e.muon_eta[1])) / (13000.)
+        #print xi_cms_1
         #This is towards +56
         xi_cms_2=(e.muon_pt[0]*m.exp(-e.muon_eta[0])+e.muon_pt[1]*m.exp(-e.muon_eta[1])) / (13000.)
+        #print xi_cms_2
         #print "Phi1, Phi2: ",e.muon_phi[0]," ",e.muon_phi[1]
         dphi=GetDphi(e.muon_phi[0],e.muon_phi[1])
         acopl=1. - abs(dphi/m.pi)
@@ -474,10 +476,12 @@ for e in chain:
         h_jets_30_15extraTracks.Fill(num_jets_30,pileupw)
 
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["passesPPS"]:
-        if fvertex_numtracks < 1 and acopl < 0.006:
-            #print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
-            #print xi["1981284352"][0]
-            #print xi["1998061568"][0]
+        if fvertex_numtracks < 1 and acopl < 0.009 and mass > 110:
+            print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
+            print xi["1981284352"][0]
+            print xi["1998061568"][0]
+            print xi_cms_1
+            print xi_cms_2
             h_xi_cms_vs_xi_RP_left.Fill(abs(xi["1981284352"][0]),xi_cms_1)
             h_xi_cms_vs_xi_RP_right.Fill(abs(xi["1998061568"][0]),xi_cms_2)
             h_xi_cms_vs_xi_RP_left_wrong.Fill(abs(xi["1981284352"][0]),xi_cms_2)
@@ -486,6 +490,9 @@ for e in chain:
             Y_RP=0.5*m.log(xi["1981284352"][0]/xi["1998061568"][0])
             h_M_cms_vs_M_RP.Fill(M_RP,mass)
             h_Y_cms_vs_Y_RP.Fill(Y_RP,rapidity)
+            print mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
+            xi_cms_1=mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
+            print xi_cms_1*m.exp(2*rapidity)  
             #if event == 116170160:
             #    break
 
