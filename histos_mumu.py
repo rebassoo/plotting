@@ -212,9 +212,6 @@ h_jets_30_ptemu30=TH1F("h_jets_30_ptemu30","Number of jets",15,-0.5,14.5)
 h_xi_cms_vs_xi_RP_left=TH2F("h_xi_cms_vs_xi_RP_left","",1000,0,1,1000,0,1)
 h_xi_cms_vs_xi_RP_right=TH2F("h_xi_cms_vs_xi_RP_right","",1000,0,1,1000,0,1)
 
-h_xi_cms_vs_xi_RP_left_wrong=TH2F("h_xi_cms_vs_xi_RP_left_wrong","",1000,0,1,1000,0,1)
-h_xi_cms_vs_xi_RP_right_wrong=TH2F("h_xi_cms_vs_xi_RP_right_wrong","",1000,0,1,1000,0,1)
-
 h_M_cms_vs_M_RP=TH2F("h_M_cms_vs_M_RP","",9000,0,3000,9000,0,3000)
 h_Y_cms_vs_Y_RP=TH2F("h_Y_cms_vs_Y_RP","",640,-4,4,640,-4,4)
 
@@ -241,8 +238,8 @@ crossAngleDict=GetCrossingAngles()
 for e in chain:
     it=it+1
     Num_events_cut_0=Num_events_cut_0+1
-    #run=302229#, Lumi: 115, Event: 116170160
-    #event=116170160
+    #run=300576#, Lumi: 115, Event: 116170160
+    #event=506844112
     #if run == e.run and event == e.event:
     #    #continue
     #    print "Got to proper event"
@@ -454,7 +451,7 @@ for e in chain:
             crossingAngle=crossAngleDict['{0}:{1}'.format(run,lumi)]
             #print float(crossingAngle)
             c["passesPPS"]=passPPS(e,xi,float(crossingAngle))
-
+            
 
     #Plotting zero tracks and no ptemu requirement
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks0"]:
@@ -474,25 +471,39 @@ for e in chain:
         h_fvtx_mass_pt30.Fill(mass,pileupw)
         h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
         h_jets_30_15extraTracks.Fill(num_jets_30,pileupw)
+    
+    #print xi["1981284352"][0]
+    #print xi["1998061568"][0]
+    #print xi_cms_1
+    #print xi_cms_2
+    #print mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
+    #xi_cms_1=mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
+    #print xi_cms_1*m.exp(2*rapidity)  
+    #print fvertex_numtracks
+    #print "Acopl: ",acopl
+    #print "Mass: ",mass
+    #print "c[twoLeptons]",c["twoLeptons"]
+    #print "c[fittedVertexPassRequirements]",c["fittedVertexPassRequirements"]
+    #print "c[passesPPS]",c["passesPPS"]
 
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["passesPPS"]:
         if fvertex_numtracks < 1 and acopl < 0.009 and mass > 110:
-            print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
-            print xi["1981284352"][0]
-            print xi["1998061568"][0]
-            print xi_cms_1
-            print xi_cms_2
-            h_xi_cms_vs_xi_RP_left.Fill(abs(xi["1981284352"][0]),xi_cms_1)
-            h_xi_cms_vs_xi_RP_right.Fill(abs(xi["1998061568"][0]),xi_cms_2)
-            h_xi_cms_vs_xi_RP_left_wrong.Fill(abs(xi["1981284352"][0]),xi_cms_2)
-            h_xi_cms_vs_xi_RP_right_wrong.Fill(abs(xi["1998061568"][0]),xi_cms_1)
-            M_RP=m.sqrt(169000000*xi["1981284352"][0]*xi["1998061568"][0])
-            Y_RP=0.5*m.log(xi["1981284352"][0]/xi["1998061568"][0])
-            h_M_cms_vs_M_RP.Fill(M_RP,mass)
-            h_Y_cms_vs_Y_RP.Fill(Y_RP,rapidity)
-            print mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
-            xi_cms_1=mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
-            print xi_cms_1*m.exp(2*rapidity)  
+            #print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
+            #print xi["1981284352"][0]
+            #print xi["1998061568"][0]
+            #print xi_cms_1
+            #print xi_cms_2
+            if len(xi["1981284352"]) > 0:
+                h_xi_cms_vs_xi_RP_left.Fill(abs(xi["1981284352"][0]),xi_cms_1)
+            if len(xi["1998061568"]) > 0:
+                h_xi_cms_vs_xi_RP_right.Fill(abs(xi["1998061568"][0]),xi_cms_2)
+            #M_RP=m.sqrt(169000000*xi["1981284352"][0]*xi["1998061568"][0])
+            #Y_RP=0.5*m.log(xi["1981284352"][0]/xi["1998061568"][0])
+            #h_M_cms_vs_M_RP.Fill(M_RP,mass)
+            #h_Y_cms_vs_Y_RP.Fill(Y_RP,rapidity)
+            #print mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
+            #xi_cms_2=mass/m.sqrt(13000.*13000.*m.exp(2*rapidity))  
+            #print xi_cms_2*m.exp(2*rapidity)  
             #if event == 116170160:
             #    break
 
