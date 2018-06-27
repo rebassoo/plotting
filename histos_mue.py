@@ -31,10 +31,13 @@ file_dir=sys.argv[3]
 
 DATA=False
 SIMPROTONS=False
+BACKGROUND=False
 if sample_name == "MuonEG":
     DATA=True
 if sample_name =="ExclusiveWW":
     SIMPROTONS=True
+if DATA==False and SIMPROTONS==False:
+    BACKGROUND=True
 
 mypath_prefix='/hadoop/cms/store/user/rebassoo/'
 print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
@@ -91,11 +94,41 @@ chain = TChain('demo/SlimmedNtuple')
 chainSimProton = TChain('demo/SlimmedNtuple')
 if file_dir == "SM_FPMC":
     chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-WithXi-25ns-CorrectMeans.root")
+if file_dir == "SM_FPMC-noXiCut":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-SM-noXiCut.root")
 if file_dir == "a0w5e-6":
     chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6.root")
+if file_dir == "a0w5e-5-withXiCut":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-5-withXi.root")
+if file_dir == "a0w2e-5-withXiCut":
+    #chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w2e-5-withXi.root")
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w2e-5-withXi-NewJanRecipe.root")
+if file_dir == "a0w2e-5-withXiCut-FF1TeV":
+    #chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w2e-5-withXi-NewJanRecipe-FF1TeV.root")
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w2e-5-withXi-FF1TeV-5-22-18.root")
+if file_dir == "a0w2e-5-FF920GeV-XiCut":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w2e-5-FF920GeV-XiCut.root")
+if file_dir == "a0w5e-6-FF1300GeV-SingleLepton":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6-FF1300GeV.root")
+if file_dir == "a0w5e-6-FF1700GeV-SingleLepton":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6-FF1700GeV.root")
 if file_dir == "a0w5e-6-withXiCut":
-    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6-withXi.root")
+    #chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6-withXi.root")
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6-withXi-6-04-2018.root")
+
+#if file_dir == "a0w5e-6-noFF-XiCut":
+#    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/")
 i=0
+chainSimSD = TChain('demo/SlimmedNtuple')
+chainSimDD = TChain('demo/SlimmedNtuple')
+chainSimnonDiff = TChain('demo/SlimmedNtuple')
+chainSimElastic = TChain('demo/SlimmedNtuple')
+chainSimCD = TChain('demo/SlimmedNtuple')
+chainSimSD.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-SD.root")
+chainSimDD.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-DD.root")
+chainSimnonDiff.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-nonDiff.root")
+chainSimElastic.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-Elastic.root")
+chainSimCD.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-CD.root")
 
 #files = [f for f in listdir('.') if isfile(f)]
 #for f in files:
@@ -104,6 +137,7 @@ i=0
 count_1_15_tracks=0
 count_zero_tracks=0
 num_events=0
+counting=[0,0,0,0,0,0,0,0,0,0]
 for file in ListOfFiles:
     i=i+1
     #print file
@@ -211,6 +245,10 @@ it=0
 run=0.
 event=0.
 print chain.GetEntries()
+chain.GetEntry(0)
+print chain.run 
+print chain.event 
+print chain.lumiblock 
 for e in chain:
     it=it+1
     if run == e.run and event == e.event:
@@ -396,9 +434,15 @@ for e in chain:
         h_fvtx_mass_pt30.Fill(mass,pileupw)
         h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
         h_jets_30_15extraTracks.Fill(num_jets_30,pileupw)
+
         if num_jets_30 < 1:
             h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
-
+            if BACKGROUND:
+                passWithPU,countingPU=addPUProtons(e.numPUInteractions,chainSimSD,chainSimDD,chainSimnonDiff,chainSimElastic,chainSimCD)
+                if passWithPU:
+                    counting=[x + y for x, y in zip(counting, countingPU)]
+                    h_fvtx_numtracks_Leptons_0jets_PPS.Fill(fvertex_numtracks,pileupw)
+                    
     #Plots with PPS requirements, ptemu>30, number of tracks <15
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["ptemug30"] and c["passesPPS"]:
@@ -416,10 +460,10 @@ for e in chain:
             count_zero_tracks=count_zero_tracks+1
 
     #Printing out, ptemu > 30 for number tracks <7 passing PPS
-#    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and fvertex_numtracks < 6 and c["ptemug30"] and c["passesPPS"]:
+    #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and fvertex_numtracks < 6 and c["ptemug30"] and c["passesPPS"] and num_jets_30 == 0:
         #print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
         #print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
-        #print "Num jets: ADD THIS"
+        #print "Num jets: ",num_jets_30
         #print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
         #print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
         #print "Closest track: {0}".format(closest_track_ts)
@@ -427,10 +471,12 @@ for e in chain:
         #print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
         #print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
         #print "Number of vertices in event: {0}".format(e.vertex_nvtxs)
+        #print "Mass: {0}".format(mass)
+        #print "Ptemu: {0}".format(ptemu)
         #print "Muon pt: {0}".format(e.muon_pt[0])
         #print "Electron pt: {0}".format(e.electron_pt[0])
         
-
+print "Counting: ",counting
 print "Total number of data in 1-15 extra tracks bin, PPS: {0}".format(count_1_15_tracks)
 print "Total number of data in 0 extra tracks bin, PPS: {0}".format(count_zero_tracks)
 fout.Write()
