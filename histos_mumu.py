@@ -30,8 +30,11 @@ file_dir=sys.argv[3]
 
 
 DATA=False
+SIMPROTONS=False
 if sample_name == "MuonEG" or sample_name =="DoubleMuon":
     DATA=True
+if sample_name =="ExclusiveWW":
+    SIMPROTONS=True
 
 mypath_prefix='/hadoop/cms/store/user/rebassoo/'
 print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
@@ -85,6 +88,8 @@ fout.cd()
 
 #print ListOfFiles
 chain = TChain('demo/SlimmedNtuple')
+chainSimProton = TChain('demo/SlimmedNtuple')
+chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-WithXi-25ns-CorrectMeans.root")
 i=0
 
 #files = [f for f in listdir('.') if isfile(f)]
@@ -341,13 +346,22 @@ for e in chain:
     #Looking at extra tracks <15, no ptemu requirement. Also, does pass PPS requirements
     xi = {"2":[],"3":[],"102":[],"103":[]}
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
+    if SIMPROTONS:
+        print "I get here"
+        for ev in chainSimProton:
+            if ev.run == e.run and ev.event == e.event and ev.lumiblock ==e.lumiblock:
+                print "Ev.run: {0}, Ev.event: {1}".format(ev.run,ev.event)
+                print "E.run: {0}, E.event: {1}".format(e.run,e.event)
+                c["passesPPS"]=passPPSSim(ev)
+
+
+
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"]:
         h_fvtx_mass.Fill(mass,pileupw)
         h_fvtx_ptemu.Fill(ptemu,pileupw)
         if DATA:
             #xi = dict.fromkeys(["2","3","102","103"],[])
             c["passesPPS"]=passPPS(e,xi)
-
 
     #Plotting zero tracks and no ptemu requirement
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks0"]:
