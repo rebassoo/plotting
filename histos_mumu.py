@@ -30,8 +30,17 @@ file_dir=sys.argv[3]
 
 
 DATA=False
-if sample_name == "MuonEG" or sample_name =="DoubleMuon":
+SIMPROTONS=False
+BACKGROUND=False
+if sample_name == "MuonEG" or sample_name == "DoubleMuon":
     DATA=True
+if sample_name =="ExclusiveWW":
+    SIMPROTONS=True
+if DATA==False and SIMPROTONS==False:
+    BACKGROUND=True
+print "Background: ",BACKGROUND
+print "Data: ",DATA
+print "SIMPROTONS: ",SIMPROTONS
 
 mypath_prefix='/hadoop/cms/store/user/rebassoo/'
 print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
@@ -85,6 +94,23 @@ fout.cd()
 
 #print ListOfFiles
 chain = TChain('demo/SlimmedNtuple')
+chainSimProton = TChain('demo/SlimmedNtuple')
+if file_dir == "SM_FPMC":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-WithXi-25ns-CorrectMeans.root")
+if file_dir == "a0w5e-6":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6.root")
+if file_dir == "a0w5e-6-withXiCut":
+    chainSimProton.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-FPMC-GEN-SIM-Jans-a0w5e-6-withXi.root")
+chainSimSD = TChain('demo/SlimmedNtuple')
+chainSimDD = TChain('demo/SlimmedNtuple')
+chainSimnonDiff = TChain('demo/SlimmedNtuple')
+chainSimElastic = TChain('demo/SlimmedNtuple')
+chainSimSD.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-SD.root")
+chainSimDD.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-DD.root")
+chainSimnonDiff.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-nonDiff.root")
+chainSimElastic.Add("/home/users/rebassoo/work/2017_11_06_PlottingProtonSimulation/Ntupler/SlimmedNtuple-MinBias-Elastic.root")
+
+
 i=0
 
 #files = [f for f in listdir('.') if isfile(f)]
@@ -135,13 +161,9 @@ h_num_vertices=TH1F("h_num_vertices",";Num vertices;",100,-0.5,99.5)
 #h_vtx_numtracks=TH1F("h_vtx_numtracks",";Num Extra Tracks at vertex;",15,-0.5,14.5)
 h_fvtx_numtracks_Leptons=TH1F("h_fvtx_numtracks_Leptons",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_PPS=TH1F("h_fvtx_numtracks_Leptons_PPS",";Num Extra Tracks at vertex;",85,-0.5,84.5)
-h_fvtx_numtracks_Leptons_Mass160=TH1F("h_fvtx_numtracks_Leptons_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
-h_fvtx_numtracks_Leptons_PPS_Mass160=TH1F("h_fvtx_numtracks_Leptons_PPS_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_pt_0_30=TH1F("h_fvtx_numtracks_Leptons_pt_0_30",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_0jets=TH1F("h_fvtx_numtracks_Leptons_0jets",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_numtracks_Leptons_0jets_PPS=TH1F("h_fvtx_numtracks_Leptons_0jets_PPS",";Num Extra Tracks at vertex;",85,-0.5,84.5)
-h_fvtx_numtracks_Leptons_0jets_Mass160=TH1F("h_fvtx_numtracks_Leptons_0jets_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
-h_fvtx_numtracks_Leptons_0jets_PPS_Mass160=TH1F("h_fvtx_numtracks_Leptons_0jets_PPS_Mass160",";Num Extra Tracks at vertex;",85,-0.5,84.5)
 h_fvtx_mass=TH1F("h_fvtx_mass",";Mass [GeV];",50,0,500)
 h_fvtx_ptemu=TH1F("h_fvtx_ptemu",";p_{T}(e#mu) [GeV];",20,0,300)
 h_fvtx_mass_pt30=TH1F("h_fvtx_mass_pt30",";Mass [GeV];",50,0,500)
@@ -180,12 +202,25 @@ h_closest_track_ts_vs_cms=TH2F("h_closest_track_ts_vs_cms","",100,0,1,100,0,1)
 
 h_jets_25=TH1F("h_jets_25","Number of jets",15,-0.5,14.5)
 h_jets_30=TH1F("h_jets_30","Number of jets",15,-0.5,14.5)
+h_jets_40=TH1F("h_jets_40","Number of jets",15,-0.5,14.5)
+h_jets_50=TH1F("h_jets_50","Number of jets",15,-0.5,14.5)
+h_jets_30_closestTrackRequirements=TH1F("h_jets_30_closestTrackRequirements","Number of jets",15,-0.5,14.5)
 h_jets_30_15extraTracks=TH1F("h_jets_30_15extraTracks","Number of jets",15,-0.5,14.5)
 
+h_jets_pt=TH1F("h_jets_pt","jet p_{T} (GeV)",60,0,300)
 h_jets_30_eta=TH1F("h_jets_30_eta","jet #eta",60,-3,3)
 h_jets_30_phi=TH1F("h_jets_30_phi","jet #phi",60,2*3.14,3)
 h_jets_30_ptemu30=TH1F("h_jets_30_ptemu30","Number of jets",15,-0.5,14.5)
 
+h_mass_PPS=TH1F("h_mass_PPS",";Mass [GeV];",100,0,1000)
+h_ptemu_PPS=TH1F("h_ptemu_PPS",";p_{T} (e#mu) [GeV];",20,0,600)
+h_pte_PPS=TH1F("h_pte_PPS",";p_{T} (e) [GeV];",20,0,600)
+h_ptmu_PPS=TH1F("h_ptmu_PPS",";p_{T} (#mu) [GeV];",20,0,600)
+h_mass_noPPS=TH1F("h_mass_noPPS",";Mass [GeV];",100,0,1000)
+h_mass_PPS_SingleTag=TH1F("h_mass_PPS_SingleTag",";Mass [GeV];",100,0,1000)
+h_mass_PPS_DoubleTag=TH1F("h_mass_PPS_DoubleTag",";Mass [GeV];",100,0,1000)
+h_mass_PPS_SingleTag45=TH1F("h_mass_PPS_SingleTag45",";Mass [GeV];",100,0,1000)
+h_mass_PPS_SingleTag56=TH1F("h_mass_PPS_SingleTag56",";Mass [GeV];",100,0,1000)
 
 runPPSCuts=False
 
@@ -196,6 +231,7 @@ it=0
 run=0.
 event=0.
 print chain.GetEntries()
+count_events_in_mass=0
 for e in chain:
     it=it+1
     if run == e.run and event == e.event:
@@ -247,7 +283,6 @@ for e in chain:
 
     fvertex_numtracks=1000
     numCloseLeptons=0
-    #if( numMuHighPt==1 and numEHighPt==1 ):
     if( numMuHighPt==2 and numEHighPt==0 ):
         if e.fvertex_chi2ndof < 10 and abs(e.fvertex_z) < 15:
             c["fittedVertexPassRequirements"]=True
@@ -292,12 +327,14 @@ for e in chain:
 
     num_jets_25=0
     num_jets_30=0
+    num_jets_40=0
+    num_jets_50=0
     #Plots without any track requirements, but fitted vertex requirements
     if c["twoLeptons"] and c["fittedVertexPassRequirements"] and c["iMass"] and c["oppCharge"]:                
         h_muon_dist.Fill(e.muon_tkdist[0],pileupw)
-        #h_electron_dist.Fill(e.electron_tkdist[0],pileupw)
+        h_electron_dist.Fill(e.muon_tkdist[1],pileupw)
         h_muon_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[0],pileupw)
-        #h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.electron_tkdist[0],pileupw)
+        h_electron_dist_vs_chi2.Fill(e.fvertex_chi2ndof,e.muon_tkdist[1],pileupw)
         dist_myvtx_pv=m.sqrt( (e.vertex_x-e.fvertex_x)*(e.vertex_x-e.fvertex_x) + (e.vertex_y-e.fvertex_y)*(e.vertex_y-e.fvertex_y) + (e.vertex_z-e.fvertex_z)*(e.vertex_z-e.fvertex_z) )
         h_dist_myVertex_pv.Fill(dist_myvtx_pv,pileupw)
         h_muon_pt.Fill(e.muon_pt[0],pileupw)            
@@ -311,12 +348,20 @@ for e in chain:
         num_jets_25=e.jet_pt.size()
         jet_i=0
         for jet_pt in e.jet_pt:
+            if abs(e.jet_eta[jet_i])<2.4:
+                h_jets_pt.Fill(jet_pt,pileupw)
             if jet_pt>30 and abs(e.jet_eta[jet_i])<2.4:
                 num_jets_30=num_jets_30+1
                 h_jets_30_eta.Fill(e.jet_eta[jet_i],pileupw)
                 h_jets_30_phi.Fill(e.jet_phi[jet_i],pileupw)
+                if jet_pt > 40:
+                    num_jets_40=num_jets_40+1
+                if jet_pt > 50:
+                    num_jets_50=num_jets_50+1
             jet_i=jet_i+1
         h_jets_30.Fill(num_jets_30,pileupw)
+        h_jets_40.Fill(num_jets_40,pileupw)
+        h_jets_50.Fill(num_jets_50,pileupw)
 
 
 
@@ -326,14 +371,9 @@ for e in chain:
         h_closest_track_cms.Fill(closest_track_cms,pileupw)
         h_closest_track_ts_vs_cms.Fill(closest_track_cms,closest_track_ts,pileupw)
         h_fvtx_ts_vs_cms_p5mm.Fill(e.fvertex_ntracks_cms_p5mm,e.fvertex_ntracks_ts_p5mm,pileupw)
+        h_jets_30_closestTrackRequirements.Fill(num_jets_30,pileupw)
         if num_jets_30 < 1:
             h_closest_track_ts_0jets.Fill(closest_track_ts,pileupw)
-            h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
-        h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
-        if mass > 160:
-            h_fvtx_numtracks_Leptons_Mass160.Fill(fvertex_numtracks,pileupw)
-            if num_jets_30 < 1:
-                h_fvtx_numtracks_Leptons_0jets_Mass160.Fill(fvertex_numtracks,pileupw)         
         h_jets_30_ptemu30.Fill(num_jets_30,pileupw)
 
     #All plots below here have less than 15 extra tracks at the vertex
@@ -341,13 +381,33 @@ for e in chain:
     #Looking at extra tracks <15, no ptemu requirement. Also, does pass PPS requirements
     xi = {"2":[],"3":[],"102":[],"103":[]}
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"]:
+
+
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"]:
         h_fvtx_mass.Fill(mass,pileupw)
         h_fvtx_ptemu.Fill(ptemu,pileupw)
+        if SIMPROTONS:
+            for ev in chainSimProton:
+                if ev.run == e.run and ev.event == e.event and ev.lumiblock ==e.lumiblock:
+                #print "Ev.run: {0}, Ev.event: {1}".format(ev.run,ev.event)
+                #print "E.run: {0}, E.event: {1}".format(e.run,e.event)
+                    c["passesPPS"]=passPPSSim(ev)
+
         if DATA:
             #xi = dict.fromkeys(["2","3","102","103"],[])
-            c["passesPPS"]=passPPS(e,xi)
-
+            c["passesPPS"],tagging=passPPS(e,xi)
+            if mass > 80 and mass < 100:
+                h_mass_noPPS.Fill(mass)
+                if c["passesPPS"]:
+                    h_mass_PPS.Fill(mass)
+                if tagging[0]:
+                    h_mass_PPS_SingleTag.Fill(mass)
+                if tagging[1]:
+                    h_mass_PPS_DoubleTag.Fill(mass)
+                if tagging[2]:
+                    h_mass_PPS_SingleTag45.Fill(mass)
+                if tagging[3]:
+                    h_mass_PPS_SingleTag56.Fill(mass)
 
     #Plotting zero tracks and no ptemu requirement
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks0"]:
@@ -364,37 +424,54 @@ for e in chain:
 
     #Plotting ptemu>30, number tracks <15
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"]:
+        h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
         h_fvtx_mass_pt30.Fill(mass,pileupw)
         h_fvtx_ptemu_pt30.Fill(ptemu,pileupw)
         h_jets_30_15extraTracks.Fill(num_jets_30,pileupw)
+        if num_jets_30 < 1:
+            h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
+
+    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and mass > 80 and mass < 100:
+        #h_mass_noPPS.Fill(mass)
+        #if DATA and c["passesPPS"]:
+        #    h_mass_PPS.Fill(mass)
+        if BACKGROUND:
+            count_events_in_mass=count_events_in_mass+1
+            if count_events_in_mass > 10000:
+                break
+            passWithPU=addPUProtons(e.numPUInteractions,chainSimSD,chainSimDD,chainSimnonDiff,chainSimElastic)
+            if passWithPU:
+                h_mass_PPS.Fill(mass)
 
     #Plots with PPS requirements, ptemu>30, number of tracks <15
     #if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks15"] and c["ptemug30"] and c["passesPPS"]:
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["ptemug30"] and c["passesPPS"]:
         h_fvtx_numtracks_Leptons_PPS.Fill(fvertex_numtracks,pileupw)
-        if mass > 160: h_fvtx_numtracks_Leptons_PPS_Mass160.Fill(fvertex_numtracks,pileupw)
-        if num_jets_30 < 1:
-            h_fvtx_numtracks_Leptons_0jets_PPS.Fill(fvertex_numtracks,pileupw) 
-            if mass > 160:
-                h_fvtx_numtracks_Leptons_0jets_PPS_Mass160.Fill(fvertex_numtracks,pileupw)     
+        if num_jets_30<1:
+            h_fvtx_numtracks_Leptons_0jets_PPS.Fill(fvertex_numtracks,pileupw)
+            if fvertex_numtracks < 2:
+                h_mass_PPS.Fill(mass)
+                h_ptemu_PPS.Fill(ptemu)
+                h_ptmu_PPS.Fill(e.muon_pt[0])
+                h_pte_PPS.Fill(e.muon_pt[1])
         if (fvertex_numtracks) > 0:
             count_1_15_tracks=count_1_15_tracks+1
         else:
             count_zero_tracks=count_zero_tracks+1
 
     #Printing out, ptemu > 30 for number tracks <7 passing PPS
-    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and fvertex_numtracks < 6 and c["ptemug30"] and c["passesPPS"]:
-        print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
-        print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
-        print "Num jets: ADD THIS"
-        print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
-        print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
-        print "Closest track: {0}".format(closest_track_ts)
-        print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
-        print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
-        print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
-        print "Number of vertices in event: {0}".format(e.vertex_nvtxs)
-        print "Muon pt: {0}".format(e.muon_pt[0])
+#    if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and fvertex_numtracks < 6 and c["ptemug30"] and c["passesPPS"]:
+        #print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
+        #print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
+        #print "Num jets: ADD THIS"
+        #print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
+        #print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
+        #print "Closest track: {0}".format(closest_track_ts)
+        #print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
+        #print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
+        #print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
+        #print "Number of vertices in event: {0}".format(e.vertex_nvtxs)
+        #print "Muon pt: {0}".format(e.muon_pt[0])
         #print "Electron pt: {0}".format(e.electron_pt[0])
         
 
