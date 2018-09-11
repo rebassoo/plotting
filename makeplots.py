@@ -71,7 +71,12 @@ for i in range(min,max+1):
 
     #Plot Data
     #f_data=TFile("histos/MuonEG_total.root")
-    f_data=TFile("histos/DoubleMuonTotal.root")
+    #f_data=TFile("histos/DoubleMuonTotal.root")
+    #f_data=TFile("histos/DoubleMuonTotal-8-15-18.root")
+    #f_data=TFile("histos/DoubleMuon_Run2017CD.root")
+    f_data=TFile("histos/DoubleMuonTotal-8-20-18-RunB-RunF-2nd.root")
+    #f_data=TFile("histos/DoubleMuonTotalNew.root")
+    #f_data=TFile("histos/DoubleMuonTotalPreTS2.root")
     #f_data=TFile("histos/DoubleMuon_Run2017C.root")
     #f_data=TFile("histos/MuonEG_runBCG.root")
     f_data.cd()
