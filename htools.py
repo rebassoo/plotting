@@ -51,6 +51,7 @@ def GetXi(x,y,pot,run,crossingAngle):
     D=100000.
     xi=0.
     #print "x,:",x
+    #print "crossing Angle: ",crossingAngle
     if pot == 1981284352:
         #Alignment from Jan's talk 30Jan2017 and his 20Feb2018 talk for postTS2
         #print "x of track: ",x
@@ -85,12 +86,24 @@ def GetXi(x,y,pot,run,crossingAngle):
 
     #This is for pixels
     #Use same dispersion values as for strips?
-    #if pot == 2023227392:
-    #    if run > 303718: x_corr =x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 42.2
-    #    else: x_corr = x - 42.05
-    #if pot == 2040004608:
-    #    if run > 303718: x_corr =x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 42.2
-    #    else: x_corr = x - 42.05
+    if pot == 2023227392:
+        if run > 503718: x_corr =x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 42.2
+        else: x_corr = x - 42.05
+        if crossingAngle ==120.: xi = x_corr / (-9.145*10)
+        else:
+            #0.46 cm per 10 murad, so 0.046 cm per 1 murad
+            D_corr = (crossingAngle-120.)*0.046*10 - 9.145*10
+            xi = x_corr / D_corr
+
+    if pot == 2040004608:
+        if run > 503718: x_corr =x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 42.2
+        else: x_corr = x - 42.05
+        if crossingAngle ==120.: xi = x_corr / (-7.291*10)
+        else:
+            #0.46 cm per 10 murad, so 0.046 cm per 1 murad
+            D_corr = (crossingAngle-120.)*0.046*10 - 7.291*10
+            xi = x_corr / D_corr
+
     return xi
 
 def passPPS(e,xi,crossingAngle):
@@ -112,7 +125,7 @@ def passPPS(e,xi,crossingAngle):
             xi["2023227392"].append(GetXi(e.rp_tracks_x[ii],e.rp_tracks_y[ii],2023227392,run,crossingAngle))
         #strips
         if detId_rp == 1981284352: 
-            left=True
+            #left=True
                     #if lessthan6: print "DetId 3, Xi: {0}".format(e.rp_tracks_xi[i])
             xi["1981284352"].append(GetXi(e.rp_tracks_x[ii],e.rp_tracks_y[ii],1981284352,run,crossingAngle))
         #diamond
@@ -129,7 +142,7 @@ def passPPS(e,xi,crossingAngle):
             xi["2040004608"].append(GetXi(e.rp_tracks_x[ii],e.rp_tracks_y[ii],2040004608,run,crossingAngle))
         #strips
         if detId_rp == 1998061568: 
-            right=True
+            #right=True
                     #xi_right.append(float(e.rp_tracks_xi))
                     #if lessthan6: print "DetId 103, Xi: {0}".format(e.rp_tracks_xi[i])
             xi["1998061568"].append(GetXi(e.rp_tracks_x[ii],e.rp_tracks_y[ii],1998061568,run,crossingAngle))
@@ -142,8 +155,10 @@ def passPPS(e,xi,crossingAngle):
                 print e.rp_tracks_time[ii]
         ii=ii+1
 
-    if (left == True) and (right == True):
+    if len(xi["2040004608"])==1 and len(xi["2023227392"])==1:
         passesPPS=True
+    #if (left == True) or (right == True):
+    #    passesPPS=True
         
     #if len(xi["2"]) > 1 or len(xi["3"]) > 1 or len(xi["102"]) > 1 or len(xi["103"]) > 1:
     #    print "This event has multiple tracks in a single pot"
