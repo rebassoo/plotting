@@ -4,11 +4,20 @@
 
 #2017 data
 
-#python histos_mumu.py latest DoubleMuon crab_Run2017D
+python histos_mumu.py specific DoubleMuon crab_Run2017C/180504_211422/0000/Merged
+
+#python histos_mumu.py specific DoubleMuon crab_Run2017B/180504_211356/0000
 #python histos_mumu.py specific DoubleMuon crab_Run2017C/180504_211422/0000
+#python histos_mumu.py specific DoubleMuon crab_Run2017D/180504_211448/0000
+#python histos_mumu.py specific DoubleMuon crab_Run2017E/180504_211515/0000
+#python histos_mumu.py specific DoubleMuon crab_Run2017F/180504_211543/0000
+#python histos_mumu.py specific DoubleMuon crab_Run2017F/180504_211543/0001
+#python histos_mumu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DY-50-up-94x-mumu
+
+#python histos_mumu.py latest DoubleMuon crab_Run2017B
+#python histos_mumu.py latest DoubleMuon crab_Run2017D
 #python histos_mumu.py latest DoubleMuon crab_Run2017E
 #python histos_mumu.py latest DoubleMuon crab_Run2017F
-python histos_mumu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DY-50-up-94x-mumu
 
 #python histos_mumu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DY-50-up-94x-mumu
 #python histos_mumu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8 crab_DY-50-up-94x-Madgraph-ext1-mumu
