@@ -115,7 +115,7 @@ for file in ListOfFiles:
     #    if e.lumiblock == 1700:
     #        if e.run == 279841:
     #            print file
-    #if i > 1:
+    #if i > 5:
     #    break
 
 fout.cd()
@@ -215,6 +215,31 @@ h_xi_cms_vs_xi_RP_right=TH2F("h_xi_cms_vs_xi_RP_right","",1000,0,1,1000,0,1)
 h_M_cms_vs_M_RP=TH2F("h_M_cms_vs_M_RP","",9000,0,3000,9000,0,3000)
 h_Y_cms_vs_Y_RP=TH2F("h_Y_cms_vs_Y_RP","",640,-4,4,640,-4,4)
 
+h_fvtx_numtracks_Leptons_ptmumu30=TH1F("h_fvtx_numtracks_Leptons_ptmumu30",";Num Extra Tracks at vertex;",85,-0.5,84.5)
+
+h_mass_bare=TH1F("h_mass_bare","",500,0,1000)
+h_pt_mumu=TH1F("h_pt_mumu","",50,0,200)
+h_mass_pt_mumu_60=TH1F("h_mass_pt_mumu_60","",500,0,1000)
+h_pt_mumu_signal=TH1F("h_pt_mumu_signal","",50,0,200)
+h_pt_mumu_background=TH1F("h_pt_mumu_background","",50,0,200)
+h_missing_mass_background=TH1F("h_missing_mass_background","",120,0,3000)
+h_missing_mass_signal=TH1F("h_missing_mass_signal","",120,0,3000)
+h_missing_mass_background_noPtMuMuCut=TH1F("h_missing_mass_background_noPtMuMuCut","",120,0,3000)
+h_missing_mass_signal_noPtMuMuCut=TH1F("h_missing_mass_signal_noPtMuMuCut","",120,0,3000)
+h_missing_mass_background_80=TH1F("h_missing_mass_background_80","",120,0,3000)
+h_missing_mass_signal_80=TH1F("h_missing_mass_signal_80","",120,0,3000)
+
+h_missing_mass_background_Mass50=TH1F("h_missing_mass_background_Mass50","",120,0,3000)
+h_missing_mass_background_80_Mass50=TH1F("h_missing_mass_background_80_Mass50","",120,0,3000)
+
+h_missing_mass_background_diego=TH1F("h_missing_mass_background_diego","",120,0,3000)
+h_missing_mass_signal_diego=TH1F("h_missing_mass_signal_diego","",120,0,3000)
+
+h_xi_background_45=TH1F("h_xi_background_45","",100,0,1)
+h_xi_background_56=TH1F("h_xi_background_56","",100,0,1)
+h_xi_signal_45=TH1F("h_xi_signal_45","",100,0,1)
+h_xi_signal_56=TH1F("h_xi_signal_56","",100,0,1)
+
 
 runPPSCuts=False
 
@@ -271,6 +296,7 @@ for e in chain:
     acopl=-999.
     xi_cms_1=-999.
     xi_cms_2=-999.
+    lcombined=TLorentzVector()
     #if e.muon_pt.size()+e.electron_pt.size() > 2:
     #    #print "Event has 3 good leptons, skip"
     #    continue
@@ -318,8 +344,8 @@ for e in chain:
             c["fittedVertexPassRequirements"]=True
             fvertex_numtracks=0
             #numCloseLeptons=e.fvertex_ntracks
-            #This does count muon and electron
             fvertex_numtracks=e.fvertex_ntracks_ts_p5mm
+            #fvertex_numtracks=e.fvertex_ntracks_cms_p5mm
             #for tkdist in e.fvertex_tkdist:
             #    if tkdist < 0.05:
             #        fvertex_numtracks=fvertex_numtracks+1
@@ -330,7 +356,9 @@ for e in chain:
 
         c["twoLeptons"]=True
         l1 = TLorentzVector(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
+        #print "l1 px: {0} py: {1} pz: {2}, E: {3}".format(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
         l2 = TLorentzVector(e.muon_px[1],e.muon_py[1],e.muon_pz[1],e.muon_e[1])
+        #print "l2 px: {0} py: {1} pz: {2}, E: {3}".format(e.muon_px[1],e.muon_py[1],e.muon_pz[1],e.muon_e[1])
         lcombined=l1+l2
         #xi_cms_1=lcombined.M()/m.sqrt(13000.*13000.*m.exp(2*lcombined.Rapidity()))
         #xi_cms_2=xi_cms_1*m.exp(2*lcombined.Rapidity())
@@ -435,8 +463,11 @@ for e in chain:
         if num_jets_30 < 1:
             h_closest_track_ts_0jets.Fill(closest_track_ts,pileupw)
             h_fvtx_numtracks_Leptons_0jets.Fill(fvertex_numtracks,pileupw)
-        h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
+        h_fvtx_numtracks_Leptons_ptmumu30.Fill(fvertex_numtracks,pileupw)
         h_jets_30_ptemu30.Fill(num_jets_30,pileupw)
+
+    if c["twoLeptons"] and c["fittedVertexPassRequirements"] and c["iMass"] and c["oppCharge"]:
+        h_fvtx_numtracks_Leptons.Fill(fvertex_numtracks,pileupw)
 
     #All plots below here have less than 15 extra tracks at the vertex
 
@@ -451,7 +482,110 @@ for e in chain:
             crossingAngle=crossAngleDict['{0}:{1}'.format(run,lumi)]
             #print float(crossingAngle)
             c["passesPPS"]=passPPS(e,xi,float(crossingAngle))
+
+    if c["twoLeptons"] and c["oppCharge"]:
+        h_mass_bare.Fill(mass)
+        if mass > 50:
+            h_pt_mumu.Fill(ptemu)
+        if ptemu > 60:
+            h_mass_pt_mumu_60.Fill(mass)
+
+    #Plot pixels and signal region
+    if c["passesPPS"] and c["twoLeptons"] and c["oppCharge"] and mass < 94 and mass > 88:
+        h_pt_mumu_signal.Fill(ptemu)
+        if xi["2023227392"][0] > 0 or xi["2040004608"][0] > 0:
+            print "One of the xi values is positive"
+            print xi["2023227392"][0]
+            print xi["2040004608"][0]
+        if (xi["2023227392"][0]*xi["2040004608"][0]) > 0:
+            proton_pz_45=6500*abs(xi["2023227392"][0])
+            proton_pz_56=6500*abs(xi["2040004608"][0])
+            h_xi_signal_45.Fill(abs(xi["2023227392"][0]))
+            h_xi_signal_56.Fill(abs(xi["2040004608"][0]))
+            proton_4vector_45=TLorentzVector(0.,0.,proton_pz_45,proton_pz_45)
+            proton_4vector_56=TLorentzVector(0.,0.,-proton_pz_56,proton_pz_56)
+            proton_combined=proton_4vector_45+proton_4vector_56
+            proton_Z_combined=proton_combined-lcombined
+            missing_mass=proton_Z_combined.M()
+            h_missing_mass_signal_noPtMuMuCut.Fill(missing_mass)
+            if ptemu > 60:
+                #proton_4vector_mass=m.sqrt(169000000*xi["2023227392"][0]*xi["2040004608"][0])
+                #missing_mass=proton_4vector_mass-lcombined.M()
+                h_missing_mass_signal.Fill(missing_mass)
+                ECM=13000.0
+                #print "Signal"
+                proton1_pz=6500-proton_pz_45
+                proton2_pz=-6500+proton_pz_56
+                #missing_mass_diego=m.sqrt((ECM-(lcombined.M()+abs(proton1_pz)+abs(proton2_pz)))*(ECM-(lcombined.M()+abs(proton1_pz)+abs(proton2_pz)))-(lcombined.Px())*(lcombined.Px())-(lcombined.Py())*(lcombined.Py())- (lcombined.Pz()+proton1_pz+proton2_pz)*(lcombined.Pz()+proton1_pz+proton2_pz));
+                #h_missing_mass_signal_diego.Fill(missing_mass_diego)
+                if ptemu > 80:
+                    h_missing_mass_signal_80.Fill(missing_mass)
+        else:
+            print "One of the xi values is greater than 0 for signal"
+            print "Xi values 2023227392: ",xi["2023227392"][0]
+            print "Xi values 2040004608: ",xi["2040004608"][0]
+
+    if c["passesPPS"] and c["twoLeptons"] and c["oppCharge"] and ( mass > 94 or mass < 88) and mass > 20:
+        h_pt_mumu_background.Fill(ptemu)
+        if xi["2023227392"][0] > 0 or xi["2040004608"][0] > 0:
+            print "One of the xi values is positive"
+            print xi["2023227392"][0]
+            print xi["2040004608"][0]
+        
+        if (xi["2023227392"][0]*xi["2040004608"][0]) > 0:
+
+            h_xi_background_45.Fill(abs(xi["2023227392"][0]))
+            h_xi_background_56.Fill(abs(xi["2040004608"][0]))
+
+                #proton_4vector_mass=m.sqrt(169000000*xi["2023227392"][0]*xi["2040004608"][0])
+                #missing_mass=proton_4vector_mass-lcombined.M()
+            proton_pz_45=6500-6500*abs(xi["2023227392"][0])
+            proton_pz_56=6500-6500*abs(xi["2040004608"][0])
+            proton_4vector_45=TLorentzVector(0.,0.,proton_pz_45,proton_pz_45)
+            proton_4vector_56=TLorentzVector(0.,0.,-proton_pz_56,proton_pz_56)
+            proton_combined=proton_4vector_45+proton_4vector_56
+            proton_proton_cms=TLorentzVector(0.,0.,0.,13000)
+            proton_Z_combined=proton_proton_cms-proton_combined-lcombined
+            missing_mass=proton_Z_combined.M()
             
+            proton_pz_45_2=6500*abs(xi["2023227392"][0])
+            proton_pz_56_2=6500*abs(xi["2040004608"][0])
+            proton_4vector_45_2=TLorentzVector(0.,0.,proton_pz_45_2,proton_pz_45_2)
+            proton_4vector_56_2=TLorentzVector(0.,0.,-proton_pz_56_2,proton_pz_56_2)
+            proton_combined2=proton_4vector_45_2+proton_4vector_56_2
+            proton_Z_combined2=proton_combined2-lcombined
+            missing_mass2=proton_Z_combined2.M()
+            #print xi["2023227392"][0]
+            #print xi["2040004608"][0]
+            #print "proton_4vector_45_2, px: {0} py: {1} pz: {2}, E: {3}".format(proton_4vector_45_2.Px(),proton_4vector_45_2.Py(),proton_4vector_45_2.Pz(),proton_4vector_45_2.E())
+            #print "proton_4vector_56_2, px: {0} py: {1} pz: {2}, E: {3}".format(proton_4vector_56_2.Px(),proton_4vector_56_2.Py(),proton_4vector_56_2.Pz(),proton_4vector_56_2.E())
+            #print "proton_combined2, px: {0} py: {1} pz: {2}, E: {3}".format(proton_combined2.Px(),proton_combined2.Py(),proton_combined2.Pz(),proton_combined2.E())
+            #print "proton_Z_combined2, px: {0} py: {1} pz: {2}, E: {3}".format(proton_Z_combined2.Px(),proton_Z_combined2.Py(),proton_Z_combined2.Pz(),proton_Z_combined2.E())
+            #print missing_mass
+            #print missing_mass2
+            h_missing_mass_background_noPtMuMuCut.Fill(missing_mass)
+            if ptemu > 60:                
+                h_missing_mass_background.Fill(missing_mass)
+                ECM=13000.0
+                proton1_pz=6500.-proton_pz_45_2
+                proton2_pz=-6500.+proton_pz_56_2
+                #print proton1_pz
+                #print proton2_pz
+                #missing_mass_diego=m.sqrt((ECM-(lcombined.E()+abs(proton1_pz)+abs(proton2_pz)))*(ECM-(lcombined.E()+abs(proton1_pz)+abs(proton2_pz)))-(lcombined.Px())*(lcombined.Px())-(lcombined.Py())*(lcombined.Py())- (lcombined.Pz()+proton1_pz+proton2_pz)*(lcombined.Pz()+proton1_pz+proton2_pz));
+                #h_missing_mass_background_diego.Fill(missing_mass_diego)
+                #print "missing mass background: ",missing_mass
+                #print "missing mass background 2: ",missing_mass2
+                #print "missing mass background Diego: ",missing_mass_diego
+                if mass > 50:
+                    h_missing_mass_background_Mass50.Fill(missing_mass)
+                if ptemu > 80:
+                    h_missing_mass_background_80.Fill(missing_mass)
+                    if mass > 50:
+                        h_missing_mass_background_80_Mass50.Fill(missing_mass)
+        else:
+            print "One of the xi values is greater than 0 for background"
+            print "Xi values 2023227392: ",xi["2023227392"][0]
+            print "Xi values 2040004608: ",xi["2040004608"][0]
 
     #Plotting zero tracks and no ptemu requirement
     if c["twoLeptons"] and c["oppCharge"] and c["iMass"] and c["fittedVertexPassRequirements"] and c["fittedVertexTracks0"]:
@@ -495,8 +629,14 @@ for e in chain:
             #print xi_cms_2
             if len(xi["1981284352"]) > 0:
                 h_xi_cms_vs_xi_RP_left.Fill(abs(xi["1981284352"][0]),xi_cms_1)
+                #print "Left Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
+                #print "RP xi: ",xi["1981284352"]
+                #print "CMS xi: ",xi_cms_1
             if len(xi["1998061568"]) > 0:
                 h_xi_cms_vs_xi_RP_right.Fill(abs(xi["1998061568"][0]),xi_cms_2)
+                #print "Right Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
+                #print "RP xi: ",xi["1998061568"]
+                #print "CMS xi: ",xi_cms_2
             #M_RP=m.sqrt(169000000*xi["1981284352"][0]*xi["1998061568"][0])
             #Y_RP=0.5*m.log(xi["1981284352"][0]/xi["1998061568"][0])
             #h_M_cms_vs_M_RP.Fill(M_RP,mass)
