@@ -19,6 +19,10 @@ def ModifyHisto(h,sample):
     numevents=0
     linecolor=0
 
+    if sample=="ExclusiveWW_a0w2p5e-6-SingleLepton-2017":
+        numevents=993
+        cross_section_pb=0.1282
+
     if sample=="WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         numevents=180935349.0
         cross_section_pb=50131.983
