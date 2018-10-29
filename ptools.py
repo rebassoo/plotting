@@ -10,213 +10,215 @@ def calcAco(phi1,phi2):
     return aco
 
 def ModifyHisto(h,sample):
-    #h.Scale(2.)
-    #luminosity_fb=37.2
-    #luminosity_fb=4.39
-    #luminosity_fb=12.19
-    #luminosity_fb=7.8
-    #Runs BCG
-    #luminosity_fb=15.9
-    #Full run
-    #luminosity_fb=35.8
-    #Runs BCG
-    #luminosity_fb=15.9
-    luminosity_fb=9.4
-    #Runs BG
-    #luminosity_fb=13.8
-    #luminosity_fb=13
-    #This is luminosity without runD
-    #luminosity_fb=32.8
+
+    #luminosity_fb=8.681
+    luminosity_fb=37.5
     print sample
     #https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#Diboson
     cross_section_pb=0
     numevents=0
     linecolor=0
-    if sample =="ExclusiveWWNonElastic":
-        #This cross section is from Doug's notes 92.83+/-0.10 for Madgraph 5.2.4.2. But this sample is only leptons so smaller cross section. Used %10.61 from Doug's notes. Should be 10.71% from 2014 PDG. 
-        #numevents=5000
-        numevents=50000
-        #0.0098903 is value calculated in Madgraph and is in the file unweighted_events.lhe
-        #This does no include elastic
-        cross_section_pb=3.11*0.0098903
-        #cross_section_pb=0.0098903
-        #linecolor=8
-        linecolor=429
-    if sample =="ExclusiveWW":
-        #This cross section is from Doug's notes 92.83+/-0.10 for Madgraph 5.2.4.2. But this sample is only leptons so smaller cross section. Used %10.61 from Doug's notes. Should be 10.71% from 2014 PDG. 
-        #numevents=5000
-        numevents=50000
-        #0.0098903 is value calculated in Madgraph and is in the file unweighted_events.lhe
-        #cross_section_pb=4.1*0.0098903
-        cross_section_pb=0.0098903
-        linecolor=7
-    if sample =="ExclusiveWW-FPMC":
-        numevents=199132
-        cross_section_pb=0.036744*0.7
-        linecolor=7
-    if sample =="ExclusiveWW-a0w-5e-6":
-        numevents=199132
-        cross_section_pb=2.228*0.7
-        linecolor=8
-    if sample =="ExclusiveWW-a0w-5e-6-withXiCut":
-        numevents=200000
-        cross_section_pb=0.1352*0.7
-        linecolor=9
-    if sample =="ExclusiveWW-a0w-2e-5-withXiCut":
-        numevents=200000
-        cross_section_pb=1.610*0.7
-        linecolor=10
-    if sample =="ExclusiveWW-a0w-5e-5-withXiCut":
-        numevents=200000
-        cross_section_pb=9.859*0.7
-        linecolor=11
-    if sample =="WWTo2L2Nu_13TeV-powheg":
-        #numevents=1999000
-        #numevents=1236906
-        #numevents=1162658
-        #numevents=1206070
-        numevents=1999000.0
-        #From website above
-        cross_section_pb=12.178
-        linecolor=5
-    if sample =="TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
-        numevents=6105137.
-        #numevents=5865278
-        #numevents=5997301
-        #numevents=6055403
-        #numevents=5967259.0
-        #From UCSB table (3*0.108)^2*815.96
-        cross_section_pb=85.66
-        linecolor=4
-    if sample =="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
-        #Differs slightly from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#DY_Z. Where is 1.23 factor from that is in UCSB table?
-        #numevents=47943922
-        #numevents=49748967
-        numevents=49582723.0
-        #numevents=49620546.0
-        cross_section_pb=4895*1.23
-        linecolor=2
-    if sample =="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
-        #Differs slightly from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns#DY_Z. Where is 1.23 factor from?
-        #numevents=35293682
-        numevents=35167868
-        cross_section_pb=18610*1.23
-        linecolor=2
-    #From UCBS table, NNLO from Lesya's summary table
-    if sample=="WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8":
-        #numevents=24120319
-        #numevents=24083399.0
-        #numevents=23183722
-        numevents=2317615.0
+
+    if sample=="WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
+        numevents=180935349.0
+        cross_section_pb=50131.983
+        linecolor=3
+
+    if sample=="WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
+        numevents=129940921.0
+        cross_section_pb=8426.094
+        linecolor=3
+
+    if sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
+        numevents=80285191.0
+        cross_section_pb=3172.958
+        linecolor=3
+
+    if sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=35862893*(103./105.)
+        #numevents=35862893*(104./105.)
+        #numevents=26462644.0
+        numevents=31865784.0
         cross_section_pb=61526.7
-        linecolor=6
-    if sample=="WW_DoubleScattering_13TeV-pythia8":
-        numevents=10000
-        cross_section_pb=1.64
-        linecolor=7
-    if sample=="WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8":
-        numevents=149681.
-        cross_section_pb=0.03711
-        linecolor=14
-    if sample=="ZZTo4L_13TeV_powheg_pythia8":
-        numevents=6669988.
-        cross_section_pb=1.256
-        linecolor=8
-    if sample=="WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":
-        numevents=6103817
-        cross_section_pb=405.271
-        linecolor=9
-    if sample=="ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8":
-        #This samples is for M>30
-        numevents=2307158.0
-        cross_section_pb=117.864
-        linecolor=11
-    if sample=="WZ_TuneCUETP8M1_13TeV-pythia8":
-        numevents=1000000.0
+        linecolor=3
+
+    if sample=="WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=35862893*(30./148.)
+        #numevents=35862893*(31./148.)
+        numevents=26345944.0
+        #cross_section_pb=1345*1.21
+        cross_section_pb=1345*1.26
+        linecolor=3
+
+    if sample=="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=17260723
+        #numevents=21250517*(79./80.)
+        numevents=19899436.0
+        #cross_section_pb=359.7*1.21
+        cross_section_pb=359.7*1.48
+        linecolor=3
+
+    if sample=="WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=14313274
+        #numevents=13970012*(63./63.)
+        #numevents=13970012*(62./63.)
+        numevents=10697050.0
+        #cross_section_pb=48.91*1.21
+        cross_section_pb=48.91*1.26
+        linecolor=3
+
+    if sample=="WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=20516713
+        #numevents=21709087*(79./98.)
+        #numevents=21709087*(98./98.)
+        numevents=18325085.0
+        #cross_section_pb=12.05*1.21
+        cross_section_pb=12.05*1.03
+        linecolor=3
+
+    if sample=="WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=20466692
+        #numevents=20466692*(98./98.)
+        numevents=20245897.0
+        #cross_section_pb=5.501*1.21
+        cross_section_pb=5.501*1.05
+        linecolor=3
+
+    if sample=="WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=19464742
+        #numevents=20258624*(108./111.)
+        numevents=20258624.0
+        #cross_section_pb=1.329*1.21
+        cross_section_pb=1.329*0.77
+        linecolor=3
+
+    if sample=="WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8":
+        #numevents=20244084
+        #numevents=20244084*(100./118.)
+        #numevents=20244084*(113./118.)
+        numevents=19426229.0
+        #cross_section_pb=0.03216*1.21
+        cross_section_pb=0.03216*0.77
+        linecolor=3
+
+    if sample=="QCD_Pt_170to300_TuneCP5_13TeV_pythia8":
+        #numevents=29829920. *(65./85.)
+        numevents=26298316.0
+        cross_section_pb=103500
+        linecolor=2
+
+    if sample=="QCD_Pt_300to470_TuneCP5_13TeV_pythia8":
+        #numevents=53798780. *(173./180.)
+        numevents=50543662.0
+        cross_section_pb=6830
+        linecolor=2
+
+    if sample=="QCD_Pt_470to600_TuneCP5_13TeV_pythia8":
+        #numevents=27881028. *(83./92.)
+        numevents= 27881028.0
+        cross_section_pb=642.1
+        linecolor=2
+
+    if sample=="QCD_Pt_600to800_TuneCP5_13TeV_pythia8":
+        #numevents=66134964 *(178./227.)
+        numevents=56760138.0
+        cross_section_pb=185.9
+        linecolor=2
+
+    if sample=="QCD_Pt_800to1000_TuneCP5_13TeV_pythia8":
+        #numevents=39529008*(89./124.)
+        numevents=37594720.0
+        cross_section_pb=32.293
+        linecolor=2
+
+    if sample=="QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8":
+        #numevents=19631814 *(60./124.)
+        numevents=19631814.0
+        cross_section_pb=9.4183
+        linecolor=2
+
+    if sample =="WW_TuneCP5_13TeV-pythia8":
+        #numevents=7319484
+        numevents=7791498
+        #From website above
+        #This NNLO from diboson_final
+        cross_section_pb=115.0
+        linecolor=5
+
+    if sample=="WZ_TuneCP5_13TeV-pythia8":
+        #numevents=3928630
+        numevents=2775960.0
         cross_section_pb=47.13
         linecolor=12
-    if sample=="ZZ_TuneCUETP8M1_13TeV-pythia8":
-        numevents=990064.0
-        cross_section_pb=16.523
-        linecolor=13
 
-        
+    if sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8":
+        #numevents=133011159
+        numevents=153531390*(435./461.)
+        #numevents=135461679
+        cross_section_pb=831.76
+        linecolor=4
+
+    if sample=="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8":
+        #numevents=41221873*(122./123.)
+        #numevents=41221873*(123./123.)
+        #numevents=36833333.0
+        numevents=37238173.0
+        cross_section_pb=831.76*0.435
+        linecolor=4
+
+    if sample=="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8":
+        #numevents=9568575*(5./27.)
+        numevents=6860482.0
+        cross_section_pb=3.36
+        linecolor=7
+ 
+    if sample=="ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8":
+        #This is total number of events in DAS, just submitted crab job
+        #numevents=5865875.*(23./23.)
+        numevents=5865875.0
+        cross_section_pb=136.02       
+        linecolor=7
+
+    if sample=="ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8":
+        #numevents=3939990*(12./13.)
+        numevents=3350290.0
+        cross_section_pb=80.945
+        linecolor=7
+
+    if sample=="ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8":
+        #numevents=7581624.*(12./26.)
+        numevents=6135926.0
+        cross_section_pb=35.85
+        linecolor=7
+
+    if sample=="ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8":
+        #numevents=7780870*(26./26.)
+        numevents=7516910.0
+        cross_section_pb=35.85
+        linecolor=7
+
 
     print sample
     print luminosity_fb
     print cross_section_pb
     print numevents
+    h.Sumw2()
     h.Scale((luminosity_fb*cross_section_pb*1000.)/numevents)
     h.SetFillColor(linecolor)
     h.SetLineColor(linecolor)
+    #h.SetLineStyle(2)
 
 
 def legend_name(sample):
     name="No legend name yet"
-    if sample=="WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8":name="W+Jets"
-    if sample=="TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8":name="t#bar{t}"
-    if sample=="WWTo2L2Nu_13TeV-powheg":name="inclusive WW"
-    if sample=="DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 10-50 GeV"
-    if sample=="DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="Drell-Yan 50+ GeV"
-    if sample=="ExclusiveWW": name="Elastic SM Exclusive WW"
-    if sample=="ExclusiveWW-a0w-5e-6": name="Elastic SM Exclusive WW a0w = 5e-6"
-    if sample=="ExclusiveWW-a0w-5e-6-withXiCut": name="Elastic SM Exclusive WW a0w = 5e-6"
-    if sample=="ExclusiveWW-a0w-2e-6-withXiCut": name="Elastic SM Exclusive WW a0w = 2e-6"
-    if sample=="ExclusiveWW-a0w-5e-5-withXiCut": name="Elastic SM Exclusive WW a0w = 5e-5"
-    if sample=="ExclusiveWWNonElastic": name="Non-Elastic SM Exclusive WW"
-    if sample=="WW_DoubleScattering_13TeV-pythia8": name="WW_DoubleScattering"
-    if sample=="WpWpJJ_EWK-QCD_TuneCUETP8M1_13TeV-madgraph-pythia8": name="WpWpJJ_EWK-QCD"
-    if sample=="ZZTo4L_13TeV_powheg_pythia8": name="ZZTo4L"
-    if sample=="ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8": name="ZGTo2LG"
-    if sample=="WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8": name="WGToLNuG"
-    if sample=="ZZ_TuneCUETP8M1_13TeV-pythia8": name="ZZ"
-    if sample=="WZ_TuneCUETP8M1_13TeV-pythia8": name="WZ"
+    if sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="W+Jets"
+    if sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8":name="W+Jets"
+    if sample=="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8":name="W+Jets, HT binned madgraph"
+    if sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="t#bar{t} amcatnloFXFX-pythia8"
+    if sample=="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8":name="t#bar{t} powheg"
+    if sample=="WW_TuneCP5_13TeV-pythia8":name="WW pythia8"
+    if sample=="WZ_TuneCP5_13TeV-pythia8": name="WZ pythia8"
+    if sample=="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8": name="Single top"
+    if sample=="QCD_Pt_170to300_TuneCP5_13TeV_pythia8": name="QCD Pt binned"
     return name
-
-
-def passPPS(xi):
-    left=False
-    right=False
-    passesPPS=False
-    ii=0
-    for detId_rp in e.rp_tracks_detId:
-                    #print detId_rp
-        if detId_rp == 2: 
-            left=True
-                    #if lessthan6: print "DetId 2, Xi: {0}".format(e.rp_tracks_xi[i])
-            xi["2"].append(e.rp_tracks_xi[ii])
-        if detId_rp == 3: 
-            left=True
-                    #if lessthan6: print "DetId 3, Xi: {0}".format(e.rp_tracks_xi[i])
-            xi["3"].append(e.rp_tracks_xi[ii])
-        if detId_rp == 102: 
-            right=True
-                    #xi_right.append(float(e.rp_tracks_xi))
-                    #if lessthan6: print "DetId 102, Xi: {0}".format(e.rp_tracks_xi[i])
-            xi["102"].append(e.rp_tracks_xi[ii])
-        if detId_rp == 103: 
-            right=True
-                    #xi_right.append(float(e.rp_tracks_xi))
-                    #if lessthan6: print "DetId 103, Xi: {0}".format(e.rp_tracks_xi[i])
-            xi["103"].append(e.rp_tracks_xi[ii])
-        ii=ii+1
-
-    if (left == True) and (right == True):
-        passesPPS=True
-        if fvertex_numtracks < 6 and ptemu > 30:
-            print "Run: {0}, Lumi: {1}, Event: {2}".format(run,e.lumiblock,event)
-            print "Num extra tracks: {0}, ptemu: {1}".format(fvertex_numtracks,ptemu)
-            print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
-            print "Chi2_ndof: {0}".format(e.fvertex_chi2ndof)
-            print "Closest track: {0}".format(closest_track)
-            print "My vertex fit position x, y, z: {0},{1},{2}".format(e.fvertex_x,e.fvertex_y,e.fvertex_z)
-            print "Primary vertex fit position x, y, z: {0},{1},{2}".format(e.vertex_x,e.vertex_y,e.vertex_z)
-            print "Primary vertex extra tracks: {0}".format(e.vertex_ntracks-2)
-
-    if len(xi["2"]) > 1 or len(xi["3"]) > 1 or len(xi["102"]) > 1 or len(xi["103"]) > 1:
-        print "This event has multiple tracks in a single pot"
-        print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
-        passesPPS=False
-    return passesPPS
-
 
