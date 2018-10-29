@@ -1,0 +1,66 @@
+#!/bin/bash
+
+#/hadoop/cms/store/user/rebassoo/
+
+python histos_singleMu.py latest ExclusiveWW a0w2p5e-6-SingleLepton-2017
+cp histos/ExclusiveWW.root histos/ExclusiveWW_a0w2p5e-6-SingleLepton-2017.root
+#exit 1
+#python histos_singleMu.py latest WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-0jets
+#python histos_singleMu.py latest WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-1jets
+#python histos_singleMu.py latest WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-2jets
+
+python histos_singleMu.py specific WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-0jets/181004_161707/0000
+python histos_singleMu.py specific WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-1jets/181004_161729/0000
+python histos_singleMu.py specific WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-2jets/181004_161751/0000
+
+#exit 1
+#python histos_singleMu.py specific SingleMuon crab_Run2017C-wElectron/180921_224838/0000/
+#python histos_singleMu.py latest SingleMuon crab_Run2017C-wElectron
+#python histos_singleMu.py latest WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJets
+#python histos_singleMu.py latest TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8 crab_TTToSemiLeptonic
+
+python histos_singleMu.py latest SingleMuon crab_Run2017B
+python histos_singleMu.py latest SingleMuon crab_Run2017C
+python histos_singleMu.py latest SingleMuon crab_Run2017D
+python histos_singleMu.py latest SingleMuon crab_Run2017E
+python histos_singleMu.py latest SingleMuon crab_Run2017F
+
+#exit 1
+
+
+#python histos_singleMu.py specific WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT100-200/180927_213758/0000
+#python histos_singleMu.py specific WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT200-400/180927_213820/0000
+#python histos_singleMu.py specific WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT400-600/180927_213846/0000
+#python histos_singleMu.py specific WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT600-800/180927_213912/0000
+#python histos_singleMu.py specific WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT800-1200/180927_213933/0000
+#python histos_singleMu.py specific WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT1200-2500/180927_213955/0000
+#python histos_singleMu.py specific WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT2500ToInf/180927_214016/0000
+
+
+
+#python histos_singleMu.py latest WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT100-200
+#python histos_singleMu.py latest WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT200-400
+#python histos_singleMu.py latest WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT400-600
+#python histos_singleMu.py latest WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT600-800
+#python histos_singleMu.py latest WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT800-1200
+#python histos_singleMu.py latest WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT1200-2500
+#python histos_singleMu.py latest WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT2500ToInf
+
+python histos_singleMu.py latest TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8 crab_TTToSemiLeptonic
+#python histos_singleMu.py latest TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_TTbar
+python histos_singleMu.py latest WW_TuneCP5_13TeV-pythia8 crab_WW
+python histos_singleMu.py latest WZ_TuneCP5_13TeV-pythia8 crab_WZ
+
+python histos_singleMu.py latest ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8 crab_ST_s-channel
+python histos_singleMu.py latest ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 crab_ST_t-channel_top-better
+python histos_singleMu.py latest ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 crab_ST_t-channel_antitop
+python histos_singleMu.py latest ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 crab_ST_tW_top_5f
+python histos_singleMu.py latest ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 crab_ST_tW_antitop_5f
+
+python histos_singleMu.py latest QCD_Pt_170to300_TuneCP5_13TeV_pythia8 crab_QCD_Pt_170to300
+python histos_singleMu.py latest QCD_Pt_300to470_TuneCP5_13TeV_pythia8 crab_QCD_Pt_300to470
+python histos_singleMu.py latest QCD_Pt_470to600_TuneCP5_13TeV_pythia8 crab_QCD_Pt_470to600
+python histos_singleMu.py latest QCD_Pt_600to800_TuneCP5_13TeV_pythia8 crab_QCD_Pt_600to800
+python histos_singleMu.py latest QCD_Pt_800to1000_TuneCP5_13TeV_pythia8 crab_QCD_Pt_800to1000
+python histos_singleMu.py latest QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8 crab_QCD_Pt_1000to1400
+
