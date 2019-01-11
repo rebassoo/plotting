@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #Finn Rebassoo, LLNL 10-16-2017
 import math as m
+import random as r
+from ROOT import *
 
 def GetDphi(phi1,phi2):
     result = phi1-phi2
@@ -8,6 +10,15 @@ def GetDphi(phi1,phi2):
     while result > m.pi: result = 2*m.pi - result
     while result < -m.pi: result = 2*m.pi + result
     return result
+
+#def calcPixelProb0Track(sector,numI):
+#    if sector="45":
+#        prob=numI*numI*0.015-2.05*numI+93.
+#        return prob/100.
+#    if sector="56"
+#        prob=numI*numI*0.01625-2.1625*numI+92.625
+#        return prob/100.
+    
 
 #def GetCrossingAngle(run,lumiblock):
 #    crossingAngle=0
@@ -104,7 +115,99 @@ def GetXi(x,y,pot,run,crossingAngle):
             D_corr = (crossingAngle-120.)*0.046*10 - 7.291*10
             xi = x_corr / D_corr
 
-    return xi
+    return abs(xi)
+
+#def passPPSSimMixing(numInteractions):
+#def passPPSSimMixing(numInteractions):
+def passPPSSimMixing():
+    passPPS=False
+    #Randomly pick from one of the Runs
+    #num=r.random()
+    #RunBlumi=4.89
+    #RunClumi=9.9
+    #RunDlumi=4.36
+    #RunElumi=9.535
+    #RunFlumi=13.96
+    #totallumi=RunBlumi+RunClumi+RunDlumi+RunElumi+RunFlumi
+    #runToSample=""
+    #if num<(RunBlumi/totallumi):
+    #    runToSample="RunB"
+    #if num>(RunBlumi/totallumi) and num < ((RunBlumi+RunClumi)/totallumi):
+    #    runToSample="RunC"
+    #if num > ((RunBlumi+RunClumi)/totallumi) and num < ((RunBlumi+RunClumi+RunDlumi)/totallumi):
+    #    runToSample="RunD"
+    #if num > ((RunBlumi+RunClumi+RunDlumi)/totallumi) and num < ((RunBlumi+RunClumi+RunDlumi+RunElumi)/totallumi):
+    #    runToSample="RunE"
+    #if num > ((RunBlumi+RunClumi+RunDlumi+RunElumi)/totallumi):
+    #    runToSample="RunF"
+
+    #probSec45=calcProtonProb("45",numInteractions)
+    #probSec56=calcProtonProb("56",numInteractions)
+    #num=r.random()
+    #doubleTag=False
+    #if num < probSec45*probSec56:
+    #    doubleTag=True
+    #else:
+    #    return False
+
+    file_xi=TFile("xi.root")
+    #h_num_pix_45=file_xi.Get("h_numPixTracks_45")
+    #h_num_pix_56=file_xi.Get("h_numPixTracks_56")
+    #num_pix_45=h_num_pix_45.GetRandom()
+    #num_pix_56=h_num_pix_56.GetRandom()
+    num1=r.random()
+    num2=r.random()
+    #print "num1: ",num1
+    #print "num2: ",num2
+    #if num_pix_45 == 1 and num_pix_56 ==1:
+    if num1 < 0.292298 and num2 < 0.295310:
+        h_xi_45=file_xi.Get("h_pixel_xi_45_1track")
+        h_xi_56=file_xi.Get("h_pixel_xi_56_1track")
+        xi_45=h_xi_45.GetRandom()
+        xi_56=h_xi_56.GetRandom()
+        xi=[xi_45,xi_56]
+        #print "xi: ",xi
+        passPPS=True
+        return passPPS,xi
+    else:
+        xi=[]
+        return passPPS,xi
+
+def passPPSNew(e,xi):
+    left=False
+    right=False
+    passesPPS=False
+    ii=0
+    #print "Run: ",e.run
+    #print "Lumiblock: ",e.lumiblock
+    run=e.run
+    lumiblock=e.lumiblock
+    for detId_rp in e.proton_rpid:
+        #pixel
+        if detId_rp == 23: 
+            xi["23"].append(e.proton_xi[ii])
+        #strips
+        if detId_rp == 3: 
+            xi["3"].append(e.proton_xi[ii])
+        #diamond
+        if detId_rp == "16": 
+            xi["16"].append(e.proton_xi[ii])
+        #pixel
+        if detId_rp == 123: 
+            xi["123"].append(e.proton_xi[ii])
+        #strips
+        if detId_rp == 103: 
+            xi["103"].append(e.proton_xi[ii])
+        #diamond
+        if detId_rp == "116": 
+            xi["116"].append(e.proton_xi[ii])
+        ii=ii+1
+
+    if len(xi["123"])==1 and len(xi["23"])==1:
+        passesPPS=True
+
+    return passesPPS
+
 
 def passPPS(e,xi,crossingAngle):
     left=False
