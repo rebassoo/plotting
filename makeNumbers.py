@@ -52,11 +52,11 @@ CutflowNameList=[
 "Preselection",
 "Jet Veto",
 "Jet pruned",
-"Delta phi cut",
-"MWW cut",
-"MWhad cut",
-"MET cut",
-"W leptonic pt cut",
+"Delta phi > 2.5",
+"MWW>500 GeV",
+"40 GeV<MWhad<120 GeV",
+"MET>40 GeV",
+"W leptonic pt > 200 GeV",
 "Extra tracks cut"
 ]
 
@@ -149,13 +149,13 @@ for cut in CutflowHistoList:
     total_error[i]=round(total_error[i],1)
     i=i+1
 
-data=[0]*6
+data=[0]*8
 if not justMC:
     #fdata=TFile("histos/10-25-2018/SingleMuonTotal.root")
     fdata=TFile("histos/SingleMuonTotal.root")
     idata=0
     for cut in CutflowHistoList:
-        if idata<6:
+        if idata<8:
             hData=TH1F()
             #print "Cut: ",cut
             hData=fdata.Get(cut)
@@ -173,7 +173,7 @@ for at in CutflowHistoList:
     QCD_all.append(str(QCD[ait])+" +/- "+ str(QCD_error[ait]))
     total_all.append(str(total[ait])+" +/- "+ str(total_error[ait]))
     exclWWa02p5_all.append(str(exclWWa02p5[ait])+" +/- "+ str(exclWWa02p5_error[ait]))
-    if ait<6:
+    if ait<8:
         data_all.append(str(data[ait]))
     ait=ait+1
 
@@ -195,7 +195,7 @@ print "Data:           ",data_all
 
 data=[CutflowNameList,Wjets_all,ttbar_all,SingleTop_all,Diboson_all,QCD_all,total_all,exclWWa02p5_all,data_all]
 data_names=["","Wjets:","ttbar:","SingleTop:","Diboson:","QCD:","total MC:","a0w=2.5e-6","data:"]
-
+#print data[8]
 dash='_'*200
 for i in range(len(data)):
     if i ==0:
@@ -203,7 +203,7 @@ for i in range(len(data)):
         print('{:<20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}'.format(data_names[i],data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],data[i][6],data[i][7],data[i][8]))
         print(dash)
     if i == 8:
-        print('{:<20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}'.format(data_names[i],data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5]))
+        print('{:<20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}'.format(data_names[i],data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],data[i][6],data[i][7]))
     if i!=0 and i!=8:
         print('{:<20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}{:^20s}'.format(data_names[i],data[i][0],data[i][1],data[i][2],data[i][3],data[i][4],data[i][5],data[i][6],data[i][7],data[i][8]))
 
