@@ -32,7 +32,15 @@ MCsamples=[
 "QCD_Pt_470to600_TuneCP5_13TeV_pythia8",
 "QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
 "QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
-"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8"
+"QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
+"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8"
+"QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8"
+#"QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+#"QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+#"QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+#"QCD_Pt-600to800_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+#"QCD_Pt-800to1000_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+#"QCD_Pt-1000toInf_MuEnrichedPt5_TuneCP5_13TeV_pythia8"
 ]
 
 gStyle.SetOptStat(0)
@@ -123,8 +131,8 @@ for i in range(min,max+1):
     #Plot Data
     #f_data=TFile("histos/SingleMuon_Run2017C.root")
     #f_data=TFile("histos/SingleElectron_Run2017C.root")
-    #f_data=TFile("histos/SingleMuonTotal.root")
-    f_data=TFile("histos/SingleElectronTotal.root")
+    f_data=TFile("histos/SingleMuonTotal.root")
+    #f_data=TFile("histos/SingleElectronTotal.root")
     f_data.cd()
     if digits:
         h_data=f_data.Get(histo_list[i-1])
@@ -135,7 +143,7 @@ for i in range(min,max+1):
     h_data.SetLineColor(1)
     #h_data.Sumw2()
     #h_data.Scale(0.5)
-    h_data.Rebin(2)
+    #h_data.Rebin(2)
     maxhisto_data=h_data.GetMaximum()
     print maxhisto_data
     #hstack.GetYaxis().SetRangeUser(0,maxhisto_data*1.15)
@@ -157,8 +165,8 @@ for i in range(min,max+1):
         else: hMC.append(fMC[it].Get(u))
         ModifyHisto(hMC[it],sample)
         #Scale MC to data for PPS numextra tracks plot
-        hMC[it].Rebin(2)
-        if sample =="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" or sample=="WW_TuneCP5_13TeV-pythia8" or sample=="WZ_TuneCP5_13TeV-pythia8" or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8":
+        #hMC[it].Rebin(2)
+        if sample =="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" or sample=="WW_TuneCP5_13TeV-pythia8" or sample=="WZ_TuneCP5_13TeV-pythia8" or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8" or sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
             leg.AddEntry(hMC[it],legend_name(sample),"f")
         hstack.Add(hMC[it])
         it=it+1
