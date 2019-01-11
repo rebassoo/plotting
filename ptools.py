@@ -19,9 +19,15 @@ def ModifyHisto(h,sample):
     numevents=0
     linecolor=0
 
+    if sample=="ExclusiveWW_SM-SingleLepton-2017":
+        numevents=38000
+        cross_section_pb=0.00391
+        linecolor=6
+
     if sample=="ExclusiveWW_a0w2p5e-6-SingleLepton-2017":
         numevents=993
         cross_section_pb=0.1282
+        linecolor=6
 
     if sample=="WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         numevents=180935349.0
@@ -141,6 +147,31 @@ def ModifyHisto(h,sample):
         cross_section_pb=9.4183
         linecolor=2
 
+    if sample=="QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8":
+        numevents=46438676.0
+        cross_section_pb=0.07335*117989
+        linecolor=2
+    if sample=="QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8":
+        numevents=15679722.0
+        cross_section_pb=0.10196*7820.25
+        linecolor=2
+    if sample=="QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8":
+        cross_section_pb=0.12242*645.528
+        linecolor=2
+        numevents=23940201.0
+    if sample=="QCD_Pt-600to800_MuEnrichedPt5_TuneCP5_13TeV_pythia8":
+        cross_section_pb=0.13412*187.109
+        linecolor=2
+        numevents=16171482.0
+    if sample=="QCD_Pt-800to1000_MuEnrichedPt5_TuneCP5_13TeV_pythia8":
+        cross_section_pb=0.14552*32.3486
+        linecolor=2
+        numevents=14559081.0
+    if sample=="QCD_Pt-1000toInf_MuEnrichedPt5_TuneCP5_13TeV_pythia8":
+        cross_section_pb=0.15544*10.4305
+        linecolor=2
+        numevents=11208614.0
+
     if sample =="WW_TuneCP5_13TeV-pythia8":
         #numevents=7319484
         numevents=7791498
@@ -201,6 +232,12 @@ def ModifyHisto(h,sample):
         cross_section_pb=35.85
         linecolor=7
 
+    if sample=="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8":
+        numevents=7516910.0
+        cross_section_pb=5765.4
+        linecolor=8
+
+        
 
     print sample
     print luminosity_fb
