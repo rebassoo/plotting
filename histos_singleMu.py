@@ -14,7 +14,7 @@ import time
 
 
 new_method=True
-if True:
+if new_method:
     print "Using New Proton Reconstruction Method"
 else:
     print "Using Old Proton Reconstruction Method"
@@ -36,8 +36,11 @@ file_dir=sys.argv[3]
 
 
 DATA=False
+ExclusiveMC=False
 if sample_name == "SingleMuon":
     DATA=True
+if sample_name == "ExclusiveWW":
+    ExclusiveMC=True
 print "Is is Data: ",DATA
 mypath_prefix='/hadoop/cms/store/user/rebassoo/'
 print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
@@ -128,6 +131,7 @@ h_jet_pt=TH1F("h_jet_pt",";p_{T} (jet) [GeV];",120,0,1200)
 h_jet_eta=TH1F("h_jet_eta",";#eta_{jet};",60,-3,3)
 h_deltaR_lepton_jet=TH1F("h_deltaR_lepton_jet",";#deltaR(#mu,jet);",200,0,10)
 h_deltaphi_jet_met=TH1F("h_deltaphi_jet_met",";#delta#Phi(MET,jet);",100,0,5)
+h_deltaphi_jet_Wleptonic=TH1F("h_deltaphi_jet_Wleptonic",";#delta#Phi(MET,jet);",100,0,5)
 h_tau21=TH1F("h_tau21",";tau21;",100,0,2)
 h_prunedMass=TH1F("h_prunedMass",";prunedMass [GeV];",200,0,1000)
 h_recoMWlep=TH1F("h_recoMWlep",";M_{W_{lep}} [GeV];",100,0,200)
@@ -152,6 +156,7 @@ h_jet_pt_jetVeto_Wplus=TH1F("h_jet_pt_jetVeto_Wplus",";p_{T} (jet) [GeV];",120,0
 h_jet_pt_jetVeto_Wminus=TH1F("h_jet_pt_jetVeto_Wminus",";p_{T} (jet) [GeV];",120,0,1200)
 h_deltaR_lepton_jet_jetVeto=TH1F("h_deltaR_lepton_jet_jetVeto",";#deltaR(#mu,jet);",200,0,10)
 h_deltaphi_jet_met_jetVeto=TH1F("h_deltaphi_jet_met_jetVeto",";#delta#Phi(MET,jet);",100,0,5)
+
 h_tau21_jetVeto=TH1F("h_tau21_jetVeto",";tau21;",100,0,2)
 h_prunedMass_jetVeto=TH1F("h_prunedMass_jetVeto",";prunedMass [GeV];",200,0,1000)
 h_recoMWlep_jetVeto=TH1F("h_recoMWlep_jetVeto",";M_{W_{lep}} [GeV];",100,0,200)
@@ -226,9 +231,25 @@ h_pfcand_nextracks_after_jet_veto_jet_pruning_veto_signal_PPS=TH1F("h_pfcand_nex
 h_xi_1=TH1F("h_xi_1",";#xi_{1};",128,0,0.32)
 h_xi_2=TH1F("h_xi_2",";#xi_{2};",128,0,0.32)
 h_Y_RP=TH1F("h_Y_RP",";Y RP;",60,-3,3)
+h_Y_CMS_minus_RP=TH1F("h_Y_CMS_minus_RP",";Y RP;",60,-3,3)
 h_MX=TH1F("h_MX",";Mass RP [GeV];",100,0,3000)
 h_MWW_MX=TH1F("h_MWW_MX",";MWW/MX;",100,0,2)
 h_MWW_minus_MX=TH1F("h_MWW_minus_MX",";MWW - MX;",1000,-1000,200)
+
+h_xi_1_0_4_extratracks=TH1F("h_xi_1_0_4_extratracks",";#xi_{1};",128,0,0.32)
+h_xi_2_0_4_extratracks=TH1F("h_xi_2_0_4_extratracks",";#xi_{2};",128,0,0.32)
+h_Y_RP_0_4_extratracks=TH1F("h_Y_RP_0_4_extratracks",";Y RP;",60,-3,3)
+h_Y_CMS_minus_RP_0_4_extratracks=TH1F("h_Y_CMS_minus_RP_0_4_extratracks",";Y RP;",60,-3,3)
+h_MX_0_4_extratracks=TH1F("h_MX_0_4_extratracks",";Mass RP [GeV];",100,0,3000)
+h_MWW_MX_0_4_tracks=TH1F("h_MWW_MX_0_4_tracks",";MWW/MX;",100,0,2)
+
+h_xi_1_0_9_extratracks=TH1F("h_xi_1_0_9_extratracks",";#xi_{1};",128,0,0.32)
+h_xi_2_0_9_extratracks=TH1F("h_xi_2_0_9_extratracks",";#xi_{2};",128,0,0.32)
+h_Y_RP_0_9_extratracks=TH1F("h_Y_RP_0_9_extratracks",";Y RP;",60,-3,3)
+h_Y_CMS_minus_RP_0_9_extratracks=TH1F("h_Y_CMS_minus_RP_0_9_extratracks",";Y RP;",60,-3,3)
+h_MX_0_9_extratracks=TH1F("h_MX_0_9_extratracks",";Mass RP [GeV];",100,0,3000)
+h_MWW_MX_0_9_extratracks=TH1F("h_MWW_MX_0_9_extratracks",";MWW/MX;",100,0,2)
+
 
 h_num_extra_tracks_0jets=TH1F("h_num_extra_tracks_0jets",";Number of extra tracks;",100,-0.5,99.5)
 h_num_extra_tracks_0jets_boosted=TH1F("h_num_extra_tracks_0jets_boosted",";Number of extra tracks;",100,-0.5,99.5)
@@ -249,12 +270,40 @@ h_num_extra_tracks_PPS_reweight_extra_tracks=TH1F("h_num_extra_tracks_PPS_reweig
 h_num_extra_tracks_notPPS=TH1F("h_num_extra_tracks_notPPS",";Number of extra tracks;",20,-0.5,99.5)
 h_num_extra_tracks_notPPS_reweight_extra_tracks=TH1F("h_num_extra_tracks_notPPS_reweight_extra_tracks",";Number of extra tracks;",20,-0.5,99.5)
 
+h_xi_23=TH1F("h_xi_23",";Xi;",128,0,0.32)
+h_xi_123=TH1F("h_xi_123",";Xi;",128,0,0.32)
+
 h_mass_cms_vs_rp=TH2F("h_mass_cms_vs_rp","M_{CMS} [GeV]; M_{RP} [GeV];",2500,0,2500,2500,0,2500)
 h_tau21_vs_prunedMass=TH2F("h_tau21_vs_prunedMass","tau21;prunedMass [GeV];",200,0,1000,100,0,2)
 
+
+
 #ratio=[1.71411442757,1.65346240997,1.51162588596,1.32219600677,1.48807013035,1.32334625721,1.19461846352,0.960833132267,0.717698097229,0.667848348618,0.55575978756,0.51155591011,0.406985670328,0.386163681746,0.222981020808,0.301497846842,0.30847299099,0.26160132885,0.217442929745,0.206935018301]
 #ratio=[1.7591894865,1.65770566463,1.52731251717,1.38454854488,1.49983930588,1.34218049049,1.18148815632,0.962043762207,0.726165413857,0.659949243069,0.558763444424,0.517887592316,0.404845952988,0.392880350351,0.226762995124,0.312207937241,0.3112424016,0.27814039588,0.229229226708,0.209610715508]
-ratio=[2.82236480713,2.00691056252,2.03978705406,1.76865959167,1.8862708807,1.76884937286,1.42001616955,1.18990719318,1.08082330227,0.90074044466,0.691348254681,0.625970959663,0.543983399868,0.453996747732,0.409627914429,0.400803387165,0.333947241306,0.375621974468,0.300886541605,0.408319681883]
+#ratio=[2.82236480713,2.00691056252,2.03978705406,1.76865959167,1.8862708807,1.76884937286,1.42001616955,1.18990719318,1.08082330227,0.90074044466,0.691348254681,0.625970959663,0.543983399868,0.453996747732,0.409627914429,0.400803387165,0.333947241306,0.375621974468,0.300886541605,0.408319681883]
+
+ratio_norm=1.200741
+ratio=[
+2.73496890068
+,2.09822511673
+,2.22265338898
+,2.20156693459
+,2.050604105
+,1.94660282135
+,1.55770504475
+,1.37191867828
+,1.1828019619
+,0.977574408054
+,0.77213126421
+,0.700397014618
+,0.613473594189
+,0.504572927952
+,0.451342433691
+,0.490676164627
+,0.40177705884
+,0.431589245796
+,0.353999227285
+,0.509139001369]
 
 Run=0.
 event=0.
@@ -275,7 +324,24 @@ for e in chain:
     if e.muon_pt.size() == 0:
         continue
 
+    if DATA:
+        xi_trigger = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[]}
+        if new_method:
+            if passPPSNewPixel(e,xi_trigger):
+                if len(xi_trigger["23"]) == 1:
+                    h_xi_23.Fill(xi_trigger["23"][0])
+                if len(xi_trigger["123"]) == 1:
+                    h_xi_123.Fill(xi_trigger["123"][0])
 
+        else:
+            crossingAngle=crossAngleDict['{0}:{1}'.format(run,lumi)]
+            passesPPS=passPPS(e,xi_trigger,float(crossingAngle)) 
+            if len(xi_trigger["23"]) == 1:
+                h_xi_23.Fill(xi_trigger["23"][0])
+            if len(xi_trigger["123"]) == 1:
+                h_xi_123.Fill(xi_trigger["123"][0])
+
+            
     h_muon_pt.Fill(e.muon_pt[0],pileupw)
     h_muon_eta.Fill(e.muon_eta[0],pileupw)
     h_muon_iso.Fill(e.muon_iso[0],pileupw)
@@ -286,16 +352,38 @@ for e in chain:
     deta_lepton_jet=e.muon_eta[0]-e.jet_eta[0]
     deltaR=m.sqrt(dphi_lepton_jet*dphi_lepton_jet+deta_lepton_jet*deta_lepton_jet   )
     h_deltaR_lepton_jet.Fill(deltaR,pileupw)
-    h_deltaphi_jet_met.Fill(GetDphi(e.jet_phi[0],e.met_phi),pileupw)
-    #h_deltaphi_jet_Wleptonic
+    dphi_jet_met=abs(GetDphi(e.jet_phi[0],e.met_phi))
+    h_deltaphi_jet_met.Fill(dphi_jet_met,pileupw)
+    dphi_jet_Wl=abs(GetDphi(e.jet_phi[0],e.WLeptonicPhi))
+    h_deltaphi_jet_Wleptonic.Fill(dphi_jet_Wl,pileupw)
 
     tau21=e.jet_tau2[0]/e.jet_tau1[0]
     prunedMass=e.jet_corrmass[0]
+
+    if deltaR<= (m.pi/2):
+        continue
+    if dphi_jet_met<=2:
+        continue
+    if dphi_jet_Wl<=2:
+        continue
+
+    recoMWhad=-999.
     recoMWhad=e.recoMWhad
+    #if DATA:
+    #    recoMWhad=e.recoMWhad
+    #else:
+    #    CER=e.jet_pt[0]/(m.sqrt(e.jet_px[0]*e.jet_px[0]+e.jet_py[0]*e.jet_py[0]))
+    #    p4SumJets=TLorentzVector()
+    #    p4SumJets.SetPtEtaPhiE(e.jet_pt[0],e.jet_eta[0],e.jet_phi[0],CER*e.jet_energy[0])
+    #    recoMWhad=p4SumJets.M()
+        
+
     recoMWlep=e.recoMWlep
     dphiWW=abs(e.dphiWW)
     WLeptonicPt=e.WLeptonicPt
     recoMWW=e.recoMWW
+    recoYCMS=e.recoRapidityWW
+    #recoYCMS=0
     pfcand_nextracks=e.pfcand_nextracks
     MET=e.met
 
@@ -316,6 +404,7 @@ for e in chain:
 
     jet_veto=False
     if e.num_jets_ak4<1 and e.num_bjets_ak8 < 1:
+    #if e.num_jets_ak4<1:
     #if e.num_bjets_ak4<1 and e.num_bjets_ak8 < 1:
         h_muon_iso_jetVeto.Fill(e.muon_iso[0],pileupw)
         jet_veto=True
@@ -389,14 +478,16 @@ for e in chain:
         #if e.num_jets_ak4<1 and e.num_bjets_ak8 < 1:
         h_dphiWW_after_jetVeto.Fill(dphiWW,pileupw)
         h_pfcand_nextracks_after_jetVeto.Fill(pfcand_nextracks,pileupw)
-        if not (dphiWW>2.5 and recoMWW>500 and (recoMWhad>40 and recoMWhad<120) and MET>40 and WLeptonicPt>200):
+        #if not (dphiWW>2.5 and recoMWW>500 and (recoMWhad>40 and recoMWhad<120) and MET>40 and WLeptonicPt>200):
+        if not (dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200):
             h_pfcand_nextracks_controlRegion.Fill(pfcand_nextracks,pileupw)
             
         if dphiWW>2.5:
             h_recoMWW_afterDphi.Fill(recoMWW,pileupw)
             if recoMWW>500:
                 h_recoMWhad_afterMWW.Fill(recoMWhad,pileupw)
-                if recoMWhad>40 and recoMWhad<120:
+                #if recoMWhad>40 and recoMWhad<120:
+                if recoMWhad>0:
                     h_MET_afterMWhad.Fill(MET,pileupw)
                     if MET>40:
                         h_WLeptonicPt_afterMET.Fill(WLeptonicPt,pileupw)
@@ -425,7 +516,8 @@ for e in chain:
 
 
     passesBoosted=False
-    if dphiWW>2.5 and recoMWW>500 and recoMWhad>40 and recoMWhad<120 and MET>40 and WLeptonicPt>200:
+    #if dphiWW>2.5 and recoMWW>500 and recoMWhad>40 and recoMWhad<120 and MET>40 and WLeptonicPt>200:
+    if dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200:
         passesBoosted=True
     if e.num_jets_ak4<1:
         if DATA:
@@ -480,9 +572,11 @@ for e in chain:
     #xi = {"2023227392":[],"1981284352":[],"2070937600":[],"2040004608":[],"1998061568":[],"2054160384":[]}
     xi = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[]}
     passesPPS=False
+    passesPPSSignalMixing=False
     #if DATA and e.num_jets_ak4<1 and e.num_bjets_ak8 < 1:
     #if e.num_jets_ak4>0 and e.num_bjets_ak8 < 1 and e.num_bjets_ak4 <1:
-    if e.num_jets_ak4<1 and e.num_bjets_ak8 < 1 and dphiWW>2.5 and recoMWW>500 and recoMWhad>40 and recoMWhad<120 and MET>40 and WLeptonicPt>200:
+    #if e.num_jets_ak4<1 and e.num_bjets_ak8 < 1 and dphiWW>2.5 and recoMWW>500 and recoMWhad>40 and recoMWhad<120 and MET>40 and WLeptonicPt>200:
+    if e.num_jets_ak4<1 and e.num_bjets_ak8 < 1 and dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200:
         h_num_extra_tracks_nominal.Fill(pfcand_nextracks,pileupw)
         reweight_extra_tracks=1.
         if DATA:
@@ -493,15 +587,19 @@ for e in chain:
                 passesPPS=passPPS(e,xi,float(crossingAngle))
 
         if not DATA:
-            #passesPPS=passPPSSimMixing(numInteractions)
-            if pfcand_nextracks < 100:
-                #reweight_extra_tracks=ratio[int(pfcand_nextracks/5)]/0.919
-                #reweight_extra_tracks=ratio[int(pfcand_nextracks/5)]/0.9273
-                reweight_extra_tracks=ratio[int(pfcand_nextracks/5)]/1.0642518
-            passesPPS,xi_sim=passPPSSimMixing()
-            if passesPPS:
-                xi["23"].append(xi_sim[0])
-                xi["123"].append(xi_sim[1])
+            if not ExclusiveMC:
+                if pfcand_nextracks < 100:
+                    #reweight_extra_tracks=ratio[int(pfcand_nextracks/5)]/ratio_norm
+                    reweight_extra_tracks=ratio[int(pfcand_nextracks/5)]
+                passesPPS,xi_sim=passPPSSimMixing()
+                if passesPPS:
+                    xi["23"].append(xi_sim[0])
+                    xi["123"].append(xi_sim[1])
+            else:
+                if passPPSNew(e,xi):
+                    passesPPSSignalMixing=passPPSSimMixingSignal(e.mc_pu_trueinteractions)
+                    if passesPPSSignalMixing:
+                        passesPPS=True
 
         #if passesPPS and dphiWW>2.5 and recoMWW>500 and (recoMWhad>40 and recoMWhad<120) and MET>40 and WLeptonicPt>200:
 
@@ -517,7 +615,7 @@ for e in chain:
             #h_pfcand_nextracks_after_jet_veto_PPS.Fill(pfcand_nextracks,pileupw)
             M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
             if xi["23"][0] > 0 and xi["123"][0] > 0:
-                #Rapidity_RP=0.5*m.log(xi["23"][0]/xi["123"][0])
+                Rapidity_RP=0.5*m.log(xi["23"][0]/xi["123"][0])
                 if DATA:
                     if pfcand_nextracks>9:
                         h_num_extra_tracks_PPS.Fill(pfcand_nextracks,pileupw)
@@ -525,22 +623,35 @@ for e in chain:
                 else:
                     h_num_extra_tracks_PPS.Fill(pfcand_nextracks,pileupw)
                     h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*reweight_extra_tracks)
+                    if pfcand_nextracks<5:
+                        h_xi_1_0_4_extratracks.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
+                        h_xi_2_0_4_extratracks.Fill(xi["123"][0],pileupw*reweight_extra_tracks)
+                        h_MX_0_4_extratracks.Fill(M_RP,pileupw*reweight_extra_tracks)
+                        h_Y_RP_0_4_extratracks.Fill(Rapidity_RP,pileupw*reweight_extra_tracks)
+                        h_Y_CMS_minus_RP_0_4_extratracks.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)                        
+                        h_MWW_MX_0_4_tracks.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+                    if pfcand_nextracks<10:
+                        h_xi_1_0_9_extratracks.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
+                        h_xi_2_0_9_extratracks.Fill(xi["123"][0],pileupw*reweight_extra_tracks)
+                        h_MX_0_9_extratracks.Fill(M_RP,pileupw*reweight_extra_tracks)
+                        h_Y_RP_0_9_extratracks.Fill(Rapidity_RP,pileupw*reweight_extra_tracks)
+                        h_Y_CMS_minus_RP_0_9_extratracks.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)
+                        h_MWW_MX_0_9_extratracks.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+
                 if pfcand_nextracks >9:
                     h_xi_1.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
-                    #h_xi_1.Fill(xi["23"][0],pileupw)
                     h_xi_2.Fill(xi["123"][0],pileupw*reweight_extra_tracks)
-                    h_xi_2.Fill(xi["123"][0],pileupw)
-                    #h_Y_RP.Fill(M_RP,pileupw*reweight_extra_tracks)
+                    h_Y_RP.Fill(M_RP,pileupw*reweight_extra_tracks)
+                    h_Y_CMS_minus_RP.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)
                     h_MX.Fill(M_RP,pileupw*reweight_extra_tracks)
-                    #h_MX.Fill(M_RP,pileupw)
                     h_MWW_MX.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
-                    #h_MWW_minus_MX.Fill(recoMWW-M_RP,pileupw*reweight_extra_tracks)
-                #h_YWW_minus_YX(-Rapidity_RP)
+                
             if jet_pruning:
                 h_pfcand_nextracks_after_jet_veto_jet_pruning_PPS.Fill(pfcand_nextracks,pileupw)
-                if not (dphiWW>2.5 and recoMWW>500 and (recoMWhad>40 and recoMWhad<120) and MET>40 and WLeptonicPt>200):
+                #if not (dphiWW>2.5 and recoMWW>500 and (recoMWhad>40 and recoMWhad<120) and MET>40 and WLeptonicPt>200):
+                if not (dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200):
                     h_pfcand_nextracks_after_jet_veto_jet_pruning_veto_signal_PPS.Fill(pfcand_nextracks,pileupw)
-                if not (dphiWW>2.5 and (recoMWhad>40 and recoMWhad<120) and MET>40 and WLeptonicPt>200):
+                if not (dphiWW>2.5 and MET>40 and WLeptonicPt>200):
                     M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
                     h_mass_cms_vs_rp.Fill(M_RP,recoMWW)
 
