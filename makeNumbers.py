@@ -31,7 +31,7 @@ MCsamples=[
 "QCD_Pt_470to600_TuneCP5_13TeV_pythia8",
 "QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
 "QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
-"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
+"QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
 "ExclusiveWW_a0w2p5e-6-SingleLepton-2017"
 ]
 
