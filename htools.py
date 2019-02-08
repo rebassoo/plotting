@@ -119,36 +119,22 @@ def GetXi(x,y,pot,run,crossingAngle):
 
 #def passPPSSimMixing(numInteractions):
 #def passPPSSimMixing(numInteractions):
+def passPPSSimMixingSignal(numI):
+    #Sector45
+    prob45=100.-2.718*numI+0.0349*numI*numI-0.000187*numI*numI*numI
+    #Sector56
+    prob56=100.-2.892*numI+0.0387*numI*numI-0.000216*numI*numI*numI
+
+    tot_prob=prob45*prob56
+    num1=r.random()
+    num2=r.random()
+    if num1 < prob45 and num2 < prob56:
+        return True
+    else:
+        return False
+
 def passPPSSimMixing():
     passPPS=False
-    #Randomly pick from one of the Runs
-    #num=r.random()
-    #RunBlumi=4.89
-    #RunClumi=9.9
-    #RunDlumi=4.36
-    #RunElumi=9.535
-    #RunFlumi=13.96
-    #totallumi=RunBlumi+RunClumi+RunDlumi+RunElumi+RunFlumi
-    #runToSample=""
-    #if num<(RunBlumi/totallumi):
-    #    runToSample="RunB"
-    #if num>(RunBlumi/totallumi) and num < ((RunBlumi+RunClumi)/totallumi):
-    #    runToSample="RunC"
-    #if num > ((RunBlumi+RunClumi)/totallumi) and num < ((RunBlumi+RunClumi+RunDlumi)/totallumi):
-    #    runToSample="RunD"
-    #if num > ((RunBlumi+RunClumi+RunDlumi)/totallumi) and num < ((RunBlumi+RunClumi+RunDlumi+RunElumi)/totallumi):
-    #    runToSample="RunE"
-    #if num > ((RunBlumi+RunClumi+RunDlumi+RunElumi)/totallumi):
-    #    runToSample="RunF"
-
-    #probSec45=calcProtonProb("45",numInteractions)
-    #probSec56=calcProtonProb("56",numInteractions)
-    #num=r.random()
-    #doubleTag=False
-    #if num < probSec45*probSec56:
-    #    doubleTag=True
-    #else:
-    #    return False
 
     file_xi=TFile("xi.root")
     #h_num_pix_45=file_xi.Get("h_numPixTracks_45")
@@ -161,8 +147,10 @@ def passPPSSimMixing():
     #print "num2: ",num2
     #if num_pix_45 == 1 and num_pix_56 ==1:
     if num1 < 0.292298 and num2 < 0.295310:
-        h_xi_45=file_xi.Get("h_pixel_xi_45_1track")
-        h_xi_56=file_xi.Get("h_pixel_xi_56_1track")
+        #h_xi_45=file_xi.Get("h_pixel_xi_45_1track")
+        h_xi_45=file_xi.Get("h_xi_23")
+        #h_xi_56=file_xi.Get("h_pixel_xi_56_1track")
+        h_xi_56=file_xi.Get("h_xi_123")
         xi_45=h_xi_45.GetRandom()
         xi_56=h_xi_56.GetRandom()
         xi=[xi_45,xi_56]
@@ -172,6 +160,18 @@ def passPPSSimMixing():
     else:
         xi=[]
         return passPPS,xi
+
+def passPPSNewPixel(e,xi):
+    ii=0
+    for detId_rp in e.proton_rpid:
+        #pixel
+        if detId_rp == 23: 
+            xi["23"].append(e.proton_xi[ii])
+        #pixel
+        if detId_rp == 123: 
+            xi["123"].append(e.proton_xi[ii])
+        ii=ii+1
+    return True
 
 def passPPSNew(e,xi):
     left=False
@@ -190,7 +190,7 @@ def passPPSNew(e,xi):
         if detId_rp == 3: 
             xi["3"].append(e.proton_xi[ii])
         #diamond
-        if detId_rp == "16": 
+        if detId_rp == 16: 
             xi["16"].append(e.proton_xi[ii])
         #pixel
         if detId_rp == 123: 
@@ -199,7 +199,7 @@ def passPPSNew(e,xi):
         if detId_rp == 103: 
             xi["103"].append(e.proton_xi[ii])
         #diamond
-        if detId_rp == "116": 
+        if detId_rp == 116: 
             xi["116"].append(e.proton_xi[ii])
         ii=ii+1
 
