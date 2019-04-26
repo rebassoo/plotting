@@ -392,7 +392,7 @@ for e in chain:
     #This is to look at gen W pt
     if not DATA and len(e.gen_W_pt)>0:
         h_gen_Wpt.Fill(e.gen_W_pt[0])
-    if not DATA and len(e.gen_W_pt)>0 and jet_veto and WLeptonicPt>200 and MET > 40:
+    if not DATA and len(e.gen_W_pt)>0 and jet_veto and e.WLeptonicPt>200 and e.met > 40:
         h_gen_Wpt_recopt200.Fill(e.gen_W_pt[0])        
     ##########################################
 
@@ -421,12 +421,12 @@ for e in chain:
     recoMWhad=e.recoMWhad
     recoMWlep=e.recoMWlep
     dphiWW=abs(e.dphiWW)
-    WLeptonicPt=e.WLeptonicPt
     recoMWW=e.recoMWW
+    MET=e.met
+    WLeptonicPt=e.WLeptonicPt
     recoYCMS=e.recoRapidityWW
     pfcand_nextracks=e.pfcand_nextracks
     pfcand_nextracks_noDRl=e.pfcand_nextracks_noDRl
-    MET=e.met
     tau21=e.jet_tau2[0]/e.jet_tau1[0]
     prunedMass=e.jet_corrmass[0]
     h_extra_tracks_vs_vertices.Fill(e.nVertices,pfcand_nextracks,pileupw)
