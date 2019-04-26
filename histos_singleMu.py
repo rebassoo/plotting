@@ -345,6 +345,8 @@ h_MWW_extra_tracks_0_4_notPPS=TH1F("h_MWW_extra_tracks_0_4_notPPS",";;",100,0,20
 h_MWW_extra_tracks_0_9_notPPS=TH1F("h_MWW_extra_tracks_0_9_notPPS",";;",100,0,2000)
 h_MWW_extra_tracks_9_up_notPPS=TH1F("h_MWW_extra_tracks_9_up_notPPS",";;",100,0,2000)
 
+h_MWW_MX_9_up_extratracks_dY_l0p6=TH1F("h_MWW_MX_9_up_extratracks_dY_l0p6",";MWW/MX;",100,0,2)
+h_MWW_MX_9_up_extratracks_dY_g0p6=TH1F("h_MWW_MX_9_up_extratracks_dY_g0p6",";MWW/MX;",100,0,2)
 
 ratio=[1.44721281528,1.23991680145,1.26519489288,1.30109238625,1.30812001228,1.23453533649,1.07481825352,0.923676908016,0.756881356239,0.622560679913,0.554260075092,0.465188384056,0.413310259581,0.34584954381,0.307646661997,0.31958091259,0.280913054943,0.293148010969,0.2640016675,0.313326060772]
 
@@ -649,7 +651,7 @@ for e in chain:
             if passesPPSSignalMixing:
                 passesPPS=True
     #All other MC take pileup protons from data distributions
-    if jet_veto and passesBoosted and not DATA and ExclusiveMC:
+    if jet_veto and passesBoosted and not DATA and not ExclusiveMC:
         if pfcand_nextracks < 100:
             reweight_extra_tracks=ratio[int(pfcand_nextracks/5)]
         passesPPS,xi_sim=passPPSSimMixing()
@@ -695,7 +697,6 @@ for e in chain:
             h_MWW_MX_0_9_extratracks.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
 
 
-
     if jet_veto and passesBoosted and passesPPS and not DATA and pfcand_nextracks<5:
         if abs(recoYCMS-Rapidity_RP) < 1:
             h_MWW_MX_0_4_tracks_Ycut.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
@@ -721,6 +722,15 @@ for e in chain:
         if not (dphiWW>2.5 and MET>40 and WLeptonicPt>200):
             #M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
             h_mass_cms_vs_rp.Fill(M_RP,recoMWW)
+
+
+    if jet_veto and passesBoosted and passesPPS and DATA and pfcand_nextracks>9:
+        if abs(recoYCMS-Rapidity_RP) < 0.6:
+            h_MWW_MX_9_up_extratracks_dY_l0p6.Fill(recoMWW/M_RP,pileupw)
+        else:
+            h_MWW_MX_9_up_extratracks_dY_g0p6.Fill(recoMWW/M_RP,pileupw)
+
+
 
     ###########################################################
     #Start of looking at control regions
