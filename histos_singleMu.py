@@ -333,6 +333,19 @@ h_gen_proton_xi_neg=TH1F("h_gen_proton_xi_neg",";Xi;",128,0,0.32)
 h_gen_proton_xi_pos_PPS=TH1F("h_gen_proton_xi_pos_PPS",";Xi;",128,0,0.32)
 h_gen_proton_xi_neg_PPS=TH1F("h_gen_proton_xi_neg_PPS",";Xi;",128,0,0.32)
 
+h_extra_tracks_vs_vertices=TH2F("h_extra_tracks_vs_vertices",";;",100,0,100,100,0,100)
+h_extra_tracks_vs_vertices_boosted=TH2F("h_extra_tracks_vs_vertices_boosted",";;",100,0,100,100,0,100)
+
+h_extra_tracks_vs_MWW_notPPS=TH2F("h_extra_tracks_vs_MWW_notPPS",";;",100,0,2000,100,-0.5,99.5)
+h_extra_tracks_vs_MWW_PPS=TH2F("h_extra_tracks_vs_MWW_PPS",";;",100,0,2000,100,-0.5,99.5)
+h_extra_tracks_vs_MX_PPS=TH2F("h_extra_tracks_vs_MX_PPS",";;",100,0,2000,100,-0.5,99.5)
+
+h_MWW_extra_tracks_notPPS=TH1F("h_MWW_extra_tracks_notPPS",";;",100,0,2000)
+h_MWW_extra_tracks_0_4_notPPS=TH1F("h_MWW_extra_tracks_0_4_notPPS",";;",100,0,2000)
+h_MWW_extra_tracks_0_9_notPPS=TH1F("h_MWW_extra_tracks_0_9_notPPS",";;",100,0,2000)
+h_MWW_extra_tracks_9_up_notPPS=TH1F("h_MWW_extra_tracks_9_up_notPPS",";;",100,0,2000)
+
+
 ratio=[1.44721281528,1.23991680145,1.26519489288,1.30109238625,1.30812001228,1.23453533649,1.07481825352,0.923676908016,0.756881356239,0.622560679913,0.554260075092,0.465188384056,0.413310259581,0.34584954381,0.307646661997,0.31958091259,0.280913054943,0.293148010969,0.2640016675,0.313326060772]
 
 Run=0.
@@ -347,11 +360,12 @@ for e in chain:
     pileupw=e.pileupWeight
 
     jet_veto=False
+    mjet_veto=False
     #Look at events passing preselection and jet veto
     if e.num_jets_ak4<1 and e.num_bjets_ak8 < 1:
         jet_veto=True
-
-
+    if e.num_bjets_ak4<1:
+        mjet_veto=True
     ##########################################
     #Gen Plots
     ##########################################
@@ -415,6 +429,7 @@ for e in chain:
     MET=e.met
     tau21=e.jet_tau2[0]/e.jet_tau1[0]
     prunedMass=e.jet_corrmass[0]
+    h_extra_tracks_vs_vertices.Fill(e.nVertices,pfcand_nextracks,pileupw)
 
     #These are plots with just preselection
     h_muon_pt.Fill(e.muon_pt[0],pileupw)
@@ -538,6 +553,9 @@ for e in chain:
     passesBoosted=False
     if dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200:
         passesBoosted=True
+
+    if jet_veto and passesBoosted:
+        h_extra_tracks_vs_vertices_boosted.Fill(e.nVertices,pfcand_nextracks,pileupw)
 
     #Looking at No jet veto with W leptonic cuts and very boosted
     if jet_veto and passesBoosted and recoMWW> 900:
@@ -701,7 +719,7 @@ for e in chain:
         if not (dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200):
             h_pfcand_nextracks_after_jet_veto_jet_pruning_veto_signal_PPS.Fill(pfcand_nextracks,pileupw)
         if not (dphiWW>2.5 and MET>40 and WLeptonicPt>200):
-            M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
+            #M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
             h_mass_cms_vs_rp.Fill(M_RP,recoMWW)
 
     ###########################################################
@@ -719,6 +737,9 @@ for e in chain:
         h_recoMWhad_control_10_up.Fill(recoMWhad,pileupw*reweight_extra_tracks)
         h_tau21_control_10_up.Fill(tau21,pileupw)
         h_prunedMass_control_10_up.Fill(prunedMass,pileupw)
+        h_extra_tracks_vs_MX_PPS.Fill(M_RP,pfcand_nextracks,pileupw)
+        h_extra_tracks_vs_MWW_PPS.Fill(M_RP,pfcand_nextracks,pileupw)
+
 
     #Looking at control region not passing PPS, this is for EXTRA TRACKS reweighting
     if jet_veto and passesBoosted and not passesPPS:
@@ -729,8 +750,18 @@ for e in chain:
         else:
             h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*reweight_extra_tracks)
 
+    #Looking at control region not passing PPS to get ratio of high to low for MWW.
+    if jet_veto and passesBoosted and not passesPPS:
+        h_MWW_extra_tracks_notPPS.Fill(recoMWW,pileupw)        
+        h_extra_tracks_vs_MWW_notPPS.Fill(recoMWW,pfcand_nextracks,pileupw)
+    if jet_veto and passesBoosted and not passesPPS and pfcand_nextracks<10:
+        h_MWW_extra_tracks_0_9_notPPS.Fill(recoMWW,pileupw)        
+    if jet_veto and passesBoosted and not passesPPS and pfcand_nextracks>9:
+        h_MWW_extra_tracks_9_up_notPPS.Fill(recoMWW,pileupw)
+
     #Looking at control region not passing PPS and pfcand_nextracks<5
     if jet_veto and passesBoosted and not passesPPS and pfcand_nextracks<5:
+        h_MWW_extra_tracks_0_4_notPPS.Fill(recoMWW,pileupw)
         h_num_jets_not_PPS_0_4_extra_tracks.Fill(e.num_jets_ak4,pileupw)
         h_recoMWhad_not_PPS_0_4_extra_tracks.Fill(recoMWhad,pileupw)
         if recoMWhad > 50:
