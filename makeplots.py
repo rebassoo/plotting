@@ -11,11 +11,11 @@ MCsignalsamples=[
 "ExclusiveWW_a0w1e-6-SingleLepton-2017",
 #"ExclusiveWW_a0w2p5e-6-SingleLepton-2017",
 #"ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
-"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6"
+#"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6"
 ]
 
-MCsamples=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
-MCsamples2=[
+MCsamples2=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
+MCsamples=[
 "WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
 "WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
 "WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
@@ -27,9 +27,9 @@ MCsamples2=[
 #"W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
 #"W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
 #"W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+#"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+#"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+#"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
 #"WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8",
 #"WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8",
 #"WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8",
@@ -42,22 +42,22 @@ MCsamples2=[
 #"ZZ_TuneCP5_13TeV-pythia8",
 #"TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
 "TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8",
-"ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
-"ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
-"ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
-"ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+#"ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8",
+#"ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
+#"ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
+#"ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+#"ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
 #"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"QCD_Pt_170to300_TuneCP5_13TeV_pythia8",
-"QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
-"QCD_Pt_470to600_TuneCP5_13TeV_pythia8",
-"QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
-"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
-"QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
-"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8",
-"QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
-"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8",
-"QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_170to300_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_470to600_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
 #"QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
 #"QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
 #"QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
@@ -71,7 +71,7 @@ gStyle.SetOptStat(0)
 
 
 #List all the histograms in the root file
-f0=TFile("histos/2019-03-06/"+MCsamples[0]+".root")
+f0=TFile("histos/"+MCsamples[0]+".root")
 #f=TFile.Open("histos/WWTo2L2Nu_13TeV-powheg.root")
 f0.cd()
 List=f0.GetListOfKeys()
@@ -149,7 +149,7 @@ for i in range(min,max+1):
     rebin=2
 
     #Plot Data
-    f_data=TFile("histos/2019-03-06/SingleMuonTotal.root")
+    f_data=TFile("histos/SingleMuonTotal.root")
     #f_data=TFile("histos/2019-02-05/SingleMuonTotal.root")
     f_data.cd()
     if digits:
@@ -176,7 +176,7 @@ for i in range(min,max+1):
     fMC=[]
     it=0
     for sample in MCsamples:
-        fMC.append(TFile("histos/2019-03-06/"+sample+".root"))
+        fMC.append(TFile("histos/"+sample+".root"))
         #fMC.append(TFile("histos/2019-02-05/"+sample+".root"))
         fMC[it].cd()
         #This is if specified a range of histos
@@ -217,7 +217,7 @@ for i in range(min,max+1):
     itt=0
     max=0
     for sample in MCsignalsamples:
-        fsignalMC.append(TFile("histos/2019-03-06/"+sample+".root"))
+        fsignalMC.append(TFile("histos/"+sample+".root"))
         #fsignalMC.append(TFile("histos/2019-02-05/"+sample+".root"))
         fsignalMC[itt].cd()
         #This is if specified a range of histos
