@@ -23,6 +23,7 @@ DATA=False
 ExclusiveMC=False
 if sample_name == "SingleMuon":    DATA=True
 if sample_name == "ExclusiveWW":   ExclusiveMC=True
+print "ExclusiveMC", ExclusiveMC
 
 #Get List Of Files
 ListOfFiles=[]
@@ -645,7 +646,9 @@ for e in chain:
         passesPPS=passPPSNew(e,xi)
     #If exclusive WW MC then see if signal protons produce reco PPS protons. 
     if jet_veto and passesBoosted and not DATA and ExclusiveMC:
+        #print "Get into Signal Mixing for Signal MC"
         if passPPSNew(e,xi):
+            #print "passPPSNew"
             passesPPSSignalMixing=passPPSSimMixingSignal(e.mc_pu_trueinteractions)
             #Then correct for signal efficiency of multiple protons in PPS 
             if passesPPSSignalMixing:
