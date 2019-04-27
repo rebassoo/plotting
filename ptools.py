@@ -40,7 +40,7 @@ def ModifyHisto(h,sample):
         linecolor=1
 
     if sample=="ExclusiveWW_SM_FPMC-SingleLepton-2017":
-        numevents=38000
+        numevents=36000.
         cross_section_pb=0.0391
         linecolor=1
 
@@ -51,7 +51,7 @@ def ModifyHisto(h,sample):
         linecolor=6
         
     if sample=="ExclusiveWW_a0w1e-6-SingleLepton-2017":
-        numevents=15000.
+        numevents=14000.
         #cross_section_pb=0.05314
         cross_section_pb=0.062086
         linecolor=7
@@ -101,7 +101,8 @@ def ModifyHisto(h,sample):
     #W+Jets and DY cross sections come from David Morses talk on pt and nJet-binned samples.
     if sample=="WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #numevents=179488932.0
-        numevents=180935349.0
+        #numevents=180935349.0
+        numevents=157537768.0
         cross_section_pb=50131.983
         linecolor=3
 
@@ -109,14 +110,16 @@ def ModifyHisto(h,sample):
         #numevents=131511758.0
         #numevents=119299596.0
         #numevents=126360621.0
-        numevents=129238699.0
+        #numevents=129238699.0
+        numevents=132817445.0
         cross_section_pb=8426.094
         linecolor=3
 
     if sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #numevents=94564355.0
         #numevents=53492479.0
-        numevents=94281664.0
+        #numevents=94281664.0
+        numevents=95680017.0
         cross_section_pb=3172.958
         linecolor=3
 
@@ -150,7 +153,8 @@ def ModifyHisto(h,sample):
     if sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #numevents=133011159
         #numevents=153531390*(435./461.)
-        numevents=145531853.0
+        #numevents=145531853.0
+        numevents=33485568.0
         cross_section_pb=831.76
         linecolor=4
 
