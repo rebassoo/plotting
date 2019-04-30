@@ -353,9 +353,12 @@ h_MWW_extra_tracks_9_up_notPPS=TH1F("h_MWW_extra_tracks_9_up_notPPS",";;",100,0,
 h_MWW_900_extra_tracks_0_4_notPPS=TH1F("h_MWW_900_extra_tracks_0_4_notPPS",";;",100,0,2000)
 h_MWW_900_extra_tracks_5_15_notPPS=TH1F("h_MWW_900_extra_tracks_5_15_notPPS",";;",100,0,2000)
 h_MWW_900_extra_tracks_5_up_notPPS=TH1F("h_MWW_900_extra_tracks_5_up_notPPS",";;",100,0,2000)
-h_MWW_MX_10_up_recoMWW900=TH1F("h_MWW_MX_0_9_recoMWW900",";MWW/MX;",100,0,2)
-h_Y_CMS_minus_RP_10_up_recoMWW=TH1F("h_Y_CMS_minus_RP_10_up_recoMWW",";Y RP;",60,-3,3)
-h_MWW_MX_10_up_recoMWW900_Ycut=TH1F("h_MWW_MX_0_9_recoMWW900_Ycut",";MWW/MX;",100,0,2)
+h_MWW_MX_5_15_recoMWW900=TH1F("h_MWW_MX_5_15_recoMWW900",";MWW/MX;",100,0,2)
+h_MWW_MX_5_up_recoMWW900=TH1F("h_MWW_MX_5_up_recoMWW900",";MWW/MX;",100,0,2)
+h_Y_CMS_minus_RP_5_up_recoMWW=TH1F("h_Y_CMS_minus_RP_10_up_recoMWW",";Y RP;",60,-3,3)
+h_MWW_MX_5_up_recoMWW900_Ycut=TH1F("h_MWW_MX_5_up_recoMWW900_Ycut",";MWW/MX;",100,0,2)
+#h_MWW_MX_10_up_recoMWW900_Ycut=TH1F("h_MWW_MX_10_up_recoMWW900_Ycut",";MWW/MX;",100,0,2)
+h_MWW_MX_0_4_tracks_recoMWW900=TH1F("h_MWW_MX_0_4_tracks_recoMWW900",";MWW/MX;",100,0,2)
 
 h_MWW_MX_9_up_extratracks_dY_l0p6=TH1F("h_MWW_MX_9_up_extratracks_dY_l0p6",";MWW/MX;",100,0,2)
 h_MWW_MX_9_up_extratracks_dY_g0p6=TH1F("h_MWW_MX_9_up_extratracks_dY_g0p6",";MWW/MX;",100,0,2)
@@ -691,6 +694,9 @@ for e in chain:
         h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*reweight_extra_tracks)
         h_num_extra_tracks_PPS_noDRl.Fill(pfcand_nextracks_noDRl,pileupw)
 
+    if mjet_veto and passesBoosted and passesPPS and not DATA and pfcand_nextracks<5:      
+        h_MWW_MX_0_4_tracks_recoMWW900.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+
     if mjet_veto and passesBoosted and passesPPS and not DATA:                            
         if pfcand_nextracks<5:
             h_xi_1_0_4_extratracks.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
@@ -765,12 +771,15 @@ for e in chain:
         h_extra_tracks_vs_MX_PPS.Fill(M_RP,pfcand_nextracks,pileupw)
         h_extra_tracks_vs_MWW_PPS.Fill(M_RP,pfcand_nextracks,pileupw)
 
-    if mjet_veto and passesBoosted and passesPPS and pfcand_nextracks >9 and recoMWW>900:
-        h_MWW_MX_10_up_recoMWW900.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
-        h_Y_CMS_minus_RP_10_up_recoMWW.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)
+    if mjet_veto and passesBoosted and passesPPS and pfcand_nextracks >4 and recoMWW>900:
+        h_MWW_MX_5_up_recoMWW900.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_Y_CMS_minus_RP_5_up_recoMWW.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)
+
+    if mjet_veto and passesBoosted and passesPPS and pfcand_nextracks >4 and pfcand_nextracks < 16 and recoMWW>900:
+        h_MWW_MX_5_15_recoMWW900.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
 
     if mjet_veto and passesBoosted and passesPPS and pfcand_nextracks >9 and recoMWW>900 and abs(recoYCMS-Rapidity_RP)<0.6:
-        h_MWW_MX_10_up_recoMWW900_Ycut.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_MWW_MX_5_up_recoMWW900_Ycut.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
 
     #Looking at control region not passing PPS, this is for EXTRA TRACKS reweighting
     if mjet_veto and passesBoosted and not passesPPS:
@@ -781,7 +790,7 @@ for e in chain:
         else:
             h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*reweight_extra_tracks)
 
-    #Looking at control region not passing PPS, this is for EXTRA TRACKS reweighting
+    #Looking at control region not passing PPS, this is for EXTRA TRACKS reweighting, recoMWW>900
     if mjet_veto and passesBoosted and not passesPPS and recoMWW>900:
         h_num_extra_tracks_notPPS_recoMWW900.Fill(pfcand_nextracks,pileupw)
         #h_num_extra_tracks_notPPS_noDRl.Fill(pfcand_nextracks_noDRl,pileupw)
@@ -812,7 +821,7 @@ for e in chain:
         h_MWW_900_extra_tracks_0_4_notPPS.Fill(recoMWW,pileupw)
     if mjet_veto and passesBoosted and not passesPPS and pfcand_nextracks>4 and pfcand_nextracks<16 and recoMWW>900:
         h_MWW_900_extra_tracks_5_15_notPPS.Fill(recoMWW,pileupw)
-    if mjet_veto and passesBoosted and not passesPPS and pfcand_nextracks>4 and pfcand_nextracks<16 and recoMWW>900:
+    if mjet_veto and passesBoosted and not passesPPS and pfcand_nextracks>4 and recoMWW>900:
         h_MWW_900_extra_tracks_5_up_notPPS.Fill(recoMWW,pileupw)
 
     if mjet_veto and passesBoosted and not passesPPS and pfcand_nextracks<5 and recoMWW>900:
