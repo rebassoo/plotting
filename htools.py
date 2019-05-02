@@ -31,6 +31,18 @@ def passPPSSimMixingSignal(numI):
     else:
         return False
 
+def protonDataMixing():
+    file_xi=TFile("xi.root")
+    num1=r.random()
+    num2=r.random()
+    h_xi_45=file_xi.Get("h_xi_23")
+        #h_xi_56=file_xi.Get("h_pixel_xi_56_1track")
+    h_xi_56=file_xi.Get("h_xi_123")
+    xi_45=h_xi_45.GetRandom()
+    xi_56=h_xi_56.GetRandom()
+    xi=[xi_45,xi_56]
+    return xi
+
 def passPPSSimMixing():
     passPPS=False
     file_xi=TFile("xi.root")
