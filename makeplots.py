@@ -153,7 +153,7 @@ for i in range(min,max+1):
     print i
     print histo_list[i-1]
 
-    rebin=10
+    rebin=1
 
     #Plot Data
     f_data=TFile("histos/"+directory+"SingleMuonTotal.root")
@@ -196,7 +196,7 @@ for i in range(min,max+1):
         #For 5-15
         #hMC[it].Scale(2.49)
         #For 0-4
-        hMC[it].Scale(2.729)
+        #hMC[it].Scale(2.729)
         hMC[it].Rebin(rebin)
         #if sample =="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" or sample=="WW_TuneCP5_13TeV-pythia8" or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8" or sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample == "W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #    leg.AddEntry(hMC[it],legend_name(sample),"f")
