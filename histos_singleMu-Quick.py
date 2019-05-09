@@ -156,6 +156,9 @@ h_MWW_extra_tracks_0_4_notPPS=TH1F("h_MWW_extra_tracks_0_4_notPPS",";;",100,0,20
 h_MWW_extra_tracks_5_15_notPPS=TH1F("h_MWW_extra_tracks_5_15_notPPS",";;",100,0,2000)
 h_MWW_extra_tracks_5_up_notPPS=TH1F("h_MWW_extra_tracks_5_up_notPPS",";;",100,0,2000)
 
+h_xi_23=TH1F("h_xi_23",";Xi;",128,0,0.32)
+h_xi_123=TH1F("h_xi_123",";Xi;",128,0,0.32)
+
 ratio=[1.59918951988,1.68628513813,1.73210585117,1.69695830345,1.60702228546,1.55586051941,1.40359997749,1.24094235897,1.06528007984,0.911292850971,0.805232226849,0.690045535564,0.588334977627,0.506649911404,0.442807376385,0.419169098139,0.373487889767,0.327817767859,0.318366676569,0.320016086102]
 
 Run=0.
@@ -168,6 +171,14 @@ for e in chain:
     event=e.event
     lumi=e.lumiblock
     pileupw=e.pileupWeight
+
+    #if DATA:
+    #    xi_trigger = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[]}
+    #    if passPPSNewPixel(e,xi_trigger):
+    #        if len(xi_trigger["23"]) == 1:
+    #            h_xi_23.Fill(xi_trigger["23"][0])
+    #        if len(xi_trigger["123"]) == 1:
+    #           h_xi_123.Fill(xi_trigger["123"][0])
 
     jet_veto=False
     mjet_veto=False
