@@ -31,6 +31,19 @@ def passPPSSimMixingSignal(numI):
     else:
         return False
 
+def protonDataMixing():
+    file_xi=TFile("xi.root")
+    #num1=r.random()
+    h_xi_45=file_xi.Get("h_xi_23")
+        #h_xi_56=file_xi.Get("h_pixel_xi_56_1track")
+    h_xi_56=file_xi.Get("h_xi_123")
+    xi_56=h_xi_56.GetRandom()
+    xi_45=h_xi_45.GetRandom()
+    #print "xi_45: ",xi_45
+    #print "xi_56: ",xi_56
+    xi=[xi_45,xi_56]
+    return xi
+
 def passPPSSimMixing():
     passPPS=False
     file_xi=TFile("xi.root")
@@ -43,20 +56,20 @@ def passPPSSimMixing():
     #print "num1: ",num1
     #print "num2: ",num2
     #if num_pix_45 == 1 and num_pix_56 ==1:
-    if num1 < 0.292298 and num2 < 0.295310:
+    #if num1 < 0.292298 and num2 < 0.295310:
         #h_xi_45=file_xi.Get("h_pixel_xi_45_1track")
-        h_xi_45=file_xi.Get("h_xi_23")
+    h_xi_45=file_xi.Get("h_xi_23")
         #h_xi_56=file_xi.Get("h_pixel_xi_56_1track")
-        h_xi_56=file_xi.Get("h_xi_123")
-        xi_45=h_xi_45.GetRandom()
-        xi_56=h_xi_56.GetRandom()
-        xi=[xi_45,xi_56]
+    h_xi_56=file_xi.Get("h_xi_123")
+    xi_45=h_xi_45.GetRandom()
+    xi_56=h_xi_56.GetRandom()
+    xi=[xi_45,xi_56]
         #print "xi: ",xi
-        passPPS=True
-        return passPPS,xi
-    else:
-        xi=[]
-        return passPPS,xi
+    passPPS=True
+    return passPPS,xi
+    #else:
+    #    xi=[]
+    #    return passPPS,xi
 
 def passPPSNewPixel(e,xi):
     ii=0
@@ -130,6 +143,7 @@ def AddFilesToChain(chain,ListOfFiles,DATA):
 def GetListOfFiles(sample_name,file_dir,DATA):
     print "Is is Data: ",DATA
     mypath_prefix='/hadoop/cms/store/user/rebassoo/'
+    #mypath_prefix='/eos/uscms/store/user/rebassoo/'
     #print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
     ListOfFiles=[]
     if sys.argv[1] == 'latest':
@@ -139,7 +153,7 @@ def GetListOfFiles(sample_name,file_dir,DATA):
         m_date_string=0.
         m_time=0.
         m_time_string=0.
-        for d in os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir)):
+        for d in os.listdir(mypath_prefix'/{0}/{1}'.format(sample_name,file_dir)):
             date=int(d.split('_')[0])
             date_string=d.split('_')[0]
             t=0
