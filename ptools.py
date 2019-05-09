@@ -61,31 +61,31 @@ def ModifyHisto(h,sample):
         #numevents=71937389.0
         numevents=62744276.0
         cross_section_pb=286.1
-        linecolor=3
+        linecolor=862
 
     if sample=="W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #numevents=125064008.0
         numevents=108576810.0
         cross_section_pb=71.9
-        linecolor=3
+        linecolor=862
 
     if sample=="W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #numevents=20841145.0
         numevents=18410600.0
         cross_section_pb=8.05
-        linecolor=3
+        linecolor=862
 
     if sample=="W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
         numevents=4558033.0
         #numevents=4342270.0
         cross_section_pb=0.885
-        linecolor=3
+        linecolor=862
 
     if sample=="W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #numevents=36719823.0
         numevents=34912677.0
         cross_section_pb=277.7
-        linecolor=3
+        linecolor=862
 
     if sample=="W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #numevents=168794029.0
@@ -93,20 +93,20 @@ def ModifyHisto(h,sample):
         #numevents=62296752.0
         numevents=137111043.0
         cross_section_pb=105.9
-        linecolor=3
+        linecolor=862
 
     if sample=="W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #numevents=48900966.0
         #numevents=54074629.0
         numevents=58676428.0
         cross_section_pb=18.67
-        linecolor=3
+        linecolor=862
 
     if sample=="W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #numevents=30340311.0
         numevents=29956048.0
         cross_section_pb=3.037
-        linecolor=3
+        linecolor=862
 
 
     #W+Jets and DY cross sections come from David Morses talk on pt and nJet-binned samples.
@@ -115,7 +115,7 @@ def ModifyHisto(h,sample):
         #numevents=180935349.0
         numevents=157537768.0
         cross_section_pb=50131.983
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #numevents=131511758.0
@@ -124,7 +124,7 @@ def ModifyHisto(h,sample):
         #numevents=129238699.0
         numevents=132817445.0
         cross_section_pb=8426.094
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #numevents=94564355.0
@@ -132,7 +132,7 @@ def ModifyHisto(h,sample):
         #numevents=94281664.0
         numevents=95680017.0
         cross_section_pb=3172.958
-        linecolor=3
+        linecolor=862
 
     if sample=="DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #numevents=88230653.0
@@ -159,7 +159,7 @@ def ModifyHisto(h,sample):
         #numevents=40257121.0
         numevents=41221873.0
         cross_section_pb=831.76*0.435
-        linecolor=4
+        linecolor=800
 
     if sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8":
         #numevents=133011159
@@ -168,7 +168,7 @@ def ModifyHisto(h,sample):
         #numevents=33485568.0
         numevents=33762370.0
         cross_section_pb=831.76
-        linecolor=4
+        linecolor=800
 
 
 
@@ -285,7 +285,7 @@ def ModifyHisto(h,sample):
         #From website above
         #This NNLO from diboson_final
         cross_section_pb=115.0
-        linecolor=5
+        linecolor=3
 
     if sample=="WZ_TuneCP5_13TeV-pythia8":
         #numevents=3928630
@@ -294,14 +294,14 @@ def ModifyHisto(h,sample):
         numevents=2770750.0
         cross_section_pb=47.13
         #linecolor=12
-        linecolor=5
+        linecolor=3
 
     if sample=="ZZ_TuneCP5_13TeV-pythia8":
         #numevents=1949768.0
         #numevents=1475796.0
         numevents=1949768.0
         cross_section_pb=16.523
-        linecolor=5
+        linecolor=3
 
 
 
@@ -354,7 +354,7 @@ def ModifyHisto(h,sample):
         #numevents=26462644.0
         numevents=31865784.0
         cross_section_pb=61526.7
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8":
         #numevents=35862893*(30./148.)
@@ -362,7 +362,7 @@ def ModifyHisto(h,sample):
         numevents=26345944.0
         #cross_section_pb=1345*1.21
         cross_section_pb=1345*1.26
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8":
         #numevents=17260723
@@ -370,7 +370,7 @@ def ModifyHisto(h,sample):
         numevents=19899436.0
         #cross_section_pb=359.7*1.21
         cross_section_pb=359.7*1.48
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8":
         #numevents=14313274
@@ -379,7 +379,7 @@ def ModifyHisto(h,sample):
         numevents=10697050.0
         #cross_section_pb=48.91*1.21
         cross_section_pb=48.91*1.26
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8":
         #numevents=20516713
@@ -388,7 +388,7 @@ def ModifyHisto(h,sample):
         numevents=18325085.0
         #cross_section_pb=12.05*1.21
         cross_section_pb=12.05*1.03
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8":
         #numevents=20466692
@@ -396,7 +396,7 @@ def ModifyHisto(h,sample):
         numevents=20245897.0
         #cross_section_pb=5.501*1.21
         cross_section_pb=5.501*1.05
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8":
         #numevents=19464742
@@ -404,7 +404,7 @@ def ModifyHisto(h,sample):
         numevents=20258624.0
         #cross_section_pb=1.329*1.21
         cross_section_pb=1.329*0.77
-        linecolor=3
+        linecolor=862
 
     if sample=="WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8":
         #numevents=20244084
@@ -413,7 +413,7 @@ def ModifyHisto(h,sample):
         numevents=19426229.0
         #cross_section_pb=0.03216*1.21
         cross_section_pb=0.03216*0.77
-        linecolor=3
+        linecolor=862
 
         
 
