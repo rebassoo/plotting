@@ -153,7 +153,7 @@ def GetListOfFiles(sample_name,file_dir,DATA):
         m_date_string=0.
         m_time=0.
         m_time_string=0.
-        for d in os.listdir(mypath_prefix'/{0}/{1}'.format(sample_name,file_dir)):
+        for d in os.listdir(mypath_prefix+'/{0}/{1}'.format(sample_name,file_dir)):
             date=int(d.split('_')[0])
             date_string=d.split('_')[0]
             t=0
