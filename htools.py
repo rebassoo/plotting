@@ -56,20 +56,20 @@ def passPPSSimMixing():
     #print "num1: ",num1
     #print "num2: ",num2
     #if num_pix_45 == 1 and num_pix_56 ==1:
-    if num1 < 0.292298 and num2 < 0.295310:
+    #if num1 < 0.292298 and num2 < 0.295310:
         #h_xi_45=file_xi.Get("h_pixel_xi_45_1track")
-        h_xi_45=file_xi.Get("h_xi_23")
+    h_xi_45=file_xi.Get("h_xi_23")
         #h_xi_56=file_xi.Get("h_pixel_xi_56_1track")
-        h_xi_56=file_xi.Get("h_xi_123")
-        xi_45=h_xi_45.GetRandom()
-        xi_56=h_xi_56.GetRandom()
-        xi=[xi_45,xi_56]
+    h_xi_56=file_xi.Get("h_xi_123")
+    xi_45=h_xi_45.GetRandom()
+    xi_56=h_xi_56.GetRandom()
+    xi=[xi_45,xi_56]
         #print "xi: ",xi
-        passPPS=True
-        return passPPS,xi
-    else:
-        xi=[]
-        return passPPS,xi
+    passPPS=True
+    return passPPS,xi
+    #else:
+    #    xi=[]
+    #    return passPPS,xi
 
 def passPPSNewPixel(e,xi):
     ii=0

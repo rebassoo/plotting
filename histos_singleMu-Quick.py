@@ -263,8 +263,8 @@ for e in chain:
     xi = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[]}
     passesPPS=False
     passesPPSSignalMixing=False
-    reweight_extra_tracks=1.
-
+    rw_extrk=1.
+    rw_prt_mix=1.
 
     #If data get protons from PPS reco
     if mjet_veto and passesBoosted and jet_pruning and DATA:
@@ -285,7 +285,8 @@ for e in chain:
     #All other MC take pileup protons from data distributions
     if mjet_veto and passesBoosted and jet_pruning and not DATA and not ExclusiveMC:
         #if pfcand_nextracks < 100:
-        #    reweight_extra_tracks=ratio[int(pfcand_nextracks/5)]
+        #    rw_extrk=ratio[int(pfcand_nextracks/5)]
+        rw_prt_mix=0.086319
         passesPPS,xi_sim=passPPSSimMixing()
         if passesPPS:
             xi["23"].append(xi_sim[0])
@@ -314,45 +315,45 @@ for e in chain:
         if DATA and pfcand_nextracks>4:
             h_num_extra_tracks_PPS.Fill(pfcand_nextracks,pileupw)
             h_num_extra_tracks_PPS_noDRl.Fill(pfcand_nextracks_noDRl,pileupw)
-            h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*reweight_extra_tracks)
+            h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_extrk)
             h_extra_tracks_vs_MWW_PPS.Fill(recoMWW,pfcand_nextracks,pileupw)
             h_extra_tracks_vs_MX_PPS.Fill(M_RP,pfcand_nextracks,pileupw)
         if not DATA:
             h_num_extra_tracks_PPS.Fill(pfcand_nextracks,pileupw)
-            h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*reweight_extra_tracks)
+            h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_extrk*rw_prt_mix)
             h_num_extra_tracks_PPS_noDRl.Fill(pfcand_nextracks_noDRl,pileupw)
 
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and not DATA:    
         if pfcand_nextracks<5:
-            h_xi_1_0_4_extratracks.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
-            h_xi_2_0_4_extratracks.Fill(xi["123"][0],pileupw*reweight_extra_tracks)
-            h_MX_0_4_extratracks.Fill(M_RP,pileupw*reweight_extra_tracks)
-            h_MWW_0_4_extratracks.Fill(recoMWW,pileupw*reweight_extra_tracks)
-            h_Y_RP_0_4_extratracks.Fill(Rapidity_RP,pileupw*reweight_extra_tracks)
-            h_Y_CMS_minus_RP_0_4_extratracks.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)                        
-            h_MWW_MX_0_4_tracks.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
-            h_recoMWhad_0_4_tracks.Fill(recoMWhad,pileupw*reweight_extra_tracks)
+            h_xi_1_0_4_extratracks.Fill(xi["23"][0],pileupw*rw_extrk*rw_prt_mix)
+            h_xi_2_0_4_extratracks.Fill(xi["123"][0],pileupw*rw_extrk*rw_prt_mix)
+            h_MX_0_4_extratracks.Fill(M_RP,pileupw*rw_extrk*rw_prt_mix)
+            h_MWW_0_4_extratracks.Fill(recoMWW,pileupw*rw_extrk*rw_prt_mix)
+            h_Y_RP_0_4_extratracks.Fill(Rapidity_RP,pileupw*rw_extrk*rw_prt_mix)
+            h_Y_CMS_minus_RP_0_4_extratracks.Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_prt_mix)                        
+            h_MWW_MX_0_4_tracks.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
+            h_recoMWhad_0_4_tracks.Fill(recoMWhad,pileupw*rw_extrk*rw_prt_mix)
             h_tau21_0_4_tracks.Fill(tau21,pileupw)
             h_prunedMass_0_4_tracks.Fill(prunedMass,pileupw)
 
 
     if mjet_veto and passesBoosted and jet_pruning and not passesPPS and DATA:    
         if pfcand_nextracks<5:
-            h_xi_1_0_4_extratracks_notPPS.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
-            h_xi_2_0_4_extratracks_notPPS.Fill(xi["123"][0],pileupw*reweight_extra_tracks)
-            h_MX_0_4_extratracks_notPPS.Fill(M_RP,pileupw*reweight_extra_tracks)
-            h_MWW_0_4_extratracks_notPPS.Fill(M_WW,pileupw*reweight_extra_tracks)
-            h_Y_RP_0_4_extratracks_notPPS.Fill(Rapidity_RP,pileupw*reweight_extra_tracks)
-            h_Y_CMS_minus_RP_0_4_extratracks_notPPS.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)                        
-            h_MWW_MX_0_4_tracks_notPPS.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
-            h_recoMWhad_0_4_tracks_notPPS.Fill(recoMWhad,pileupw*reweight_extra_tracks)
-            h_tau21_0_4_tracks_notPPS.Fill(tau21,pileupw)
-            h_prunedMass_0_4_tracks_notPPS.Fill(prunedMass,pileupw)
+            h_xi_1_0_4_extratracks_notPPS.Fill(xi["23"][0],pileupw*rw_extrk)
+            h_xi_2_0_4_extratracks_notPPS.Fill(xi["123"][0],pileupw*rw_extrk)
+            h_MX_0_4_extratracks_notPPS.Fill(M_RP,pileupw*rw_extrk)
+            h_MWW_0_4_extratracks_notPPS.Fill(M_WW,pileupw*rw_extrk)
+            h_Y_RP_0_4_extratracks_notPPS.Fill(Rapidity_RP,pileupw*rw_extrk)
+            h_Y_CMS_minus_RP_0_4_extratracks_notPPS.Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk)                        
+            h_MWW_MX_0_4_tracks_notPPS.Fill(recoMWW/M_RP,pileupw*rw_extrk)
+            h_recoMWhad_0_4_tracks_notPPS.Fill(recoMWhad,pileupw*rw_extrk)
+            h_tau21_0_4_tracks_notPPS.Fill(tau21,pileupw*rw_extrk)
+            h_prunedMass_0_4_tracks_notPPS.Fill(prunedMass,pileupw*rw_extrk)
 
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and not DATA and pfcand_nextracks<5 and abs(recoYCMS-Rapidity_RP) < 0.6:
-        h_MWW_MX_0_4_tracks_Ycut.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_MWW_MX_0_4_tracks_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
     ###########################################################
     #Start of looking at control regions
@@ -360,48 +361,48 @@ for e in chain:
     
     #Looking large extra tracks passing PPS, this is conrol region for W+jets and ttbar
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks<16 and pfcand_nextracks>4:
-        h_xi_1_control.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
-        h_xi_2_control.Fill(xi["123"][0],pileupw*reweight_extra_tracks)
-        h_Y_RP_control.Fill(M_RP,pileupw*reweight_extra_tracks)
-        h_Y_CMS_minus_RP_control.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)
-        h_MX_control.Fill(M_RP,pileupw*reweight_extra_tracks)
-        h_MWW_control.Fill(recoMWW,pileupw*reweight_extra_tracks)
-        h_MWW_MX_control.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
-        h_recoMWhad_control_control.Fill(recoMWhad,pileupw*reweight_extra_tracks)
-        h_tau21_control_control.Fill(tau21,pileupw)
-        h_prunedMass_control_control.Fill(prunedMass,pileupw)
+        h_xi_1_control.Fill(xi["23"][0],pileupw*rw_extrk*rw_prt_mix)
+        h_xi_2_control.Fill(xi["123"][0],pileupw*rw_extrk*rw_prt_mix)
+        h_Y_RP_control.Fill(M_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_Y_CMS_minus_RP_control.Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_MX_control.Fill(M_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_MWW_control.Fill(recoMWW,pileupw*rw_extrk*rw_prt_mix)
+        h_MWW_MX_control.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_recoMWhad_control_control.Fill(recoMWhad,pileupw*rw_extrk*rw_prt_mix)
+        h_tau21_control_control.Fill(tau21,pileupw*rw_extrk*rw_prt_mix)
+        h_prunedMass_control_control.Fill(prunedMass,pileupw*rw_extrk*rw_prt_mix)
         if abs(recoYCMS-Rapidity_RP) < 0.6:
-            h_MWW_MX_control_Ycut.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+            h_MWW_MX_control_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
     if mjet_veto and passesBoosted and jet_pruning and not passesPPS and pfcand_nextracks<16 and pfcand_nextracks>4 and DATA:
-        h_xi_1_control_notPPS.Fill(xi["23"][0],pileupw*reweight_extra_tracks)
-        h_xi_2_control_notPPS.Fill(xi["123"][0],pileupw*reweight_extra_tracks)
-        h_Y_RP_control_notPPS.Fill(M_RP,pileupw*reweight_extra_tracks)
-        h_Y_CMS_minus_RP_control_notPPS.Fill(recoYCMS-Rapidity_RP,pileupw*reweight_extra_tracks)
-        h_MX_control_notPPS.Fill(M_RP,pileupw*reweight_extra_tracks)
-        h_MWW_control_notPPS.Fill(M_WW,pileupw*reweight_extra_tracks)
-        h_MWW_MX_control_notPPS.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
-        h_recoMWhad_control_control_notPPS.Fill(recoMWhad,pileupw*reweight_extra_tracks)
-        h_tau21_control_control_notPPS.Fill(tau21,pileupw)
-        h_prunedMass_control_control_notPPS.Fill(prunedMass,pileupw)
+        h_xi_1_control_notPPS.Fill(xi["23"][0],pileupw*rw_extrk*rw_prt_mix)
+        h_xi_2_control_notPPS.Fill(xi["123"][0],pileupw*rw_extrk*rw_prt_mix)
+        h_Y_RP_control_notPPS.Fill(M_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_Y_CMS_minus_RP_control_notPPS.Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_MX_control_notPPS.Fill(M_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_MWW_control_notPPS.Fill(M_WW,pileupw*rw_extrk*rw_prt_mix)
+        h_MWW_MX_control_notPPS.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_recoMWhad_control_control_notPPS.Fill(recoMWhad,pileupw*rw_extrk*rw_prt_mix)
+        h_tau21_control_control_notPPS.Fill(tau21,pileupw*rw_extrk*rw_prt_mix)
+        h_prunedMass_control_control_notPPS.Fill(prunedMass,pileupw*rw_extrk*rw_prt_mix)
         if abs(recoYCMS-Rapidity_RP) < 0.6:
-            h_MWW_MX_control_Ycut_notPPS.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+            h_MWW_MX_control_Ycut_notPPS.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
 
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks>4:
-        h_MWW_MX_control_5_up.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_MWW_MX_control_5_up.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
         if abs(recoYCMS-Rapidity_RP) < 0.6:
-            h_MWW_MX_control_5_up_Ycut.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+            h_MWW_MX_control_5_up_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks>14 and pfcand_nextracks<31:
-        h_MWW_MX_control_15_30.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_MWW_MX_control_15_30.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks>30 and pfcand_nextracks<51:
-        h_MWW_MX_control_30_50.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_MWW_MX_control_30_50.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks>50 and pfcand_nextracks<71:
-        h_MWW_MX_control_50_70.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_MWW_MX_control_50_70.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks>70 and pfcand_nextracks<101:
-        h_MWW_MX_control_70_100.Fill(recoMWW/M_RP,pileupw*reweight_extra_tracks)
+        h_MWW_MX_control_70_100.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
     #Looking at control region not passing PPS to get ratio of high to low for MWW.
     if mjet_veto and passesBoosted and jet_pruning and not passesPPS:
@@ -421,7 +422,7 @@ for e in chain:
         if DATA:
             h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw)
         else:
-            h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*reweight_extra_tracks)
+            h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_extrk)
 
 
 
