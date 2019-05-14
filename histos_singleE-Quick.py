@@ -233,11 +233,11 @@ for e in chain:
         jet_pruning=True
 
     passesBoosted=False
-    if dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200:
+    if dphiWW>2.5 and recoMWW>500 and MET>100 and WLeptonicPt>200:
         passesBoosted=True
 
     #Looking at Mauricio jet veto with W leptonic cuts
-    if e.num_bjets_ak4<1 and passesBoosted and MET > 40:
+    if e.num_bjets_ak4<1 and passesBoosted and MET > 100:
         h_electron_pt_MjetVeto_WleptonicCuts.Fill(e.electron_pt[0],pileupw)
         h_electron_eta_MjetVeto_WleptonicCuts.Fill(e.electron_eta[0],pileupw)
         h_jet_pt_MjetVeto_WleptonicCuts.Fill(e.jet_pt[0],pileupw)
