@@ -84,6 +84,17 @@ h_pfcand_nextracks_MjetVeto_WleptonicCuts=TH1F("h_pfcand_nextracks_MjetVeto_Wlep
 h_num_vertices_MjetVeto_WleptonicCuts=TH1F("h_num_vertices_MjetVeto_WleptonicCuts",";Number of vertices;",100,-0.5,99.5)
 h_num_vertices_preweight_MjetVeto_WleptonicCuts=TH1F("h_num_vertices_preweight_MjetVeto_WleptonicCuts",";Number of vertices;",100,-0.5,99.5)
 
+h_muon_pt_passingPPS=TH1F("h_muon_pt_passingPPS",";p_{T} (#mu) [GeV];",100,0,1000)
+h_jet_pt_passingPPS=TH1F("h_jet_pt_passingPPS",";p_{T} (jet) [GeV];",120,0,1200)
+h_tau21_passingPPS=TH1F("h_tau21_passingPPS",";tau21;",100,0,2)
+h_prunedMass_passingPPS=TH1F("h_prunedMass_passingPPS",";prunedMass [GeV];",200,0,1000)
+h_WLeptonicPt_passingPPS=TH1F("h_WLeptonicPt_passingPPS",";W Leptonic Pt [GeV];",100,0,1000)
+h_recoMWW_passingPPS=TH1F("h_recoMWW_passingPPS",";M_{WW} [GeV];",100,0,2000)
+h_MET_passingPPS=TH1F("h_MET_passingPPS",";MET [GeV];",80,0,400)
+h_MX_passingPPS=TH1F("h_MX_passingPPS",";Mass RP [GeV];",100,0,3000)
+h_Y_CMS_minus_RP_passingPPS=TH1F("h_Y_CMS_minus_RP_passingPPS",";Y RP;",60,-3,3)
+h_MWW_MX_passingPPS=TH1F("h_MWW_MX_passingPPS",";MWW/MX;",100,0,2)
+
 h_xi_1_0_4_extratracks=TH1F("h_xi_1_0_4_extratracks",";#xi_{1};",128,0,0.32)
 h_xi_2_0_4_extratracks=TH1F("h_xi_2_0_4_extratracks",";#xi_{2};",128,0,0.32)
 h_Y_RP_0_4_extratracks=TH1F("h_Y_RP_0_4_extratracks",";Y RP;",60,-3,3)
@@ -312,12 +323,27 @@ for e in chain:
     #Start of looking at only MC passing PPS for signal region, this is to keep things blind
     ######################################################################
     if mjet_veto and passesBoosted and jet_pruning and passesPPS:
+        h_muon_pt_passingPPS.Fill(e.muon_pt[0],pileupw)
+        h_jet_pt_passingPPS.Fill(e.jet_pt[0],pileupw)
+        h_tau21_passingPPS.Fill(tau21,pileupw)
+        h_prunedMass_passingPPS.Fill(prunedMass,pileupw)
+        h_WLeptonicPt_passingPPS.Fill(WLeptonicPt,pileupw)
+        h_recoMWW_passingPPS.Fill(recoMWW,pileupw)
+        h_MET_passingPPS.Fill(MET,pileupw)
+        h_MX_passingPPS.Fill(M_RP,pileupw)
+        #h_MWW_passingPPS.Fill(recoMWW,pileupw)
+        #h_Y_RP_passingPPS.Fill(Rapidity_RP,pileupw)
+        h_Y_CMS_minus_RP_passingPPS.Fill(recoYCMS-Rapidity_RP,pileupw)
+        h_MWW_MX_passingPPS.Fill(recoMWW/M_RP,pileupw)
+
+    if mjet_veto and passesBoosted and jet_pruning and passesPPS:
         if DATA and pfcand_nextracks>4:
             h_num_extra_tracks_PPS.Fill(pfcand_nextracks,pileupw)
             h_num_extra_tracks_PPS_noDRl.Fill(pfcand_nextracks_noDRl,pileupw)
             h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_extrk)
             h_extra_tracks_vs_MWW_PPS.Fill(recoMWW,pfcand_nextracks,pileupw)
             h_extra_tracks_vs_MX_PPS.Fill(M_RP,pfcand_nextracks,pileupw)
+            
         if not DATA:
             h_num_extra_tracks_PPS.Fill(pfcand_nextracks,pileupw)
             h_num_extra_tracks_PPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_extrk*rw_prt_mix)
