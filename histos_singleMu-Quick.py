@@ -94,6 +94,8 @@ h_MET_passingPPS=TH1F("h_MET_passingPPS",";MET [GeV];",80,0,400)
 h_MX_passingPPS=TH1F("h_MX_passingPPS",";Mass RP [GeV];",100,0,3000)
 h_Y_CMS_minus_RP_passingPPS=TH1F("h_Y_CMS_minus_RP_passingPPS",";Y RP;",60,-3,3)
 h_MWW_MX_passingPPS=TH1F("h_MWW_MX_passingPPS",";MWW/MX;",100,0,2)
+h_MWW_MX_passingPPS_1pileup=TH1F("h_MWW_MX_passingPPS_1pileup",";MWW/MX;",100,0,2)
+h_MWW_MX_passingPPS_2pileup=TH1F("h_MWW_MX_passingPPS_2pileup",";MWW/MX;",100,0,2)
 
 h_xi_1_0_4_extratracks=TH1F("h_xi_1_0_4_extratracks",";#xi_{1};",128,0,0.32)
 h_xi_2_0_4_extratracks=TH1F("h_xi_2_0_4_extratracks",";#xi_{2};",128,0,0.32)
@@ -274,6 +276,8 @@ for e in chain:
     xi = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[]}
     passesPPS=False
     passesPPSSignalMixing=False
+    passesPPSSingle1Pileup=False
+    passesPPSSingle2Pileup=False
     rw_extrk=1.
     rw_prt_mix=1.
 
@@ -293,6 +297,23 @@ for e in chain:
             #Then correct for signal efficiency of multiple protons in PPS 
             if passesPPSSignalMixing:
                 passesPPS=True
+        else:
+            #passPPSNewPixel(e,xi)
+            #print "length of xi23: ",len(xi["23"])
+            #print "length of xi123: ",len(xi["123"])
+            if len(xi["23"]) == 0 and len(xi["123"])==1:
+                #print "Get here where only one signal proton"
+                passesPPSSingle1Pileup=passPPSSimMixing23(xi)
+            if len(xi["23"]) == 1 and len(xi["123"])==0:
+                passesPPSSingle1Pileup=passPPSSimMixing123(xi)
+                #print "Get here where only one signal proton"
+            if len(xi["23"]) == 0 and len(xi["123"])==0:
+                #print "Get here where only two signal proton"
+                passes123=passPPSSimMixing123(xi)
+                passes23=passPPSSimMixing23(xi)
+                if passes123 and passes23:
+                    passesPPSSingle2Pileup=True
+
     #All other MC take pileup protons from data distributions
     if mjet_veto and passesBoosted and jet_pruning and not DATA and not ExclusiveMC:
         #if pfcand_nextracks < 100:
@@ -317,6 +338,10 @@ for e in chain:
         if xi["23"][0] > 0 and xi["123"][0] > 0:
             Rapidity_RP=0.5*m.log(xi["23"][0]/xi["123"][0])
 
+    if mjet_veto and passesBoosted and jet_pruning and (passesPPSSingle1Pileup or passesPPSSingle2Pileup):
+        M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
+        if xi["23"][0] > 0 and xi["123"][0] > 0:
+            Rapidity_RP=0.5*m.log(xi["23"][0]/xi["123"][0])
 
 
     ######################################################################
@@ -335,6 +360,14 @@ for e in chain:
         #h_Y_RP_passingPPS.Fill(Rapidity_RP,pileupw)
         h_Y_CMS_minus_RP_passingPPS.Fill(recoYCMS-Rapidity_RP,pileupw)
         h_MWW_MX_passingPPS.Fill(recoMWW/M_RP,pileupw)
+
+    #Look at signal plots
+    if mjet_veto and passesBoosted and jet_pruning and passesPPSSingle1Pileup:
+        h_MWW_MX_passingPPS_1pileup.Fill(recoMWW/M_RP,pileupw)
+        print "1 pileup, xi23: {0}, xi123: {1}, MassX: {2}, MassWW: {3}, MWW/MX: {4}".format(xi["23"],xi["123"],M_RP,recoMWW,recoMWW/M_RP)
+    if mjet_veto and passesBoosted and jet_pruning and passesPPSSingle2Pileup:
+        h_MWW_MX_passingPPS_2pileup.Fill(recoMWW/M_RP,pileupw)
+        print "2 pileup, xi23: {0}, xi123: {1}, MassX: {2}, MassWW: {3}, MWW/MX: {4}".format(xi["23"],xi["123"],M_RP,recoMWW,recoMWW/M_RP)
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS:
         if DATA and pfcand_nextracks>4:
