@@ -44,6 +44,29 @@ def protonDataMixing():
     xi=[xi_45,xi_56]
     return xi
 
+def passPPSSimMixing23(xi):
+    file_xi=TFile("xi.root")
+    num1=r.random()
+    returnProton=False
+    if num1 < 0.292298:
+        h_xi_45=file_xi.Get("h_xi_23")
+        xi_45=h_xi_45.GetRandom()
+        xi["23"].append(xi_45)
+        returnProton=True
+    return returnProton
+
+def passPPSSimMixing123(xi):
+    file_xi=TFile("xi.root")
+    num2=r.random()
+    returnProton=False
+    if num2 < 0.295310:
+        h_xi_56=file_xi.Get("h_xi_123")
+        xi_56=h_xi_56.GetRandom()
+        xi["123"].append(xi_56)
+        returnProton=True
+    return returnProton
+
+
 def passPPSSimMixing():
     passPPS=False
     file_xi=TFile("xi.root")
