@@ -19,6 +19,47 @@ def ModifyHisto(h,sample):
     numevents=0
     linecolor=0
 
+    if sample=="DY1JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=1921760.0
+        cross_section_pb=316.6
+        linecolor=12
+
+    if sample=="DY1JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=2182280.0
+        cross_section_pb=9.543
+        linecolor=12
+
+    if sample=="DY1JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=880329.0
+        cross_section_pb=1.098
+        linecolor=12
+
+    if sample=="DY1JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=626463.0
+        cross_section_pb=0.1193
+        linecolor=12
+
+    if sample=="DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=8909330.0
+        cross_section_pb=169.6
+        linecolor=12
+
+    if sample=="DY2JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=8898587.0
+        cross_section_pb=15.65
+        linecolor=12
+
+    if sample=="DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=1841896.0
+        cross_section_pb=2.737
+        linecolor=12
+
+    if sample=="DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
+        numevents=1056691.0
+        cross_section_pb=0.4477
+        linecolor=12
+
+        
     if sample=="GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6":
         numevents=993700.0
         cross_section_pb=0.0453974
@@ -441,6 +482,7 @@ def legend_name(sample):
     if sample=="WW_TuneCP5_13TeV-pythia8":name="Inclusive WV"
     if sample=="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="DY+jets"
     if sample=="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="DY+jets"
+    if sample=="DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8":name="DY+jets"
     if sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="W+Jets"
     if sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8":name="W+Jets"
     if sample=="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8":name="W+Jets, HT binned madgraph"

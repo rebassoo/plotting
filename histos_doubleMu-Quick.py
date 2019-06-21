@@ -42,33 +42,15 @@ fout.cd()
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
-h_muon_pt=TH1F("h_muon_pt",";p_{T} (#mu) [GeV];",100,0,1000)
-h_muon_eta=TH1F("h_muon_eta",";#eta_{#mu};",60,-3,3)
-h_muon2_pt=TH1F("h_muon_pt",";p_{T} (#mu) [GeV];",100,0,1000)
-h_muon2_eta=TH1F("h_muon_eta",";#eta_{#mu};",60,-3,3)
-h_jet_pt=TH1F("h_jet_pt",";p_{T} (jet) [GeV];",120,0,1200)
-h_jet_eta=TH1F("h_jet_eta",";#eta_{jet};",60,-3,3)
 h_deltaR_lepton_jet=TH1F("h_deltaR_lepton_jet",";#deltaR(#mu,jet);",200,0,10)
 h_deltaphi_jet_met=TH1F("h_deltaphi_jet_met",";#delta#Phi(MET,jet);",100,0,5)
 h_deltaphi_jet_Wleptonic=TH1F("h_deltaphi_jet_Wleptonic",";#delta#Phi(MET,jet);",100,0,5)
-h_tau21=TH1F("h_tau21",";tau21;",100,0,2)
-h_prunedMass=TH1F("h_prunedMass",";prunedMass [GeV];",200,0,1000)
-h_recoMWlep=TH1F("h_recoMWlep",";M_{W_{lep}} [GeV];",100,0,200)
-h_recoMWhad=TH1F("h_recoMWhad",";M_{W_{had}} [GeV];",100,0,200)
-h_dphiWW=TH1F("h_dphiWW",";dphiWW;",100,0,5)
-h_WLeptonicPt=TH1F("h_WLeptonicPt",";W Leptonic Pt [GeV];",100,0,1000)
-h_recoMWW=TH1F("h_recoMWW",";M_{WW} [GeV];",100,0,2000)
-h_MET=TH1F("h_MET",";MET [GeV];",80,0,400)
-h_pfcand_nextracks=TH1F("h_pfcand_nextracks",";Number of extra tracks;",100,-0.5,99.5)
-h_num_vertices=TH1F("h_num_vertices",";Number of vertices;",100,-0.5,99.5)
-h_num_vertices_preweight=TH1F("h_num_vertices_preweight",";Number of vertices;",100,-0.5,99.5)
-h_num_jets_ak4=TH1F("h_num_jets_ak4",";Num extra jets (AK4);",10,-0.5,9.5)
-h_num_bjets_ak4=TH1F("h_num_bjets_ak4",";Num extra b jets (AK4);",10,-0.5,9.5)
-h_num_bjets_ak8=TH1F("h_num_bjets_ak8",";Num extra b jets (AK8);",10,-0.5,9.5)
-h_num_jets_ak4_wbjet=TH1F("h_num_jets_ak4_wbjet",";Num extra jets in ttbar control regoin;",10,-0.5,9.5)
 
 h_muon_pt_MjetVeto_WleptonicCuts=TH1F("h_muon_pt_MjetVeto_WleptonicCuts",";p_{T} (#mu) [GeV];",100,0,1000)
 h_muon_eta_MjetVeto_WleptonicCuts=TH1F("h_muon_eta_MjetVeto_WleptonicCuts",";#eta_{#mu};",60,-3,3)
+h_muon2_pt_MjetVeto_WleptonicCuts=TH1F("h_muon2_pt_MjetVeto_WleptonicCuts",";p_{T} (#mu) [GeV];",100,0,1000)
+h_muon2_eta_MjetVeto_WleptonicCuts=TH1F("h_muon2_eta_MjetVeto_WleptonicCuts",";#eta_{#mu};",60,-3,3)
+h_MassLL_MjetVeto_WleptonicCuts=TH1F("h_MassLL_MjetVeto_WleptonicCuts",";Mass#_{ll};",100,0,200)
 h_jet_pt_MjetVeto_WleptonicCuts=TH1F("h_jet_pt_MjetVeto_WleptonicCuts",";p_{T} (jet) [GeV];",120,0,1200)
 h_jet_eta_MjetVeto_WleptonicCuts=TH1F("h_jet_eta_MjetVeto_WleptonicCuts",";#eta_{jet};",60,-3,3)
 h_jet_pt_MjetVeto_WleptonicCuts_Wplus=TH1F("h_jet_pt_MjetVeto_WleptonicCuts_Wplus",";p_{T} (jet) [GeV];",120,0,1200)
@@ -245,6 +227,10 @@ for e in chain:
     tau21=e.jet_tau2[0]/e.jet_tau1[0]
     prunedMass=e.jet_corrmass[0]
 
+    l1 = TLorentzVector(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
+    l2 = TLorentzVector(e.muon_px[1],e.muon_py[1],e.muon_pz[1],e.muon_e[1])
+    lcombined = l1+l2
+
     #Plots after jet pruning requirements.
     jet_pruning=False
     #if tau21<0.6 and prunedMass>40 and prunedMass<120:
@@ -253,15 +239,16 @@ for e in chain:
         jet_pruning=True
 
     passesBoosted=False
-    if dphiWW>2.5 and recoMWW>500 and MET>40 and WLeptonicPt>200:
+    if dphiWW>2.5 and recoMWW>500 and MET>0 and WLeptonicPt>200:
         passesBoosted=True
 
     #Looking at Mauricio jet veto with W leptonic cuts
-    if e.num_bjets_ak4<1 and passesBoosted and MET > 40:
+    if e.num_bjets_ak4<1 and passesBoosted and MET > 0:
         h_muon_pt_MjetVeto_WleptonicCuts.Fill(e.muon_pt[0],pileupw)
         h_muon_eta_MjetVeto_WleptonicCuts.Fill(e.muon_eta[0],pileupw)
         h_muon2_pt_MjetVeto_WleptonicCuts.Fill(e.muon2_pt[0],pileupw)
         h_muon2_eta_MjetVeto_WleptonicCuts.Fill(e.muon2_eta[0],pileupw)
+        h_MassLL_MjetVeto_WleptonicCuts.Fill(lCombined.M(),pileupw)
         h_jet_pt_MjetVeto_WleptonicCuts.Fill(e.jet_pt[0],pileupw)
         h_jet_eta_MjetVeto_WleptonicCuts.Fill(e.jet_eta[0],pileupw)
         h_tau21_MjetVeto_WleptonicCuts.Fill(tau21,pileupw)
@@ -278,7 +265,7 @@ for e in chain:
 
 
     #Looking at extra tracks as a function of W pt
-    if e.num_bjets_ak4<1 and passesBoosted and MET > 40 and ( (DATA and pfcand_nextracks >4) or not DATA):
+    if e.num_bjets_ak4<1 and passesBoosted and MET > 0 and ( (DATA and pfcand_nextracks >4) or not DATA):
         if WLeptonicPt > 200 and WLeptonicPt < 300:
             h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_200_300.Fill(pfcand_nextracks,pileupw)
         if WLeptonicPt > 300 and WLeptonicPt < 400:
