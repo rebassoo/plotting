@@ -30,12 +30,12 @@ def ModifyHisto(h,sample):
         linecolor=12
 
     if sample=="DY1JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8":
-        numevents=880329.0
+        numevents=1102140.0
         cross_section_pb=1.098
         linecolor=12
 
     if sample=="DY1JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
-        numevents=626463.0
+        numevents=541253.0
         cross_section_pb=0.1193
         linecolor=12
 
@@ -45,17 +45,17 @@ def ModifyHisto(h,sample):
         linecolor=12
 
     if sample=="DY2JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8":
-        numevents=8898587.0
+        numevents=10464055.0
         cross_section_pb=15.65
         linecolor=12
 
     if sample=="DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8":
-        numevents=1841896.0
+        numevents=1992566.0
         cross_section_pb=2.737
         linecolor=12
 
     if sample=="DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
-        numevents=1056691.0
+        numevents=1445099.0
         cross_section_pb=0.4477
         linecolor=12
 
@@ -207,7 +207,8 @@ def ModifyHisto(h,sample):
         #numevents=153531390*(435./461.)
         #numevents=145531853.0
         #numevents=33485568.0
-        numevents=33762370.0
+        #numevents=33762370.0
+        numevents=145853805.0
         cross_section_pb=831.76
         linecolor=800
 
@@ -482,7 +483,7 @@ def legend_name(sample):
     if sample=="WW_TuneCP5_13TeV-pythia8":name="Inclusive WV"
     if sample=="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="DY+jets"
     if sample=="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="DY+jets"
-    if sample=="DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8":name="DY+jets"
+    if sample=="DY1JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8":name="DY+jets"
     if sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="W+Jets"
     if sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8":name="W+Jets"
     if sample=="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8":name="W+Jets, HT binned madgraph"

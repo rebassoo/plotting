@@ -22,7 +22,8 @@ MCsamples=[
 "DY2JetsToLL_M-50_LHEZpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
 "DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
 "DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8"]
+"DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8",
+"TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
 
 gStyle.SetOptStat(0)
 
@@ -110,7 +111,7 @@ for i in range(min,max+1):
     print i
     print histo_list[i-1]
 
-    rebin=1
+    rebin=2
 
     #Plot Data
     f_data=TFile("histos/"+directory+"SingleMuonTotal.root")
