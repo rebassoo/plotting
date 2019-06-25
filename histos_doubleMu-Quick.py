@@ -246,8 +246,8 @@ for e in chain:
     if e.num_bjets_ak4<1 and passesBoosted and MET > 0:
         h_muon_pt_MjetVeto_WleptonicCuts.Fill(e.muon_pt[0],pileupw)
         h_muon_eta_MjetVeto_WleptonicCuts.Fill(e.muon_eta[0],pileupw)
-        h_muon2_pt_MjetVeto_WleptonicCuts.Fill(e.muon2_pt[0],pileupw)
-        h_muon2_eta_MjetVeto_WleptonicCuts.Fill(e.muon2_eta[0],pileupw)
+        h_muon2_pt_MjetVeto_WleptonicCuts.Fill(e.muon_pt[1],pileupw)
+        h_muon2_eta_MjetVeto_WleptonicCuts.Fill(e.muon_eta[1],pileupw)
         h_MassLL_MjetVeto_WleptonicCuts.Fill(lCombined.M(),pileupw)
         h_jet_pt_MjetVeto_WleptonicCuts.Fill(e.jet_pt[0],pileupw)
         h_jet_eta_MjetVeto_WleptonicCuts.Fill(e.jet_eta[0],pileupw)
