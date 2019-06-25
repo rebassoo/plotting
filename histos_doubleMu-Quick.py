@@ -229,7 +229,7 @@ for e in chain:
 
     l1 = TLorentzVector(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
     l2 = TLorentzVector(e.muon_px[1],e.muon_py[1],e.muon_pz[1],e.muon_e[1])
-    lcombined = l1+l2
+    lCombined = l1+l2
 
     #Plots after jet pruning requirements.
     jet_pruning=False
