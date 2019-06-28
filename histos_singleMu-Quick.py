@@ -181,6 +181,10 @@ h_MWW_extra_tracks_5_up_notPPS=TH1F("h_MWW_extra_tracks_5_up_notPPS",";;",100,0,
 h_xi_23=TH1F("h_xi_23",";Xi;",128,0,0.32)
 h_xi_123=TH1F("h_xi_123",";Xi;",128,0,0.32)
 
+h_MWW_vs_MX_passingPPS=TH2F("h_MWW_vs_MX_passingPPS",";MWW/MX;",100,0,2000,100,0,2000)
+h_MWW_vs_MX_passingPPS_1pileup=TH2F("h_MWW_vs_MX_passingPPS_1pileup",";MWW/MX;",100,0,2000,100,0,2000)
+h_MWW_vs_MX_passingPPS_2pileup=TH2F("h_MWW_vs_MX_passingPPS_2pileup",";MWW/MX;",100,0,2000,100,0,2000)
+
 ratio=[1.59918951988,1.68628513813,1.73210585117,1.69695830345,1.60702228546,1.55586051941,1.40359997749,1.24094235897,1.06528007984,0.911292850971,0.805232226849,0.690045535564,0.588334977627,0.506649911404,0.442807376385,0.419169098139,0.373487889767,0.327817767859,0.318366676569,0.320016086102]
 
 Run=0.
@@ -375,13 +379,17 @@ for e in chain:
         #h_Y_RP_passingPPS.Fill(Rapidity_RP,pileupw)
         h_Y_CMS_minus_RP_passingPPS.Fill(recoYCMS-Rapidity_RP,pileupw)
         h_MWW_MX_passingPPS.Fill(recoMWW/M_RP,pileupw)
+        h_MWW_vs_MX_passingPPS.Fill(M_RP,recoMWW)
 
     #Look at signal plots
     if mjet_veto and passesBoosted and jet_pruning and passesPPSSingle1Pileup:
         h_MWW_MX_passingPPS_1pileup.Fill(recoMWW/M_RP,pileupw)
+        h_MWW_vs_MX_passingPPS_1pileup.Fill(M_RP,recoMWW)
+        #if M_RP<200 or recoMWW<200:
         print "1 pileup, xi23: {0}, xi123: {1}, MassX: {2}, MassWW: {3}, MWW/MX: {4}".format(xi["23"],xi["123"],M_RP,recoMWW,recoMWW/M_RP)
     if mjet_veto and passesBoosted and jet_pruning and passesPPSSingle2Pileup:
         h_MWW_MX_passingPPS_2pileup.Fill(recoMWW/M_RP,pileupw)
+        h_MWW_vs_MX_passingPPS_2pileup.Fill(M_RP,recoMWW)
         print "2 pileup, xi23: {0}, xi123: {1}, MassX: {2}, MassWW: {3}, MWW/MX: {4}".format(xi["23"],xi["123"],M_RP,recoMWW,recoMWW/M_RP)
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS:
