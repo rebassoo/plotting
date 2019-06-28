@@ -84,6 +84,11 @@ h_pfcand_nextracks_MjetVeto_WleptonicCuts=TH1F("h_pfcand_nextracks_MjetVeto_Wlep
 h_num_vertices_MjetVeto_WleptonicCuts=TH1F("h_num_vertices_MjetVeto_WleptonicCuts",";Number of vertices;",100,-0.5,99.5)
 h_num_vertices_preweight_MjetVeto_WleptonicCuts=TH1F("h_num_vertices_preweight_MjetVeto_WleptonicCuts",";Number of vertices;",100,-0.5,99.5)
 
+h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_200_300=TH1F("h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_200_300",";Number of extra tracks;",100,-0.5,99.5)
+h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_300_400=TH1F("h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_300_400",";Number of extra tracks;",100,-0.5,99.5)
+h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_400_up=TH1F("h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_400_up",";Number of extra tracks;",100,-0.5,99.5)
+h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_600_up=TH1F("h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_600_up",";Number of extra tracks;",100,-0.5,99.5)
+
 h_muon_pt_passingPPS=TH1F("h_muon_pt_passingPPS",";p_{T} (#mu) [GeV];",100,0,1000)
 h_jet_pt_passingPPS=TH1F("h_jet_pt_passingPPS",";p_{T} (jet) [GeV];",120,0,1200)
 h_tau21_passingPPS=TH1F("h_tau21_passingPPS",";tau21;",100,0,2)
@@ -268,6 +273,16 @@ for e in chain:
         h_num_vertices_preweight_MjetVeto_WleptonicCuts.Fill(e.nVertices,pileupw)
 
 
+    #Looking at extra tracks as a function of W pt
+    if e.num_bjets_ak4<1 and passesBoosted and MET > 40 and ( (DATA and pfcand_nextracks >4) or not DATA):
+        if WLeptonicPt > 200 and WLeptonicPt < 300:
+            h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_200_300.Fill(pfcand_nextracks,pileupw)
+        if WLeptonicPt > 300 and WLeptonicPt < 400:
+            h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_300_400.Fill(pfcand_nextracks,pileupw)
+        if WLeptonicPt > 400:
+            h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_400_up.Fill(pfcand_nextracks,pileupw)
+        if WLeptonicPt > 600:
+            h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_600_up.Fill(pfcand_nextracks,pileupw)
 
     ######################################################################
     #Now Add PPS requirements
