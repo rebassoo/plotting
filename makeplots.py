@@ -8,7 +8,7 @@ import datetime
 import sys
 
 MCsignalsamples=[
-"ExclusiveWW_a0w2p5e-6-SingleLepton-2017",
+#"ExclusiveWW_a0w2p5e-6-SingleLepton-2017",
 "ExclusiveWW_a0w1e-6-SingleLepton-2017",
 "ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
 #"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6"
@@ -16,17 +16,17 @@ MCsignalsamples=[
 
 MCsamples2=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
 MCsamples=[
-#"WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-#"WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-#"WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
+"WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+"WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+"WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+#"W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8",
+#"W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
+#"W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
+#"W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
+#"W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8",
+#"W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
+#"W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
+#"W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
 #"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
 #"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
 #"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
@@ -38,25 +38,25 @@ MCsamples=[
 #"WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8",
 #"WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8",
 "TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-#"QCD_Pt_170to300_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_470to600_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8",
-#"QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
+"QCD_Pt_170to300_TuneCP5_13TeV_pythia8",
+"QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
+"QCD_Pt_470to600_TuneCP5_13TeV_pythia8",
+"QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
+"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
+"QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
+"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8",
+"QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
+"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8",
+"QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
 "ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8",
 "ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
 "ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
 "ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
 "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
 "DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-#"WW_TuneCP5_13TeV-pythia8",
-#"WZ_TuneCP5_13TeV-pythia8",
-#"ZZ_TuneCP5_13TeV-pythia8",
+"WW_TuneCP5_13TeV-pythia8",
+"WZ_TuneCP5_13TeV-pythia8",
+"ZZ_TuneCP5_13TeV-pythia8",
 #"ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
 #"TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
 #"QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
@@ -70,7 +70,14 @@ MCsamples=[
 gStyle.SetOptStat(0)
 
 #directory="2019-05-07-MJetVetoPrunedQuick/"
+#directory="2019-05-01-MJetVetoPruned/"
+#directory="2019-05-11-MJetVetoPrunedQuickUpdate/"
 directory=""
+
+#ratio=[2.95824837685,3.00581049919,2.7784640789,2.54722547531,2.25889253616,2.09989356995,1.81584835052,1.67148184776,1.42882561684,1.20253503323,1.0356720686,0.870607793331,0.739903926849,0.633592128754,0.564400851727,0.519502043724,0.420090854168,0.405464798212,0.394646286964,0.382733374834]
+
+ratio=[2.21718335152,2.52607560158,2.46251106262,2.29587388039,2.08750772476,1.96914052963,1.6261909008,1.49893152714,1.33113884926,1.13561844826,0.975487530231,0.83882021904,0.713073134422,0.599662899971,0.545682013035,0.478854328394,0.410977452993,0.370541721582,0.386292546988,0.378802418709]
+
 
 #List all the histograms in the root file
 f0=TFile("histos/"+directory+MCsamples[0]+".root")
@@ -144,9 +151,10 @@ c1.cd()
 for i in range(min,max+1):
 
     toppad.cd()
-    leg=TLegend(0.62,0.352,0.92,0.942)
-    leg.SetFillColor(0);
-    leg.SetLineColor(0);
+    #leg=TLegend(0.62,0.352,0.92,0.942)
+    leg=TLegend(0.72,0.452,0.92,0.942)
+    leg.SetFillColor(0)
+    leg.SetLineColor(0)
     #leg.SetTextSize(0.035)
     leg.SetTextSize(0.022)
     leg.SetTextFont(42)
@@ -172,6 +180,7 @@ for i in range(min,max+1):
     maxhisto_data=h_data.GetMaximum()
     print maxhisto_data
     #h_data.GetXaxis().SetRangeUser(0,200)
+    h_data.GetYaxis().SetTitle("Events")
     #maxhisto=hstack.GetMaximum()
     print maxhisto
     h_data.Draw("e")
@@ -190,13 +199,30 @@ for i in range(min,max+1):
         if digits:
             hMC.append(fMC[it].Get(histo_list[i-1]))
         else: hMC.append(fMC[it].Get(u))
+        #else: hMC.append(fMC[it].Get("h_num_extra_tracks_notPPS"))
         ModifyHisto(hMC[it],sample)
         #Scale MC to data for PPS numextra tracks plot
-        #hMC[it].Scale(2.08614635468)
+        #for i in range(0,20):
+        #    content=hMC[it].GetBinContent(i+1)
+        #    hMC[it].SetBinContent(i+1,content*ratio[i])
+        #hMC[it].Scale(1/(10.585*0.086319))
+        #hMC[it].Scale(1/10.585)
+        #For pt-binned
         #For 5-15
         #hMC[it].Scale(2.49)
         #For 0-4
         #hMC[it].Scale(2.729)
+        #For 0-4, with QCD and diboson
+        #hMC[it].Scale(2.0861)
+        #For inclusive
+        #For 5-15
+        #hMC[it].Scale(2.84)
+        #For 5-15, with QCD and diboson
+        #hMC[it].Scale(2.48)
+        #For 0-4
+        #hMC[it].Scale(2.958)
+        #For 0-4, with QCD and diboson
+        #hMC[it].Scale(2.21718)
         hMC[it].Rebin(rebin)
         #if sample =="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" or sample=="WW_TuneCP5_13TeV-pythia8" or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8" or sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample == "W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8":
         #    leg.AddEntry(hMC[it],legend_name(sample),"f")
