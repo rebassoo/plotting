@@ -23,7 +23,8 @@ MCsamples=[
 "DY2JetsToLL_M-50_LHEZpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
 "DY2JetsToLL_M-50_LHEZpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
 "DY2JetsToLL_M-50_LHEZpT_50-150_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
+"TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+"ZZ_TuneCP5_13TeV-pythia8"]
 
 gStyle.SetOptStat(0)
 
@@ -129,7 +130,7 @@ for i in range(min,max+1):
     h_data.Rebin(rebin)
     maxhisto_data=h_data.GetMaximum()
     print maxhisto_data
-    #h_data.GetXaxis().SetRangeUser(0,200)
+    h_data.GetXaxis().SetRangeUser(0,200)
     #maxhisto=hstack.GetMaximum()
     print maxhisto
     h_data.Draw("e")
@@ -150,6 +151,7 @@ for i in range(min,max+1):
         else: hMC.append(fMC[it].Get(u))
         ModifyHisto(hMC[it],sample)
         #Scale MC to data for PPS numextra tracks plot
+        #hMC[it].Scale(1/10.585)
         #hMC[it].Scale(2.08614635468)
         #For 5-15
         #hMC[it].Scale(2.49)
