@@ -18,22 +18,24 @@ deno=h_MWW_extra_tracks_5_15_notPPS.GetEntries()
 #deno=h_MWW_900_extra_tracks_5_15_notPPS.GetEntries()
 print "num: ",num
 print "deno: ",deno
-h_MWW_MX_control.Rebin(10)
-print "h_MWW_MX_control.GetEntries(): ",h_MWW_MX_control.GetEntries()
+histo_name_control="h_MWW_MX_control_Ycut"
+h1=_file0.Get(histo_name_control)
+h1.Rebin(10)
+print "h_MWW_MX_control.GetEntries(): ",h1.GetEntries()
 #h_MWW_MX_10_up.Scale(0.012282431)
-h_MWW_MX_control.Sumw2()
-h_MWW_MX_control.Scale(num/deno)
-h_MWW_MX_control.SetStats(0)
-h_MWW_MX_control.GetYaxis().SetRangeUser(0,10)
-h_MWW_MX_control.Draw("e")
+h1.Sumw2()
+h1.Scale(num/deno)
+h1.SetStats(0)
+h1.GetYaxis().SetRangeUser(0,10)
+h1.Draw("e")
 
 #h_MWW_MX_0_4_tracks_notPPS.Scale(0.098)
 #h_MWW_MX_0_4_tracks_notPPS.Rebin(10)
 #h_MWW_MX_0_4_tracks_notPPS.SetLineColor(2)
 #h_MWW_MX_0_4_tracks_notPPS.Draw("esamehist")
 
-#histo_name="h_MWW_MX_0_4_tracks_Ycut"
-histo_name="h_MWW_MX_0_4_tracks"
+histo_name="h_MWW_MX_0_4_tracks_Ycut"
+#histo_name="h_MWW_MX_0_4_tracks"
 #histo_name="h_Y_CMS_minus_RP_0_4_extratracks"
 
 
