@@ -2,13 +2,27 @@
 #Finn Rebassoo, LLNL 10-16-2017
 import math as m
 import random as r
-from ROOT import *
 import os
 import sys
+import json
+from ROOT import *
 from os import listdir
 from os.path import isfile, join
 
 
+def modifyJson(sample,num_events):
+    changeNumEvents=False
+    with open('samples_info.json') as json_file:
+        data=json.load(json_file)
+        print num_events
+        print data[sample][0]
+        if num_events != data[sample][0]:
+            changeNumEvents=True
+    
+    if changeNumEvents:
+        data[sample][0]=num_events
+        with open("samples_info.json","w") as jsonFile:
+            json.dump(data,jsonFile)
 
 def GetDphi(phi1,phi2):
     result = phi1-phi2
@@ -98,41 +112,53 @@ def passPPSNewPixel(e,xi):
     ii=0
     for detId_rp in e.proton_rpid:
         #pixel
-        if detId_rp == 23: 
+        if detId_rp == 23 and e.proton_ismultirp_[ii]==0: 
             xi["23"].append(e.proton_xi[ii])
         #pixel
-        if detId_rp == 123: 
+        if detId_rp == 123 and e.proton_ismultirp_[ii]==0: 
             xi["123"].append(e.proton_xi[ii])
         ii=ii+1
     return True
+
+def passPPSMulti(e,xi):
+    left=False
+    right=False
+    passesPPS=False
+    ii=0
+    for xi_ in e.proton_xi:
+        if e.proton_arm[ii]==0 and e.proton_ismultirp_[ii]==1:
+            xi["23"].append(xi_)
+            left=True
+        if e.proton_arm[ii]==1 and e.proton_ismultirp_[ii]==1:
+            xi["123"].append(xi_)
+            right=True
+        ii=ii+1
+    if left and right: passesPPS=True
+    return passesPPS
 
 def passPPSNew(e,xi):
     left=False
     right=False
     passesPPS=False
     ii=0
-    #print "Run: ",e.run
-    #print "Lumiblock: ",e.lumiblock
-    run=e.run
-    lumiblock=e.lumiblock
     for detId_rp in e.proton_rpid:
         #pixel
-        if detId_rp == 23: 
+        if detId_rp == 23 and e.proton_ismultirp_[ii]==0: 
             xi["23"].append(e.proton_xi[ii])
         #strips
-        if detId_rp == 3: 
+        if detId_rp == 3 and e.proton_ismultirp_[ii]==0: 
             xi["3"].append(e.proton_xi[ii])
         #diamond
-        if detId_rp == 16: 
+        if detId_rp == 16 and e.proton_ismultirp_[ii]==0: 
             xi["16"].append(e.proton_xi[ii])
         #pixel
-        if detId_rp == 123: 
+        if detId_rp == 123 and e.proton_ismultirp_[ii]==0: 
             xi["123"].append(e.proton_xi[ii])
         #strips
-        if detId_rp == 103: 
+        if detId_rp == 103 and e.proton_ismultirp_[ii]==0: 
             xi["103"].append(e.proton_xi[ii])
         #diamond
-        if detId_rp == 116: 
+        if detId_rp == 116 and e.proton_ismultirp_[ii]==0: 
             xi["116"].append(e.proton_xi[ii])
         ii=ii+1
 
@@ -159,9 +185,7 @@ def AddFilesToChain(chain,ListOfFiles,DATA):
             chain.Add(file)
     print "Number of total files: ",i
     print "Number of events: {0}".format(num_events)
-    #if i>5:
-    #    break
-
+    return num_events
 
 def GetListOfFiles(sample_name,file_dir,DATA):
     print "Is is Data: ",DATA
@@ -213,149 +237,4 @@ def GetListOfFiles(sample_name,file_dir,DATA):
     return ListOfFiles,output_name
 
 
-
-def GetCrossingAngles():
-    crossingAngles=dict()
-    run=0
-    lumiblock = 0
-    crossingAngle=0
-    txtfile='xangle_afterTS2_STABLEBEAMS_CLEANUP.csv'
-    f = open(txtfile)
-    for line in f:
-        run=line.split(' ')[0]
-        lumiblock=line.split(' ')[2]
-        crossingAngle=line.split(' ')[4]
-        crossingAngles['{0}:{1}'.format(run,lumiblock)]=crossingAngle
-    txtfile='xangle_tillTS2_STABLEBEAMS_CLEANUP.csv'
-    f2 = open(txtfile)
-    for line in f2:
-        run=line.split(' ')[0]
-        lumiblock=line.split(' ')[2]
-        crossingAngle=line.split(' ')[4]
-        crossingAngles['{0}:{1}'.format(run,lumiblock)]=crossingAngle
-    return crossingAngles
-    
-
-def GetXi(x,y,pot,run,crossingAngle):
-    x_corr=0
-    #crossingAngle=GetCrossingAngle(run,lumiblock)
-    D=100000.
-    xi=0.
-    #print "x,:",x
-    #print "crossing Angle: ",crossingAngle
-    if pot == 3:
-        #Alignment from Jan's talk 30Jan2017 and his 20Feb2018 talk for postTS2
-        #print "x of track: ",x
-        if run > 303718: x_corr = x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 3.6
-        else:    x_corr = x - 3.7
-        #print "x,:",x_corr
-        #Dispersion values in cm, x values in mm
-        #Dispersion values come from Fricis talk 2017_11_22
-        #Using 120 as starting point
-        #print crossingAngle
-        if crossingAngle ==120.: xi = x_corr / (-9.145*10)
-        else:
-            #0.46 cm per 10 murad, so 0.046 cm per 1 murad
-            D_corr = (crossingAngle-120.)*0.046*10 - 9.145*10
-            xi = x_corr / D_corr
-        #if crossingAngle ==130.: xi = x_corr / (-8.591*10)
-        #if crossingAngle ==140.: xi = x_corr / (-9.226*10)
-    if pot == 103:
-        #Alignment from Jan's talk 30Jan2017 and his 20Feb2018 talk for postTS2
-        #print "x of track: ",x
-        if run > 303718: x_corr = x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 2.8
-        else: x_corr = x - 2.75
-        #print "x,:",x_corr
-        #Dispersion values in cm, x values in mm
-        if crossingAngle ==120.: xi = x_corr / (-7.291*10)
-        else:
-            #0.46 cm per 10 murad, so 0.046 cm per 1 murad
-            D_corr = (crossingAngle-120.)*0.046*10 - 7.291*10
-            xi = x_corr / D_corr
-        #if crossingAngle ==130.: xi = x_corr / (-6.621*10)
-        #if crossingAngle ==140.: xi = x_corr / (-6.191*10)
-
-    #This is for pixels
-    #Use same dispersion values as for strips?
-    if pot == 23:
-        if run > 503718: x_corr =x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 42.2
-        else: x_corr = x - 42.05
-        if crossingAngle ==120.: xi = x_corr / (-9.145*10)
-        else:
-            #0.46 cm per 10 murad, so 0.046 cm per 1 murad
-            D_corr = (crossingAngle-120.)*0.046*10 - 9.145*10
-            xi = x_corr / D_corr
-
-    if pot == 123:
-        if run > 503718: x_corr =x *m.cos(m.radians(8)) + y*m.sin(m.radians(8)) - 42.2
-        else: x_corr = x - 42.05
-        if crossingAngle ==120.: xi = x_corr / (-7.291*10)
-        else:
-            #0.46 cm per 10 murad, so 0.046 cm per 1 murad
-            D_corr = (crossingAngle-120.)*0.046*10 - 7.291*10
-            xi = x_corr / D_corr
-
-    return abs(xi)
-
-
-def passPPS(e,xi,crossingAngle):
-    left=False
-    right=False
-    passesPPS=False
-    ii=0
-    #print "Run: ",e.run
-    #print "Lumiblock: ",e.lumiblock
-    run=e.run
-    lumiblock=e.lumiblock
-    #crossingAngle=GetCrossingAngle(run,lumiblock)
-    for detId_rp in e.pps_track_rpid:
-                    #print detId_rp
-        #pixel
-        if detId_rp == 23: 
-            #left=True
-                    #if lessthan6: print "DetId 2, Xi: {0}".format(e.pps_track_xi[i])
-            xi["23"].append(GetXi(e.pps_track_x[ii],e.pps_track_y[ii],23,run,crossingAngle))
-        #strips
-        if detId_rp == 3: 
-            #left=True
-                    #if lessthan6: print "DetId 3, Xi: {0}".format(e.pps_track_xi[i])
-            xi["3"].append(GetXi(e.pps_track_x[ii],e.pps_track_y[ii],3,run,crossingAngle))
-        #diamond
-        if detId_rp == "16": 
-            #left=True
-                    #if lessthan6: print "DetId 3, Xi: {0}".format(e.pps_track_xi[i])
-            #print e.pps_tracktime[ii]
-            xi["16"].append(GetXi(e.pps_track_x[ii],e.pps_track_y[ii],16,run,crossingAngle))
-        #pixel
-        if detId_rp == 123: 
-            #right=True
-                    #xi_right.append(float(e.pps_track_xi))
-                    #if lessthan6: print "DetId 102, Xi: {0}".format(e.pps_track_xi[i])
-            xi["123"].append(GetXi(e.pps_track_x[ii],e.pps_track_y[ii],123,run,crossingAngle))
-        #strips
-        if detId_rp == 103: 
-            #right=True
-                    #xi_right.append(float(e.pps_track_xi))
-                    #if lessthan6: print "DetId 103, Xi: {0}".format(e.pps_track_xi[i])
-            xi["103"].append(GetXi(e.pps_track_x[ii],e.pps_track_y[ii],103,run,crossingAngle))
-        #diamond
-        if detId_rp == "116": 
-            #left=True
-                    #if lessthan6: print "DetId 3, Xi: {0}".format(e.pps_track_xi[i])
-            xi["116"].append(GetXi(e.pps_track_x[ii],e.pps_track_y[ii],116,run,crossingAngle))
-            #if e.pps_tracktime[ii] !=0:
-            #    print e.pps_tracktime[ii]
-        ii=ii+1
-
-    if len(xi["123"])==1 and len(xi["23"])==1:
-        passesPPS=True
-    #if (left == True) or (right == True):
-    #    passesPPS=True
-        
-    #if len(xi["2"]) > 1 or len(xi["3"]) > 1 or len(xi["102"]) > 1 or len(xi["103"]) > 1:
-    #    print "This event has multiple tracks in a single pot"
-    #    print "Xi_2:",xi["2"],"Xi_3:",xi["3"],"Xi_102:",xi["102"],"Xi_103:",xi["103"]
-    #    #passesPPS=False
-
-    return passesPPS
 
