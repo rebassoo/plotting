@@ -2,71 +2,69 @@
 
 #/hadoop/cms/store/user/rebassoo/
 
+python histos_quick.py latest electron SingleElectron crab_Run2017B
+python histos_quick.py latest electron SingleElectron crab_Run2017C
+python histos_quick.py latest electron SingleElectron crab_Run2017D
+python histos_quick.py latest electron SingleElectron crab_Run2017E
+python histos_quick.py latest electron SingleElectron crab_Run2017F
+
+python histos_quick.py latest electron GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6
+python histos_quick.py latest electron GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6
+python histos_quick.py latest electron GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6
+python histos_quick.py latest electron GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6 crab_GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6
+
+python histos_quick.py latest electron WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-0jets_JEC
+python histos_quick.py latest electron WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-1jets_JEC
+python histos_quick.py latest electron WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-2jets_JEC
+
+python histos_quick.py latest electron DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_0J_JEC
+python histos_quick.py latest electron DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_1J_JEC
+python histos_quick.py latest electron DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_2J_JEC
 
 
-#python histos_singleE.py latest SingleElectron crab_SingleElectron-Run2017C
-#python histos_singleE.py latest WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJets
-#python histos_singleE.py latest TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8 crab_TTToSemiLeptonic
+python histos_quick.py latest electron TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8 crab_TTToSemiLeptonic_JEC
+python histos_quick.py latest electron TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_TTbar-Inclusive_JEC
+python histos_quick.py latest electron WW_TuneCP5_13TeV-pythia8 crab_WW_JEC
+python histos_quick.py latest electron WZ_TuneCP5_13TeV-pythia8 crab_WZ_JEC
+python histos_quick.py latest electron ZZ_TuneCP5_13TeV-pythia8 crab_ZZ_JEC
 
-python histos_singleE-Quick.py latest SingleElectron crab_Run2017B
-python histos_singleE-Quick.py latest SingleElectron crab_Run2017C
-python histos_singleE-Quick.py latest SingleElectron crab_Run2017D
-python histos_singleE-Quick.py latest SingleElectron crab_Run2017E
-python histos_singleE-Quick.py latest SingleElectron crab_Run2017F
+python histos_quick.py latest electron ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8 crab_ST_s-channel_JEC
+python histos_quick.py latest electron ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 crab_ST_t-channel_top_JEC
+python histos_quick.py latest electron ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 crab_ST_t-channel_antitop_JEC
+python histos_quick.py latest electron ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 crab_ST_tW_top_5f_JEC
+python histos_quick.py latest electron ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 crab_ST_tW_antitop_5f_JEC
 
-python histos_singleE-Quick.py latest ExclusiveWW a0w2p5e-6-SingleLepton-2017
+python histos_quick.py latest electron QCD_Pt_170to300_TuneCP5_13TeV_pythia8 crab_QCD_Pt_170to300_JEC
+python histos_quick.py latest electron QCD_Pt_300to470_TuneCP5_13TeV_pythia8 crab_QCD_Pt_300to470_JEC
+python histos_quick.py latest electron QCD_Pt_470to600_TuneCP5_13TeV_pythia8 crab_QCD_Pt_470to600_JEC
+python histos_quick.py latest electron QCD_Pt_600to800_TuneCP5_13TeV_pythia8 crab_QCD_Pt_600to800_JEC
+python histos_quick.py latest electron QCD_Pt_800to1000_TuneCP5_13TeV_pythia8 crab_QCD_Pt_800to1000_JEC
+python histos_quick.py latest electron QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8 crab_QCD_Pt_1000to1400_JEC
+python histos_quick.py latest electron QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8 crab_QCD_Pt_1400to1800_JEC
+python histos_quick.py latest electron QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8 crab_QCD_Pt_1800to2400_JEC
+python histos_quick.py latest electron QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8 crab_QCD_Pt_2400to3200_JEC
+python histos_quick.py latest electron QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8 crab_QCD_Pt_3200toInf_JEC
+
+python histos_quick.py latest electron DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX_JEC
+
+python histos_quick.py latest electron W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_100-150_JEC
+python histos_quick.py latest electron W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_150-250_JEC
+python histos_quick.py latest electron W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_250-400_JEC
+python histos_quick.py latest electron W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_400-inf_JEC
+
+python histos_quick.py latest electron W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_100-150_JEC
+python histos_quick.py latest electron W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_150-250_JEC
+python histos_quick.py latest electron W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_250-400_JEC
+python histos_quick.py latest electron W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_400-inf_JEC
+
+exit 1
+python histos_quick.py latest electron ExclusiveWW a0w2p5e-6-SingleLepton-2017
 cp histos/quick/ExclusiveWW.root histos/quick/ExclusiveWW_a0w2p5e-6-SingleLepton-2017.root
 
 
-python histos_singleE-Quick.py latest ExclusiveWW a0w1e-6-SingleLepton-2017
+python histos_quick.py latest electron ExclusiveWW a0w1e-6-SingleLepton-2017
 cp histos/quick/ExclusiveWW.root histos/quick/ExclusiveWW_a0w1e-6-SingleLepton-2017.root
 
-python histos_singleE-Quick.py latest ExclusiveWW SM_FPMC-SingleLepton-2017
+python histos_quick.py latest electron ExclusiveWW SM_FPMC-SingleLepton-2017
 cp histos/quick/ExclusiveWW.root histos/quick/ExclusiveWW_SM_FPMC-SingleLepton-2017.root
-exit 1
-
-python histos_singleE-Quick.py latest WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-0jets_JEC
-python histos_singleE-Quick.py latest WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-1jets_JEC
-python histos_singleE-Quick.py latest WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-2jets_JEC
-
-python histos_singleE-Quick.py latest DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_0J_JEC
-python histos_singleE-Quick.py latest DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_1J_JEC
-python histos_singleE-Quick.py latest DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_2J_JEC
-
-
-python histos_singleE-Quick.py latest TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8 crab_TTToSemiLeptonic_JEC
-python histos_singleE-Quick.py latest TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_TTbar-Inclusive_JEC
-python histos_singleE-Quick.py latest WW_TuneCP5_13TeV-pythia8 crab_WW_JEC
-python histos_singleE-Quick.py latest WZ_TuneCP5_13TeV-pythia8 crab_WZ_JEC
-python histos_singleE-Quick.py latest ZZ_TuneCP5_13TeV-pythia8 crab_ZZ_JEC
-
-python histos_singleE-Quick.py latest ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8 crab_ST_s-channel_JEC
-python histos_singleE-Quick.py latest ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 crab_ST_t-channel_top_JEC
-python histos_singleE-Quick.py latest ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8 crab_ST_t-channel_antitop_JEC
-python histos_singleE-Quick.py latest ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 crab_ST_tW_top_5f_JEC
-python histos_singleE-Quick.py latest ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8 crab_ST_tW_antitop_5f_JEC
-
-python histos_singleE-Quick.py latest QCD_Pt_170to300_TuneCP5_13TeV_pythia8 crab_QCD_Pt_170to300_JEC
-python histos_singleE-Quick.py latest QCD_Pt_300to470_TuneCP5_13TeV_pythia8 crab_QCD_Pt_300to470_JEC
-python histos_singleE-Quick.py latest QCD_Pt_470to600_TuneCP5_13TeV_pythia8 crab_QCD_Pt_470to600_JEC
-python histos_singleE-Quick.py latest QCD_Pt_600to800_TuneCP5_13TeV_pythia8 crab_QCD_Pt_600to800_JEC
-python histos_singleE-Quick.py latest QCD_Pt_800to1000_TuneCP5_13TeV_pythia8 crab_QCD_Pt_800to1000_JEC
-python histos_singleE-Quick.py latest QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8 crab_QCD_Pt_1000to1400_JEC
-python histos_singleE-Quick.py latest QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8 crab_QCD_Pt_1400to1800_JEC
-python histos_singleE-Quick.py latest QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8 crab_QCD_Pt_1800to2400_JEC
-python histos_singleE-Quick.py latest QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8 crab_QCD_Pt_2400to3200_JEC
-python histos_singleE-Quick.py latest QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8 crab_QCD_Pt_3200toInf_JEC
-
-python histos_singleE-Quick.py latest DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX_JEC
-
-python histos_singleE-Quick.py latest W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_100-150_JEC
-python histos_singleE-Quick.py latest W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_150-250_JEC
-python histos_singleE-Quick.py latest W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_250-400_JEC
-python histos_singleE-Quick.py latest W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_400-inf_JEC
-
-python histos_singleE-Quick.py latest W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_100-150_JEC
-python histos_singleE-Quick.py latest W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_150-250_JEC
-python histos_singleE-Quick.py latest W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_250-400_JEC
-python histos_singleE-Quick.py latest W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_400-inf_JEC
-
 
