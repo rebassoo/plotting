@@ -2,28 +2,6 @@
 
 #/hadoop/cms/store/user/rebassoo/
 
-python histos_singleMu.py latest ExclusiveWW a0w1e-6-SingleLepton-2017
-cp histos/ExclusiveWW.root histos/ExclusiveWW_a0w1e-6-SingleLepton-2017.root
-exit 1
-
-
-#python histos_singleMu.py latest SingleMuon crab_Run2017B
-#python histos_singleMu.py specific SingleMuon crab_Run2017B/190117_022701/0000
-#python histos_singleMu.py latest SingleMuon crab_Run2017C
-##python histos_singleMu.py specific SingleMuon crab_Run2017C/180929_002104/0000
-#python histos_singleMu.py latest SingleMuon crab_Run2017D
-##python histos_singleMu.py specific SingleMuon crab_Run2017D/180927_213051/0000
-#python histos_singleMu.py latest SingleMuon crab_Run2017E
-##python histos_singleMu.py specific SingleMuon crab_Run2017E/180927_213115/0000
-#python histos_singleMu.py latest SingleMuon crab_Run2017F
-##python histos_singleMu.py specific SingleMuon crab_Run2017F/180927_213138/0000
-##python histos_singleMu.py specific SingleMuon crab_Run2017F/180927_213138/0001
-
-#python histos_singleMu.py latest W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_150-250_JEC
-#python histos_singleMu.py latest W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_250-400_JEC
-#python histos_singleMu.py latest W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_400-inf_JEC
-
-#exit 1
 
 python histos_singleMu.py latest SingleMuon crab_Run2017B
 python histos_singleMu.py latest SingleMuon crab_Run2017C
@@ -31,35 +9,18 @@ python histos_singleMu.py latest SingleMuon crab_Run2017D
 python histos_singleMu.py latest SingleMuon crab_Run2017E
 python histos_singleMu.py latest SingleMuon crab_Run2017F
 
-#exit 1
-
-#python histos_singleMu.py latest GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6
-#python histos_singleMu.py latest GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6
-#python histos_singleMu.py latest GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6
-#python histos_singleMu.py latest GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6 crab_GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6
-
-
-python histos_singleMu.py latest ExclusiveWW SM_FPMC-SingleLepton-2017
-cp histos/ExclusiveWW.root histos/ExclusiveWW_SM_FPMC-SingleLepton-2017.root
-
-#exit 1
-
-python histos_singleMu.py latest ExclusiveWW a0w2p5e-6-SingleLepton-2017
-#python histos_singleMu.py specific ExclusiveWW a0w2p5e-6-SingleLepton-2017/20181025/0000
-cp histos/ExclusiveWW.root histos/ExclusiveWW_a0w2p5e-6-SingleLepton-2017.root
-#exit 1
-
+python histos_singleMu.py latest GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6
+python histos_singleMu.py latest GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6
+python histos_singleMu.py latest GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6
+python histos_singleMu.py latest GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6 crab_GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6
 
 python histos_singleMu.py latest WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-0jets_JEC
 python histos_singleMu.py latest WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-1jets_JEC
 python histos_singleMu.py latest WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-2jets_JEC
-#python histos_singleMu.py specific WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-2jets/190117_022052/0000
-#mv histos/WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8_WJets-2jets_0000.root histos/WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8.root
 
 python histos_singleMu.py latest DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_0J_JEC
 python histos_singleMu.py latest DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_1J_JEC
 python histos_singleMu.py latest DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_2J_JEC
-
 
 python histos_singleMu.py latest TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8 crab_TTToSemiLeptonic_JEC
 python histos_singleMu.py latest TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_TTbar-Inclusive_JEC
@@ -86,31 +47,23 @@ python histos_singleMu.py latest QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8 crab_QCD
 
 python histos_singleMu.py latest DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX_JEC
 
-#python histos_singleMu.py latest W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_100-150_JEC
-#python histos_singleMu.py latest W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_150-250_JEC
-#python histos_singleMu.py latest W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_250-400_JEC
-#python histos_singleMu.py latest W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_400-inf_JEC
+python histos_singleMu.py latest W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_100-150_JEC
+python histos_singleMu.py latest W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_150-250_JEC
+python histos_singleMu.py latest W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_250-400_JEC
+python histos_singleMu.py latest W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W1JetsToLNu_LHEWpT_400-inf_JEC
 
-#python histos_singleMu.py latest W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_100-150_JEC
-#python histos_singleMu.py latest W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_150-250_JEC
-#python histos_singleMu.py latest W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_250-400_JEC
-#python histos_singleMu.py latest W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_400-inf_JEC
+python histos_singleMu.py latest W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_100-150_JEC
+python histos_singleMu.py latest W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_150-250_JEC
+python histos_singleMu.py latest W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_250-400_JEC
+python histos_singleMu.py latest W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8 crab_W2JetsToLNu_LHEWpT_400-inf_JEC
 
+exit 1
 
-#python histos_singleMu.py specific WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT100-200/180927_213758/0000
-#python histos_singleMu.py specific WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT200-400/180927_213820/0000
-#python histos_singleMu.py specific WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT400-600/180927_213846/0000
-#python histos_singleMu.py specific WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT600-800/180927_213912/0000
-#python histos_singleMu.py specific WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT800-1200/180927_213933/0000
-#python histos_singleMu.py specific WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT1200-2500/180927_213955/0000
-#python histos_singleMu.py specific WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT2500ToInf/180927_214016/0000
+python histos_singleMu.py latest ExclusiveWW a0w1e-6-SingleLepton-2017
+cp histos/ExclusiveWW.root histos/ExclusiveWW_a0w1e-6-SingleLepton-2017.root
 
+python histos_singleMu.py latest ExclusiveWW SM_FPMC-SingleLepton-2017
+cp histos/ExclusiveWW.root histos/ExclusiveWW_SM_FPMC-SingleLepton-2017.root
 
-
-#python histos_singleMu.py latest WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT100-200
-#python histos_singleMu.py latest WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT200-400
-#python histos_singleMu.py latest WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT400-600
-#python histos_singleMu.py latest WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT600-800
-#python histos_singleMu.py latest WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT800-1200
-#python histos_singleMu.py latest WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT1200-2500
-#python histos_singleMu.py latest WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8 crab_WJetsHT2500ToInf
+python histos_singleMu.py latest ExclusiveWW a0w2p5e-6-SingleLepton-2017
+cp histos/ExclusiveWW.root histos/ExclusiveWW_a0w2p5e-6-SingleLepton-2017.root
