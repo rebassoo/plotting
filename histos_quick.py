@@ -59,8 +59,8 @@ print("--- %s seconds ---" % (time.time() - start_time))
 h_deltaR_lepton_jet=TH1F("h_deltaR_lepton_jet",";#deltaR({0},jet);".format(pname),200,0,10)
 h_deltaphi_jet_met=TH1F("h_deltaphi_jet_met",";#delta#Phi(MET,jet);",100,0,5)
 h_deltaphi_jet_Wleptonic=TH1F("h_deltaphi_jet_Wleptonic",";#delta#Phi(MET,jet);",100,0,5)
-h_lepton_pt_MjetVeto_WleptonicCuts=TH1F("h_electron_pt_MjetVeto_WleptonicCuts",";p_{{T}} ({0}) [GeV];".format(pname),100,0,1000)
-h_lepton_eta_MjetVeto_WleptonicCuts=TH1F("h_electron_eta_MjetVeto_WleptonicCuts",";#eta_{{0}};".format(pname),60,-3,3)
+h_lepton_pt_MjetVeto_WleptonicCuts=TH1F("h_{0}_pt_MjetVeto_WleptonicCuts".format(channel),";p_{{T}} ({0}) [GeV];".format(pname),100,0,1000)
+h_lepton_eta_MjetVeto_WleptonicCuts=TH1F("h_{0}_eta_MjetVeto_WleptonicCuts".format(channel),";#eta_{{0}};".format(pname),60,-3,3)
 h_jet_pt_MjetVeto_WleptonicCuts=TH1F("h_jet_pt_MjetVeto_WleptonicCuts",";p_{T} (jet) [GeV];",120,0,1200)
 h_jet_eta_MjetVeto_WleptonicCuts=TH1F("h_jet_eta_MjetVeto_WleptonicCuts",";#eta_{jet};",60,-3,3)
 h_jet_pt_MjetVeto_WleptonicCuts_Wplus=TH1F("h_jet_pt_MjetVeto_WleptonicCuts_Wplus",";p_{T} (jet) [GeV];",120,0,1200)
@@ -233,7 +233,7 @@ for e in chain:
     if channel=="muon":
         l_pt=e.muon_pt[0]
         l_eta=e.muon_eta[0]
-        l_phi=e.muonx_phi[0]
+        l_phi=e.muon_phi[0]
 
     
     dphi_lepton_jet=GetDphi(l_phi,e.jet_phi[0])
