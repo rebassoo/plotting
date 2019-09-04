@@ -7,10 +7,16 @@ from ROOT import *
 import datetime
 import sys
 
+rebin=128
+channel="muon"
+
+if channel=="muon": datafile="SingleMuonTotal.root"
+if channel=="electron": datafile="SingleElectronTotal.root"
+
 MCsignalsamples=[
 #"ExclusiveWW_a0w2p5e-6-SingleLepton-2017",
-"ExclusiveWW_a0w1e-6-SingleLepton-2017",
-"ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
+#"ExclusiveWW_a0w1e-6-SingleLepton-2017",
+#"ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
 #"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6"
 ]
 
@@ -80,7 +86,7 @@ ratio=[2.21718335152,2.52607560158,2.46251106262,2.29587388039,2.08750772476,1.9
 
 
 #List all the histograms in the root file
-f0=TFile("histos/"+directory+MCsamples[0]+".root")
+f0=TFile("histos_"+channel+"/"+directory+MCsamples[0]+".root")
 #f=TFile.Open("histos/WWTo2L2Nu_13TeV-powheg.root")
 f0.cd()
 List=f0.GetListOfKeys()
@@ -161,11 +167,9 @@ for i in range(min,max+1):
     print i
     print histo_list[i-1]
 
-    rebin=1
-
     #Plot Data
-    f_data=TFile("histos/"+directory+"SingleMuonTotal.root")
-    #f_data=TFile("histos/2019-02-05/SingleMuonTotal.root")
+    f_data=TFile("histos_"+channel+"/"+directory+datafile)
+    #f_data=TFile("histos/2019-02-05/SingleElectronTotal.root")
     f_data.cd()
     if digits:
         h_data=f_data.Get(histo_list[i-1])
@@ -192,7 +196,7 @@ for i in range(min,max+1):
     fMC=[]
     it=0
     for sample in MCsamples:
-        fMC.append(TFile("histos/"+directory+sample+".root"))
+        fMC.append(TFile("histos_"+channel+"/"+directory+sample+".root"))
         #fMC.append(TFile("histos/2019-02-05/"+sample+".root"))
         fMC[it].cd()
         #This is if specified a range of histos
@@ -221,6 +225,7 @@ for i in range(min,max+1):
         #hMC[it].Scale(2.48)
         #For 0-4
         #hMC[it].Scale(2.958)
+        #hMC[it].Scale(11.58)
         #For 0-4, with QCD and diboson
         #hMC[it].Scale(2.21718)
         hMC[it].Rebin(rebin)
@@ -255,7 +260,7 @@ for i in range(min,max+1):
     itt=0
     max=0
     for sample in MCsignalsamples:
-        fsignalMC.append(TFile("histos/"+directory+sample+".root"))
+        fsignalMC.append(TFile("histos_"+channel+"/"+directory+sample+".root"))
         #fsignalMC.append(TFile("histos/2019-02-05/"+sample+".root"))
         fsignalMC[itt].cd()
         #This is if specified a range of histos
