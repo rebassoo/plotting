@@ -4,7 +4,7 @@ from ptools import *
 from ROOT import *
 
 
-_file0 = TFile("histos/quick/SingleMuonTotal.root")
+_file0 = TFile("histos_muon/SingleMuonTotal.root")
 
 #h_MWW_extra_tracks_0_4_notPPS->GetEntries()
 #h_MWW_extra_tracks_9_up_notPPS->GetEntries()
@@ -26,7 +26,7 @@ print "h_MWW_MX_control.GetEntries(): ",h1.GetEntries()
 h1.Sumw2()
 h1.Scale(num/deno)
 h1.SetStats(0)
-h1.GetYaxis().SetRangeUser(0,10)
+h1.GetYaxis().SetRangeUser(0,5)
 h1.Draw("e")
 
 #h_MWW_MX_0_4_tracks_notPPS.Scale(0.098)
@@ -39,12 +39,14 @@ histo_name="h_MWW_MX_0_4_tracks_Ycut"
 #histo_name="h_Y_CMS_minus_RP_0_4_extratracks"
 
 
-_file1 = TFile("histos/quick/ExclusiveWW_a0w1e-6-SingleLepton-2017.root")
+#_file1 = TFile("histos_electron/ExclusiveWW_a0w1e-6-SingleLepton-2017.root")
+_file1 = TFile("histos_electron/GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6.root")
 ##This is luminosity factor
 h2=_file1.Get(histo_name)
 print h2.Integral(0,1001)
 #h2.Scale(0.166)
-ModifyHisto(h2,"ExclusiveWW_a0w1e-6-SingleLepton-2017")
+#ModifyHisto(h2,"ExclusiveWW_a0w1e-6-SingleLepton-2017")
+ModifyHisto(h2,"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6")
 print h2.Integral(0,1001)
 h2.SetLineColor(6)
 h2.SetFillColor(0)
@@ -53,4 +55,16 @@ h2.Rebin(10)
 #h2.SetLineColor(6)
 h2.Draw("histsame")
 #h2.Draw()
+
+
+#_file1 = TFile("histos_electron/GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6.root")
+#h3=_file1.Get(histo_name)
+#ModifyHisto(h3,"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6")
+#h3.SetLineColor(6)
+#h3.SetFillColor(0)
+###h_MWW_MX_0_4_tracks->GetNbinsX()
+#h3.Rebin(10)
+#h3.SetLineColor(1)
+#h3.Draw("histsame")
+##h2.Draw()
 
