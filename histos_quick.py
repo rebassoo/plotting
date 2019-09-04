@@ -145,7 +145,15 @@ h_tau21_control_control_notPPS=TH1F("h_tau21_control_control_notPPS",";tau21;",1
 h_prunedMass_control_control_notPPS=TH1F("h_prunedMass_control_control_notPPS",";prunedMass [GeV];",200,0,1000)
 h_MWW_MX_control_Ycut_notPPS=TH1F("h_MWW_MX_control_Ycut_notPPS",";MWW/MX;",100,0,2)
 
-h_MWW_MX_control_5_up=TH1F("h_MWW_MX_control_5_up",";MWW/MX;",100,0,2)
+h_xi_1_5_up=TH1F("h_xi_1_5_up",";#xi_{1};",128,0,0.32)
+h_xi_2_5_up=TH1F("h_xi_2_5_up",";#xi_{2};",128,0,0.32)
+h_MX_5_up=TH1F("h_MX_5_up",";Mass RP [GeV];",100,0,3000)
+h_MWW_5_up=TH1F("h_MWW_5_up",";M_{WW} [GeV];",100,0,3000)
+h_Y_RP_5_up=TH1F("h_Y_RP_5_up",";Y RP;",60,-3,3)
+h_Y_CMS_minus_RP_5_up=TH1F("h_Y_CMS_minus_RP_5_up",";Y RP;",60,-3,3)
+#h_MWW_MX_5_up=TH1F("h_MWW_MX_5_up",";MWW/MX;",100,0,2)
+h_MWW_MX_5_up=TH1F("h_MWW_MX_5_up",";MWW/MX;",100,0,2)
+
 h_MWW_MX_control_5_up_Ycut=TH1F("h_MWW_MX_control_5_up_Ycut",";MWW/MX;",100,0,2)
 h_MWW_MX_control_15_30=TH1F("h_MWW_MX_control_15_30",";MWW/MX;",100,0,2)
 h_MWW_MX_control_30_50=TH1F("h_MWW_MX_control_30_50",";MWW/MX;",100,0,2)
@@ -337,8 +345,8 @@ for e in chain:
 
     #If data get protons from PPS reco
     if mjet_veto and passesBoosted and jet_pruning and DATA:
-        passesPPS=passPPSNew(e,xi)
-        #passesPPS=passPPSMulti(e,xi)
+        #passesPPS=passPPSNew(e,xi)
+        passesPPS=passPPSMulti(e,xi)
     if mjet_veto and passesBoosted and jet_pruning and DATA and not passesPPS:
         xi_data=protonDataMixing()
         xi["23"].append(xi_data[0])
@@ -346,8 +354,8 @@ for e in chain:
     #If exclusive WW MC then see if signal protons produce reco PPS protons. 
     if mjet_veto and passesBoosted and jet_pruning and not DATA and ExclusiveMC:
         #print "Get into Signal Mixing for Signal MC"
-        if passPPSNew(e,xi):
-        #if passPPSMulti(e,xi):
+        #if passPPSNew(e,xi):
+        if passPPSMulti(e,xi):
             #print "passPPSNew"
             passesPPSSignalMixing=passPPSSimMixingSignal(e.mc_pu_trueinteractions)
             #Then correct for signal efficiency of multiple protons in PPS 
@@ -371,11 +379,14 @@ for e in chain:
     if mjet_veto and passesBoosted and jet_pruning and not DATA and not ExclusiveMC:
         #if pfcand_nextracks < 100:
         #    rw_extrk=ratio[int(pfcand_nextracks/5)]
-        rw_prt_mix=0.086319
-        passesPPS,xi_sim=passPPSSimMixing()
-        if passesPPS:
-            xi["23"].append(xi_sim[0])
-            xi["123"].append(xi_sim[1])
+        #This is for pure sim
+        passesPPS=passPPSNew(e,xi)
+        #This is for sim mixing with data
+        #passesPPS,xi_sim=passPPSSimMixing()
+        #rw_prt_mix=0.086319
+        #if passesPPS:
+        #    xi["23"].append(xi_sim[0])
+        #    xi["123"].append(xi_sim[1])
 
     M_RP=-999.
     Rapidity_RP=-999.
@@ -468,7 +479,7 @@ for e in chain:
             h_prunedMass_0_4_tracks_notPPS.Fill(prunedMass,pileupw*rw_extrk)
 
 
-    if mjet_veto and passesBoosted and jet_pruning and passesPPS and not DATA and pfcand_nextracks<5 and abs(recoYCMS-Rapidity_RP) < 0.4:
+    if mjet_veto and passesBoosted and jet_pruning and passesPPS and not DATA and pfcand_nextracks<5 and abs(recoYCMS-Rapidity_RP) < 0.28:
         h_MWW_MX_0_4_tracks_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
     ###########################################################
@@ -487,7 +498,7 @@ for e in chain:
         h_recoMWhad_control_control.Fill(recoMWhad,pileupw*rw_extrk*rw_prt_mix)
         h_tau21_control_control.Fill(tau21,pileupw*rw_extrk*rw_prt_mix)
         h_prunedMass_control_control.Fill(prunedMass,pileupw*rw_extrk*rw_prt_mix)
-        if abs(recoYCMS-Rapidity_RP) < 0.4:
+        if abs(recoYCMS-Rapidity_RP) < 0.28:
             h_MWW_MX_control_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
     if mjet_veto and passesBoosted and jet_pruning and not passesPPS and pfcand_nextracks<16 and pfcand_nextracks>4 and DATA:
@@ -501,14 +512,20 @@ for e in chain:
         h_recoMWhad_control_control_notPPS.Fill(recoMWhad,pileupw*rw_extrk*rw_prt_mix)
         h_tau21_control_control_notPPS.Fill(tau21,pileupw*rw_extrk*rw_prt_mix)
         h_prunedMass_control_control_notPPS.Fill(prunedMass,pileupw*rw_extrk*rw_prt_mix)
-        if abs(recoYCMS-Rapidity_RP) < 0.4:
+        if abs(recoYCMS-Rapidity_RP) < 0.28:
             h_MWW_MX_control_Ycut_notPPS.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
 
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks>4:
-        h_MWW_MX_control_5_up.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
-        if abs(recoYCMS-Rapidity_RP) < 0.4:
+        h_xi_1_5_up.Fill(xi["23"][0],pileupw*rw_extrk*rw_prt_mix)
+        h_xi_2_5_up.Fill(xi["123"][0],pileupw*rw_extrk*rw_prt_mix)
+        h_MX_5_up.Fill(M_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_MWW_5_up.Fill(recoMWW,pileupw*rw_extrk*rw_prt_mix)
+        h_Y_RP_5_up.Fill(Rapidity_RP,pileupw*rw_extrk*rw_prt_mix)
+        h_Y_CMS_minus_RP_5_up.Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_prt_mix)         
+        h_MWW_MX_5_up.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
+        if abs(recoYCMS-Rapidity_RP) < 0.28:
             h_MWW_MX_control_5_up_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_prt_mix)
 
     if mjet_veto and passesBoosted and jet_pruning and passesPPS and pfcand_nextracks>14 and pfcand_nextracks<31:
