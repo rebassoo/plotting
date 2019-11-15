@@ -13,8 +13,8 @@ mkdir $1
 #mkdir /hadoop/cms/store/user/rebassoo/2018_02_20_FPMC-Reco/$1
 cd $1
 mkdir log
-#SIGNAL_BIN="multiRP"
-SIGNAL_BIN="multiPixel"
+SIGNAL_BIN="multiRP"
+#SIGNAL_BIN="multiPixel"
 #SIGNAL_BIN="pixel-pixel"
 #cp ../produceHistosSingleMu-Xi.txt .
 cp ../produceHistosSingleMu.txt .

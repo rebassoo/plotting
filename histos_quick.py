@@ -466,9 +466,9 @@ for e in chain:
                 h_MWW_MX_45_2_56_1_highXi.Fill(recoMWW/M_RP,pileupw)
                 h_Y_CMS_minus_RP_45_2_56_1_highXi.Fill(recoYCMS-Rapidity_RP,pileupw)
             multipleTracks=True
-
-    if xi_mult_45<0.04 or xi_mult_56<0.04:
-        continue
+            
+    #if xi_mult_45<0.04 or xi_mult_56<0.04:
+    #    continue
     #if (xi_mult_45<0.045 or xi_mult_56<0.06) and signal_bin=="multiRP":
     #    continue
 

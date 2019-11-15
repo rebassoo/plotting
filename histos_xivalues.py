@@ -110,6 +110,7 @@ h_xi_123_multi_2nd=TH1F("h_xi_123_2nd_multi",";Xi;",128,0,0.32)
 h_nvertices_multi_all=TH1F("h_nvertices_multi_all","Num Vertices",100,-0.5,99.5)
 h_nvertices_multi_45_0=TH1F("h_nvertices_multi_45_0","Num Vertices",100,-0.5,99.5)
 h_nvertices_multi_45_1=TH1F("h_nvertices_multi_45_1","Num Vertices",100,-0.5,99.5)
+h_nvertices_multi_45_2up_pixels=TH1F("h_nvertices_multi_45_2up_pixels","Num Vertices",100,-0.5,99.5)
 h_nvertices_multi_45_2up=TH1F("h_nvertices_multi_45_2up","Num Vertices",100,-0.5,99.5)
 
 h_nvertices_multi_56_0=TH1F("h_nvertices_multi_56_0","Num Vertices",100,-0.5,99.5)
@@ -124,6 +125,8 @@ h_nvertices_45_1pixel_1strip=TH1F("h_nvertices_45_1pixel_1strip","Num Vertices",
 h_nvertices_45_2pixel_1strip=TH1F("h_nvertices_45_2pixel_1strip","Num Vertices",100,-0.5,99.5)
 h_nvertices_56_1pixel_1strip=TH1F("h_nvertices_56_1pixel_1strip","Num Vertices",100,-0.5,99.5)
 h_nvertices_56_2pixel_1strip=TH1F("h_nvertices_56_2pixel_1strip","Num Vertices",100,-0.5,99.5)
+
+h_pixel_vs_multi_45=TH2F("h_pixel_vs_multi_45",";Xi;",128,0,0.32,128,0,0.32)
 
 Run=0.
 event=0.
@@ -149,6 +152,10 @@ for e in chain:
         if len(xi_trigger_multi["23"]) == 1:
             h_xi_23_multi.Fill(xi_trigger_multi["23"][0])
             h_nvertices_multi_45_1.Fill(e.nVertices)
+            if len(xi_trigger["23"])==1:
+                h_pixel_vs_multi_45.Fill(xi_trigger_multi["23"][0],xi_trigger["23"][0])
+            if len(xi_trigger["23"])>1:
+                h_nvertices_multi_45_2up_pixels.Fill(e.nVertices)
         if len(xi_trigger_multi["23"]) == 2:
             h_xi_23_2nd_multi.Fill(xi_trigger_multi["23"][1])
         if len(xi_trigger_multi["23"]) > 1:
@@ -169,7 +176,7 @@ for e in chain:
         if len(xi_trigger_multi["23"]) == 1 and len(xi_trigger_multi["123"]) == 0 and len(xi_trigger_strip["103"])==0:
             h_nvertices_multi_45_1_56_0.Fill(e.nVertices)                
 
-        if passPPSPixel:
+        if passPPSpixel:
             if len(xi_trigger["23"]) == 1 and len(xi_trigger_multi["23"])==0:
                 h_xi_23_noMultiRP.Fill(xi_trigger["23"][0])
             if len(xi_trigger["123"]) == 1 and len(xi_trigger_multi["123"])==0:

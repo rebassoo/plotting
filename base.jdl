@@ -5,7 +5,7 @@ x509userproxy=/tmp/x509up_u31045
 +DESIRED_Sites="T2_US_UCSD"
 #+DESIRED_Sites="UAF"
 Notification          = Never
-transfer_input_files = REPLACE/histos_quick.py,REPLACE/htools.py,REPLACE/samples_info.json,REPLACE/xi.root,REPLACE/histos_xivalues.py
+transfer_input_files = REPLACE/histos_quick.py,REPLACE/htools.py,REPLACE/samples_info.json,REPLACE/xi.root,REPLACE/histos_xivalues.py,REPLACE/2017_ElectronTight.root,REPLACE/RunBCDEF_SF_MuID.root,REPLACE/RunBCDEF_SF_ISO.root
 #should_transfer_files = NO
 #Requirements   = OpSysAndVer == "CentOS7" 
 #transfer_output_files = FSQ-RunIISummer16DR80Premix-00036.root
