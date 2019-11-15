@@ -154,6 +154,9 @@ h_tau21_control_control=TH1F("h_tau21_control_control",";tau21;",100,0,2)
 h_prunedMass_control_control=TH1F("h_prunedMass_control_control",";prunedMass [GeV];",200,0,1000)
 h_MWW_MX_control_Ycut=TH1F("h_MWW_MX_control_Ycut",";MWW/MX;",100,0,2)
 
+h_MWW_MX_5_up_notPPS=TH1F("h_MWW_MX_5_up_notPPS",";MWW/MX;",100,0,2)
+h_MWW_MX_5_up_Ycut_notPPS=TH1F("h_MWW_MX_5_up_Ycut_notPPS",";MWW/MX;",100,0,2)
+
 h_xi_1_control_notPPS=TH1F("h_xi_1_control_notPPS",";#xi_{1};",128,0,0.32)
 h_xi_2_control_notPPS=TH1F("h_xi_2_control_notPPS",";#xi_{2};",128,0,0.32)
 h_Y_RP_control_notPPS=TH1F("h_Y_RP_control_notPPS",";Y RP;",60,-3,3)
@@ -290,11 +293,12 @@ for e in chain:
         l_pt=e.electron_pt[0]
         l_eta=e.electron_eta[0]
         l_phi=e.electron_phi[0]
+        pileupw=pileupw*electronScaleFactor(l_pt,l_eta)
     if channel=="muon":
         l_pt=e.muon_pt[0]
         l_eta=e.muon_eta[0]
         l_phi=e.muon_phi[0]
-
+        pileupw=pileupw*muonScaleFactor(l_pt,l_eta)
     
     dphi_lepton_jet=GetDphi(l_phi,e.jet_phi[0])
     deta_lepton_jet=l_eta-e.jet_eta[0]
@@ -421,6 +425,8 @@ for e in chain:
     xi_mult_56=-999.
     if mjet_veto and passesBoosted and jet_pruning:
         if len(xi["23"]) == 1 and len(xi["123"])==1:
+            xi_mult_45=xi["23"][0]
+            xi_mult_56=xi["123"][0]
             h_MWW_MX_nominal.Fill(recoMWW/M_RP,pileupw)
         if len(xi["23"]) == 1 and len(xi["123"])==2:
             h_MWW_MX_45_1_56_2_first.Fill(recoMWW/M_RP,pileupw)
@@ -460,6 +466,11 @@ for e in chain:
                 h_MWW_MX_45_2_56_1_highXi.Fill(recoMWW/M_RP,pileupw)
                 h_Y_CMS_minus_RP_45_2_56_1_highXi.Fill(recoYCMS-Rapidity_RP,pileupw)
             multipleTracks=True
+
+    if xi_mult_45<0.04 or xi_mult_56<0.04:
+        continue
+    #if (xi_mult_45<0.045 or xi_mult_56<0.06) and signal_bin=="multiRP":
+    #    continue
 
     Yvalue=abs(recoYCMS-Rapidity_RP)
     passYcut=passYcutFunc(Yvalue,signal_bin)
@@ -587,6 +598,10 @@ for e in chain:
         if passYcut:
             h_MWW_MX_control_5_up_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
 
+    if mjet_veto and passesBoosted and jet_pruning and not passesPPS and pfcand_nextracks>4 and DATA:
+        h_MWW_MX_5_up_notPPS.Fill(recoMWW/M_RP,pileupw)
+        if passYcut:
+            h_MWW_MX_5_up_Ycut_notPPS.Fill(recoMWW/M_RP,pileupw)
 
     if mjet_veto and passesBoosted and jet_pruning and not passesPPS and pfcand_nextracks<16 and pfcand_nextracks>4 and DATA:
     #if mjet_veto and passesBoosted and jet_pruning and not passesPPS and pfcand_nextracks<16 and pfcand_nextracks>4:

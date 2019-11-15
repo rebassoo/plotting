@@ -142,6 +142,7 @@ for e in chain:
         h_xangle.Fill(e.crossingAngle)
         passPPS=passPPSMulti(e,xi_trigger_multi)
         passPPSstrip=passPPSNewStrip(e,xi_trigger_strip)
+        passPPSpixel=passPPSNewPixel(e,xi_trigger)
         h_nvertices_multi_all.Fill(e.nVertices)
         if len(xi_trigger_multi["23"]) == 0 and len(xi_trigger_strip["3"])==0:
             h_nvertices_multi_45_0.Fill(e.nVertices)
@@ -168,7 +169,7 @@ for e in chain:
         if len(xi_trigger_multi["23"]) == 1 and len(xi_trigger_multi["123"]) == 0 and len(xi_trigger_strip["103"])==0:
             h_nvertices_multi_45_1_56_0.Fill(e.nVertices)                
 
-        if passPPSNewPixel(e,xi_trigger):
+        if passPPSPixel:
             if len(xi_trigger["23"]) == 1 and len(xi_trigger_multi["23"])==0:
                 h_xi_23_noMultiRP.Fill(xi_trigger["23"][0])
             if len(xi_trigger["123"]) == 1 and len(xi_trigger_multi["123"])==0:
