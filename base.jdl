@@ -1,0 +1,28 @@
+#Universe=vanilla
+Universe=grid
+x509userproxy=/tmp/x509up_u31045
+#+DESIRED_Sites="T2_US_UCSD,T2_US_WISCONSIN,T2_US_FLORIDA,T2_US_PURDUE,T2_US_NEBRASKA,T2_US_CALTECH"
++DESIRED_Sites="T2_US_UCSD"
+#+DESIRED_Sites="UAF"
+Notification          = Never
+transfer_input_files = REPLACE/histos_quick.py,REPLACE/htools.py,REPLACE/samples_info.json,REPLACE/xi.root,REPLACE/histos_xivalues.py
+#should_transfer_files = NO
+#Requirements   = OpSysAndVer == "CentOS7" 
+#transfer_output_files = FSQ-RunIISummer16DR80Premix-00036.root
+#Requirements = OpSysAndVer =?= "SLC7"
+#JOB_GLIDEIN_Entry_Name="CMSHTPC_T2_US_UCSD_gw7"
+#Grid_Resource=gt2 osg-gw-7.t2.ucsd.edu:/jobmanager-condor
+grid_resource=condor osg-gw-7.t2.ucsd.edu osg-gw-7.t2.ucsd.edu:9619
+#grid_resource=condor osg-gw-6.t2.ucsd.edu osg-gw-6.t2.ucsd.edu:9619
++JOB_Site = "$$(GLIDEIN_Site:Unknown)"
++JOB_Gatekeeper = "$$(GLIDEIN_Gatekeeper:Unknown)"
+
+##############
+# Job config #
+##############
+#Executable            = test.sh
+Arguments             = $(Cluster) $(Process) 1
+Log                   = log/condor_$(Cluster)_$(Process).log
+Output =                log/condor_$(Cluster)_$(Process).stdout
+Error =                 log/condor_$(Cluster)_$(Process).stderr
+Queue 1
