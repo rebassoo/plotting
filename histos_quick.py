@@ -35,9 +35,11 @@ if len(sys.argv) > 5:
 
 METCUT=0
 pname="l"
+mname=""
 if channel=="electron": 
     METCUT=100
     pname="e"
+    mname="_e"
 if channel=="muon": 
     METCUT=40
     pname="#mu"
@@ -54,6 +56,7 @@ elif (sample_name == "ExclusiveWW" or ("GGToWW" in sample_name)):
 else:
     sample="MC"
 print "ExclusiveMC", ExclusiveMC
+print "Sample: ",sample
 
 #Get List Of Files
 ListOfFiles=[]
@@ -211,8 +214,8 @@ h_Y_CMS_minus_RP_45_2_56_1_highXi=TH1F("h_Y_CMS_minus_RP_45_2_56_1_highXi",";Y R
 h_MWW_invertPrunedMass_notPPS=TH1F("h_MWW_invertPrunedMass_notPPS",";;",100,0,2000)
 h_MWW_invertPrunedMass=TH1F("h_MWW_invertPrunedMass",";;",100,0,2000)
 h_MWW_MX_invertPrunedMass_Ycut=TH1F("h_MWW_MX_invertPrunedMass_Ycut",";;",100,0,2000)
-h_MWW_5_up_all=TH1F("h_MWW_5_up_all",";;",150,0,3000)
-h_YCMS_5_up_all=TH1F("h_YCMS_5_up_all",";Y RP;",120,-3,3)
+h_MWW_5_up_all=TH1F("h_MWW_5_up_all{0}".format(mname),";;",150,0,3000)
+h_YCMS_5_up_all=TH1F("h_YCMS_5_up_all{0}".format(mname),";Y RP;",120,-3,3)
 
 h_MWW_MX_0_4_tracks_100events=TH1F("h_MWW_MX_0_4_tracks_100events",";MWW/MX;",100,0,2)
 h_MWW_MX_0_4_tracks_100events_Ycut=TH1F("h_MWW_MX_0_4_tracks_100events_Ycut",";MWW/MX;",100,0,2)
@@ -293,12 +296,14 @@ for e in chain:
         l_pt=e.electron_pt[0]
         l_eta=e.electron_eta[0]
         l_phi=e.electron_phi[0]
-        pileupw=pileupw*electronScaleFactor(l_pt,l_eta)
+        if not DATA:
+            pileupw=pileupw*electronScaleFactor(l_pt,l_eta)
     if channel=="muon":
         l_pt=e.muon_pt[0]
         l_eta=e.muon_eta[0]
         l_phi=e.muon_phi[0]
-        pileupw=pileupw*muonScaleFactor(l_pt,l_eta)
+        if not DATA:
+            pileupw=pileupw*muonScaleFactor(l_pt,l_eta)
     
     dphi_lepton_jet=GetDphi(l_phi,e.jet_phi[0])
     deta_lepton_jet=l_eta-e.jet_eta[0]
@@ -408,6 +413,10 @@ for e in chain:
         del xi["23"][:]
         del xi["123"][:]
         protonDataMixing(xi,signal_bin)
+
+    #print "length of 23: ",len(xi["23"])
+    #print "length of 123: ",len(xi["123"])
+    #continue
 
     M_RP=-999.
     Rapidity_RP=-999.
