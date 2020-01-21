@@ -18,18 +18,18 @@ def muonScaleFactor(pt,eta):
     h=f.Get("NUM_TightID_DEN_genTracks_pt_abseta")
     sf=1.
     if pt<120:
-        bin_x=h.FindBin(pt)
-        bin_y=h.FindBin(abs(eta))
+        bin_x=h.GetXaxis().FindBin(pt)
+        bin_y=h.GetYaxis().FindBin(abs(eta))
         sf=h.GetBinContent(bin_x,bin_y)
     return sf
 
 def electronScaleFactor(pt,eta):
-    f=Tfile("2017_ElectronTight.root")
+    f=TFile("2017_ElectronTight.root")
     h=f.Get("EGamma_SF2D")
     sf=1.
     if pt<500:
-        bin_y=h.FindBin(pt)
-        bin_x=h.FindBin(abs(eta))
+        bin_y=h.GetYaxis().FindBin(pt)
+        bin_x=h.GetXaxis().FindBin(eta)
         sf=h.GetBinContent(bin_x,bin_y)
     return sf
 
@@ -220,7 +220,7 @@ def protonDataMixing(xi,signal_bin):
     if signal_bin=="multiRP": 
         end="_multi"
     else:
-        end="_noMultiRP"
+        end="_noMultiRP_doubletag_2pxl"
     h_xi_45=file_xi.Get("h_xi_23{0}".format(end))
     h_xi_56=file_xi.Get("h_xi_123{0}".format(end))
     xi_45=h_xi_45.GetRandom()
@@ -231,11 +231,11 @@ def protonDataMixing(xi,signal_bin):
         numra=r.random()
             #Assuming here that rate of 1 track in pot is symmetric
         if numra<0.5:
-            h_xi_45_2nd=file_xi.Get("h_xi_23_noMultiRP_2nd")
+            h_xi_45_2nd=file_xi.Get("h_xi_23_noMultiRP_2nd_doubletag_2pxl")
             xi_45_2nd=h_xi_45_2nd.GetRandom()
             xi["23"].append(xi_45_2nd)
         else:
-            h_xi_56_2nd=file_xi.Get("h_xi_123_noMultiRP_2nd")
+            h_xi_56_2nd=file_xi.Get("h_xi_123_noMultiRP_2nd_doubletag_2pxl")
             xi_56_2nd=h_xi_56_2nd.GetRandom()
             xi["123"].append(xi_56_2nd)
     return True
@@ -246,7 +246,7 @@ def passPPSSimMixing(xi,signal_bin):
     if signal_bin=="multiRP":  
         end="_multi"
     else:
-        end="_noMultiRP"
+        end="_noMultiRP_doubletag_2pxl"
     h_xi_45=file_xi.Get("h_xi_23{0}".format(end))
     h_xi_56=file_xi.Get("h_xi_123{0}".format(end))
     xi_45=h_xi_45.GetRandom()
@@ -258,11 +258,11 @@ def passPPSSimMixing(xi,signal_bin):
         numra=r.random()
         #Assuming here that rate of 1 track in pot is symmetric, can improve
         if numra<0.5:
-            h_xi_45_2nd=file_xi.Get("h_xi_23_noMultiRP_2nd")
+            h_xi_45_2nd=file_xi.Get("h_xi_23_noMultiRP_2nd_doubletag")
             xi_45_2nd=h_xi_45_2nd.GetRandom()
             xi["23"].append(xi_45_2nd)
         else:
-            h_xi_56_2nd=file_xi.Get("h_xi_123_noMultiRP_2nd")
+            h_xi_56_2nd=file_xi.Get("h_xi_123_noMultiRP_2nd_doubletag")
             xi_56_2nd=h_xi_56_2nd.GetRandom()
             xi["123"].append(xi_56_2nd)
     return passPPS
