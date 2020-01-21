@@ -3,3 +3,8 @@ python histos_xivalues.py latest muon SingleMuon crab_Run2017C -b
 python histos_xivalues.py latest muon SingleMuon crab_Run2017D -b
 python histos_xivalues.py latest muon SingleMuon crab_Run2017E -b
 python histos_xivalues.py latest muon SingleMuon crab_Run2017F -b
+python histos_xivalues.py latest electron SingleElectron crab_Run2017B -b
+python histos_xivalues.py latest electron SingleElectron crab_Run2017C -b
+python histos_xivalues.py latest electron SingleElectron crab_Run2017D -b
+python histos_xivalues.py latest electron SingleElectron crab_Run2017E -b
+python histos_xivalues.py latest electron SingleElectron crab_Run2017F -b
