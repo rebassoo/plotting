@@ -19,7 +19,8 @@ gStyle.SetOptStat(0)
 #f_data=TFile("SingleMuonTotal.root")
 #f_data=TFile("JustDataCorrectDistribution/SingleMuonTotal.root")
 #f_data=TFile("2019-10-14-AllData-AddingStripsUpdated/SingleMuonTotal.root")
-f_data=TFile("xi.root")
+#f_data=TFile("xi.root")
+f_data=TFile("./2019-11-20-Xi/SingleMuonTotal.root")
 #JustDataCorrectDistributionNoPPSDataMixed/SingleMuonTotal.root")
 #f_data=TFile("histos_justDataProperMixing/SingleLeptonTotal.root")
 f_data.cd()
@@ -71,6 +72,7 @@ for i in range(min,max+1):
     if "nvertices_all" in histo_list[i-1]:
         total="h_nvertices_all"
     #total="h_nvertices_45_1"
+    total="h_nvertices_45_1_xi0p07"
     #total="h_nvertices_56_1"
     h_total=f_data.Get(total)
 
