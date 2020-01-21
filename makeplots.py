@@ -9,15 +9,18 @@ import sys
 
 #rebin=128
 rebin=2
-channel="muon"
-#channel="electron"
+#channel="muon"
+channel="electron"
 #hdirectory="histos_muon_withSimPUPropagation"
-#hdirectory="2019-11-08-Electron-MultiRP"
-hdirectory="2019-11-05-MultiRP"
+#hdirectory="OldHistos/2019-11-08-Electron-MultiRP"
+#hdirectory="2019-11-15-MultiRP"
+#hdirectory="2019-11-19-Electron-MultiRP"
+hdirectory="2019-11-19-Electron-Pixel-Pixel"
 #hdirectory="histos_electron_withDataProtonMixedIn_withBugFix"
 #hdirectory="OldFiles/histos_electron_withDataProtonMixedIn"
 #extra_tracks_weight=2.205
-extra_tracks_weight=1.042862
+#extra_tracks_weight=1.042862
+extra_tracks_weight=1/1.0199
 #extra_tracks_weight=1.81
 #extra_tracks_weight=1.6835
 #apply_extra_tracks_weight=True
@@ -31,7 +34,7 @@ MCsignalsamples=[
 #"ExclusiveWW_a0w2p5e-6-SingleLepton-2017",
 #"ExclusiveWW_a0w1e-6-SingleLepton-2017",
 #"ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
-"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6"
+#"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6"
 ]
 
 MCsamples2=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
@@ -170,6 +173,7 @@ for i in range(min,max+1):
     maxhisto_data=h_data.GetMaximum()
     print maxhisto_data
     #h_data.GetXaxis().SetRangeUser(0,200)
+    h_data.GetYaxis().SetTitleOffset(1.4)
     h_data.GetYaxis().SetTitle("Events")
     #maxhisto=hstack.GetMaximum()
     print maxhisto
@@ -293,7 +297,7 @@ for i in range(min,max+1):
     h_ratio=TH1F()
     h_ratio = h_data.Clone()
     h_ratio.Divide(h_data,hstack.GetStack().Last())
-    h_ratio.GetYaxis().SetRangeUser(0,2)
+    h_ratio.GetYaxis().SetRangeUser(0,3)
     h_ratio.SetStats(0)
     h_ratio.SetLineColor(4)
     h_ratio.GetXaxis().SetTitleSize(2*scaleFacBottomPad*h_ratio.GetXaxis().GetTitleSize())
