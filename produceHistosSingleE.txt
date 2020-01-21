@@ -3,8 +3,6 @@ python histos_quick.py latest electron SingleElectron crab_Run2017C -b
 python histos_quick.py latest electron SingleElectron crab_Run2017D -b
 python histos_quick.py latest electron SingleElectron crab_Run2017E -b
 python histos_quick.py latest electron SingleElectron crab_Run2017F -b
-python histos_quick.py latest electron ZZ_TuneCP5_13TeV-pythia8 crab_ZZ_JEC-proton-propagation -b
-python histos_quick.py latest electron WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-1jets_JEC-proton-propagation -b
 python histos_quick.py latest electron GGToWWToJJENu_PtL-15_13TeV-fpmc-herwig6 crab_GGToWWToJJENu_PtL-15_13TeV-fpmc-herwig6-signal-proton-propagation -b
 python histos_quick.py latest electron GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6 crab_GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6-signal-proton-propagation -b
 python histos_quick.py latest electron GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6-signal-proton-propagation -b
