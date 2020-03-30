@@ -14,8 +14,8 @@ mkdir $1
 cd $1
 mkdir log
 #SIGNAL_BIN="multiRP"
-SIGNAL_BIN="multiPixel"
-#SIGNAL_BIN="pixel-pixel"
+#SIGNAL_BIN="multiPixel"
+SIGNAL_BIN="pixel-pixel"
 #cp ../produceHistosSingleMu-Xi.txt .
 #cp ../produceHistosSingleMu.txt .
 cp ../produceHistosSingleE.txt .
@@ -25,10 +25,11 @@ cp ../histos_quick.py .
 #cp ../produceHistosFew.txt .
 cp ../makeBashScript.sh .
 cp ../base.jdl .
+cp ../xiEventsRun*root .
 sed -i "s|REPLACE|$PWD1|g" base.jdl
 
-for i in {7..7}
-#for i in {1..54}
+#for i in {7..7}
+for i in {1..54}
 #for i in {6..11}
 #for i in {48..48}
 #for i in {1..3}

@@ -12,6 +12,8 @@ def main(direc,Ycut,channel,background_method):
     rebin=5
     maximum=4
 
+    #print channel
+    #print direc.split("-")[4]
     fout=TFile("combined_shapes_{0}_{1}.root".format(channel,direc.split("-")[4]),"recreate")
     fout.cd()
 
@@ -103,7 +105,7 @@ def main(direc,Ycut,channel,background_method):
         deno=_file0.Get("h_MWW_extra_tracks_5_up_notPPS").GetEntries()
         h1=_file0.Get("h_MWW_MX_5_up_notPPS")
         if Ycut=="Ycut": h1=_file0.Get("h_MWW_MX_5_up_Ycut_notPPS")
-        h1.Scale(num/deno)
+        #h1.Scale(num/deno)
         print "Scale factor for high to low extra tracks for template_5up is: ",scale_factor
         h_control_temp=_file0.Get("h_MWW_5_up")
         #h_control_notPPS_temp=_file0.Get("h_MX_control_notPPS")
@@ -111,8 +113,28 @@ def main(direc,Ycut,channel,background_method):
         ratio=h_control_temp.GetEntries()/h_control_notPPS_temp.GetEntries()
         ratioMC=h_control_temp.GetEntries()/(h_control_temp.GetEntries()+h_control_notPPS_temp.GetEntries())
         print "Ratio: ",ratio
+        print "RatioMC: ",ratioMC
 
-        h1.Scale(ratio)
+        h1.Scale(num/deno)
+        #h1.Scale(ratio)
+        scale_factor_1=num/deno
+        ratio=h_MWW_notPPS.GetEntries()/h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries()
+        scale_factor_2=ratio
+        scale_factor_1_error=scale_factor_1*(m.sqrt(1/num+1/deno))
+        #scale_factor_2_error=scale_factor_2*(m.sqrt(1/(h_control_temp.GetEntries())+1/(h_control_notPPS_temp.GetEntries())))
+        scale_factor_2_error=scale_factor_2*(m.sqrt(1/(h_MWW_notPPS.GetEntries())+1/(h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries())))
+        nbins=h1.GetNbinsX()
+        for i in range(0,nbins+2):
+            entry=h1.GetBinContent(i)
+            entry_error=h1.GetBinError(i)
+            if scale_factor > 0 and entry > 0:
+                total_bin_error=m.sqrt( m.pow((scale_factor_1_error/scale_factor_1),2) + m.pow(entry_error/entry,2) +m.pow((scale_factor_2_error/scale_factor_2),2) )
+            else:
+                total_bin_error=0
+            #h1.SetBinContent(i,entry*scale_factor_1*scale_factor_2)
+            #h1.SetBinError(i,entry*scale_factor*total_bin_error)
+
+
         h1.Rebin(rebin)
         h1.Sumw2()
         h1.SetStats(0)
@@ -183,7 +205,7 @@ def main(direc,Ycut,channel,background_method):
     h5.Rebin(rebin)
     h5.Draw("histsame")
 
-
+    #h0.Draw("esame")
     #sys.exit(1)
 
     #######################################################################################
@@ -234,9 +256,11 @@ def main(direc,Ycut,channel,background_method):
         digits=False
         apply_extra_tracks_weight=True
         if channel=="muon":
-            extra_tracks_weight=2.2*ratioMC
+            #extra_tracks_weight=2.2*ratioMC
+            extra_tracks_weight=2.2
         if channel=="electron":
-            extra_tracks_weight=1.6835*ratioMC
+            #extra_tracks_weight=1.6835*ratioMC
+            extra_tracks_weight=1.6835
         for sample in MCsamples:
             fMC.append(TFile(directory+"/"+sample+".root"))
             fMC[it].cd()

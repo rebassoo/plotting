@@ -68,6 +68,7 @@ print("--- %s seconds ---" % (time.time() - start_time))
 
 h_xi_23=TH1F("h_xi_23",";Xi;",128,0,0.32)
 h_xi_23_2nd=TH1F("h_xi_23_2nd",";Xi;",128,0,0.32)
+h_xi_23_2nd_withStrip=TH1F("h_xi_23_2nd",";Xi;",128,0,0.32)
 h_xi_123=TH1F("h_xi_123",";Xi;",128,0,0.32)
 h_xi_123_2nd=TH1F("h_xi_123_2nd",";Xi;",128,0,0.32)
 h_xangle=TH1F("h_xangle","",100,99.5,199.5)
@@ -116,7 +117,7 @@ h_nvertices_45_0_56_1_strips=TH1F("h_nvertices_45_0_56_1_strips","Num Vertices",
 h_xi_23_multi=TH1F("h_xi_23_multi",";Xi;",128,0,0.32)
 h_xi_23_multi_2nd=TH1F("h_xi_23_multi_2nd",";Xi;",128,0,0.32)
 h_xi_123_multi=TH1F("h_xi_123_multi",";Xi;",128,0,0.32)
-h_xi_123_multi_2nd=TH1F("h_xi_123_2nd_multi",";Xi;",128,0,0.32)
+h_xi_123_multi_2nd=TH1F("h_xi_123_2nd_multi_2nd",";Xi;",128,0,0.32)
 h_xi_23_multi_doubletag=TH1F("h_xi_23_multi_doubletag",";Xi;",128,0,0.32)
 h_xi_123_multi_doubletag=TH1F("h_xi_123_multi_doubletag",";Xi;",128,0,0.32)
 
@@ -143,6 +144,9 @@ h_nvertices_45_1pixel_1strip_xi0p07=TH1F("h_nvertices_45_1pixel_1strip_xi0p07","
 h_nvertices_56_1pixel_1strip_xi0p07=TH1F("h_nvertices_56_1pixel_1strip_xi0p07","Num Vertices",100,-0.5,99.5)
 
 h_pixel_vs_multi_45=TH2F("h_pixel_vs_multi_45",";Xi;",128,0,0.32,128,0,0.32)
+
+h_pixel1_vs_silicon_45=TH2F("h_pixel1_vs_silicon_45",";Xi;",128,0,0.32,128,0,0.32)
+h_pixel2_vs_silicon_45=TH2F("h_pixel2_vs_silicon_45",";Xi;",128,0,0.32,128,0,0.32)
 
 Run=0.
 event=0.
@@ -207,7 +211,7 @@ for e in chain:
         xi_trigger_strip = {"3":[],"103":[]}
         h_xangle.Fill(e.crossingAngle)
         passPPS=passPPSMulti(e,xi_trigger_multi)
-        passPPSstrip=passPPSNewStrip(e,xi_trigger_strip)
+        passPPSstrip=passPPSOldStrip(e,xi_trigger_strip)
         passPPSpixel=passPPSNewPixel(e,xi_trigger)
         h_nvertices_multi_all.Fill(e.nVertices)
         if len(xi_trigger_multi["23"]) == 0 and len(xi_trigger_strip["3"])==0:
@@ -285,6 +289,9 @@ for e in chain:
                 h_xi_23_2nd.Fill(xi_trigger["23"][1])
                 if len(xi_trigger_strip["3"]) == 1:
                     h_nvertices_45_2pixel_1strip.Fill(e.nVertices)
+                    h_xi_23_2nd_withStrip.Fill(xi_trigger["23"][1])
+                    h_pixel1_vs_silicon_45.Fill(xi_trigger_strip["3"][0],xi_trigger["23"][0])
+                    h_pixel2_vs_silicon_45.Fill(xi_trigger_strip["3"][0],xi_trigger["23"][1])
             if len(xi_trigger["23"]) > 1:
                 h_nvertices_45_2up.Fill(e.nVertices)
             if len(xi_trigger["123"]) == 0:

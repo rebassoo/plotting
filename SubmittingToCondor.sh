@@ -13,9 +13,9 @@ mkdir $1
 #mkdir /hadoop/cms/store/user/rebassoo/2018_02_20_FPMC-Reco/$1
 cd $1
 mkdir log
-SIGNAL_BIN="multiRP"
+#SIGNAL_BIN="multiRP"
 #SIGNAL_BIN="multiPixel"
-#SIGNAL_BIN="pixel-pixel"
+SIGNAL_BIN="pixel-pixel"
 #cp ../produceHistosSingleMu-Xi.txt .
 cp ../produceHistosSingleMu.txt .
 cp ../htools.py .
@@ -23,15 +23,18 @@ cp ../histos_quick.py .
 #cp ../produceHistosSingleE.txt .
 #cp ../produceHistosFew.txt .
 cp ../makeBashScript.sh .
+cp ../xiEventsRun*root .
 cp ../base.jdl .
 sed -i "s|REPLACE|$PWD1|g" base.jdl
 
 #for i in {0..1}
 for i in {1..54}
 #for i in {6..11}
+#for i in {8..8}
 #for i in {48..48}
 #for i in {1..3}
-#for i in {1..11}
+#for i in {1..10}
+#for i in {4..4}
 #for i in {1..5}
 #for i in {1..1}
 #for i in {1..49}

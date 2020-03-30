@@ -20,7 +20,8 @@ cp ../produceHistosSingleMu-Xi.txt .
 #cp ../produceHistosSingleMu.txt .
 cp ../htools.py .
 #cp ../histos_quick.py .
-cp ../histos_xivalues.py .
+#cp ../histos_xivalues.py .
+cp ../histos_datamixing0.py .
 #cp ../produceHistosSingleE.txt .
 #cp ../produceHistosFew.txt .
 cp ../makeBashScript.sh .
@@ -33,7 +34,7 @@ sed -i "s|REPLACE|$PWD1|g" base.jdl
 #for i in {48..48}
 #for i in {1..3}
 #for i in {1..11}
-for i in {1..5}
+for i in {1..10}
 #for i in {1..1}
 #for i in {1..49}
 do

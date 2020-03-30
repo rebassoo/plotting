@@ -8,14 +8,14 @@ import datetime
 import sys
 
 #rebin=128
-rebin=2
-#channel="muon"
-channel="electron"
+rebin=1
+channel="muon"
+#channel="electron"
 #hdirectory="histos_muon_withSimPUPropagation"
 #hdirectory="OldHistos/2019-11-08-Electron-MultiRP"
 #hdirectory="2019-11-15-MultiRP"
 #hdirectory="2019-11-19-Electron-MultiRP"
-hdirectory="2019-11-19-Electron-Pixel-Pixel"
+hdirectory="2020-03-25-Muon-MultiRP"
 #hdirectory="histos_electron_withDataProtonMixedIn_withBugFix"
 #hdirectory="OldFiles/histos_electron_withDataProtonMixedIn"
 #extra_tracks_weight=2.205
@@ -194,8 +194,8 @@ for i in range(min,max+1):
             hMC.append(fMC[it].Get(histo_list[i-1]))
         else: 
             #In this case all MC passes PPS, so need to modify to compare to data
-            if u=="h_num_extra_tracks_notPPS":
-                u="h_num_extra_tracks_PPS"
+            #if u=="h_num_extra_tracks_notPPS":
+            #    u="h_num_extra_tracks_PPS"
             hMC.append(fMC[it].Get(u))
         #else: hMC.append(fMC[it].Get("h_num_extra_tracks_notPPS"))
         ModifyHisto(hMC[it],sample,hdirectory)
