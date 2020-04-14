@@ -31,7 +31,9 @@ if len(sys.argv) < 6:
 #channel="electron"
 if len(sys.argv) > 5:
     signal_bin=sys.argv[6]
-
+seed_input=0
+if len(sys.argv) > 7:
+    seed_input=int(sys.argv[7])
 
 METCUT=0
 pname="l"
@@ -67,6 +69,11 @@ if "LHEWpT" in output_name:
     if "ext1" in file_dir:  
         output_name=output_name+"_ext1"
         sample_name=sample_name+"_ext1"
+if seed_input>0:
+    output_name=output_name+"_"+str(seed_input)
+    sample_name=sample_name+"_"+str(seed_input)
+
+
 #fout = TFile('histos_{0}/{1}.root'.format(channel,output_name),'recreate')
 fout = TFile('{0}.root'.format(output_name),'recreate')
 fout.cd()
@@ -162,7 +169,9 @@ h_tau21_0_4_tracks=TH1F("h_tau21_0_4_tracks",";tau21;",100,0,2)
 h_prunedMass_0_4_tracks=TH1F("h_prunedMass_0_4_tracks",";prunedMass [GeV];",200,0,1000)
 h_MWW_MX_0_4_tracks_Ycut=TH1F("h_MWW_MX_0_4_tracks_Ycut",";MWW/MX;",100,0,2)
 h_MWW_MX_0_4_tracks_100events=TH1F("h_MWW_MX_0_4_tracks_100events",";MWW/MX;",100,0,2)
+h_MWW_MX_0_4_tracks_100events_jet_eta_0_1p5=TH1F("h_MWW_MX_0_4_tracks_100events_jet_eta_0_1p5",";MWW/MX;",100,0,2)
 h_MWW_MX_0_4_tracks_100events_Ycut=TH1F("h_MWW_MX_0_4_tracks_100events_Ycut",";MWW/MX;",100,0,2)
+h_MWW_MX_0_4_tracks_100events_Ycut_jet_eta_0_1p5=TH1F("h_MWW_MX_0_4_tracks_100events_Ycut_jet_eta_0_1p5",";MWW/MX;",100,0,2)
 
 
 #All these will have 3 distributions
@@ -218,6 +227,7 @@ h_Y_RP_5_up=TH1F("h_Y_RP_5_up",";Y RP;",60,-3,3)
 h_Y_CMS_minus_RP_5_up=TH1F("h_Y_CMS_minus_RP_5_up",";Y RP;",60,-3,3)
 #h_MWW_MX_5_up=TH1F("h_MWW_MX_5_up",";MWW/MX;",100,0,2)
 h_MWW_MX_5_up=TH1F("h_MWW_MX_5_up",";MWW/MX;",100,0,2)
+h_MWW_MX_5_up_eta_0_1p5=TH1F("h_MWW_MX_5_up_eta_0_1p5",";MWW/MX;",100,0,2)
 
 #All these will have 3 distributions
 h_MWW_invertPrunedMass=TH1F("h_MWW_invertPrunedMass",";;",100,0,2000)
@@ -228,6 +238,7 @@ h_MWW_MX_passPPS=TH1F("h_MWW_MX_passPPS",";MWW/MX;",100,0,2)
 
 #All these will have 3 distributions
 h_MWW_MX_control_5_up_Ycut=TH1F("h_MWW_MX_control_5_up_Ycut",";MWW/MX;",100,0,2)
+h_MWW_MX_control_5_up_Ycut_eta_0_1p5=TH1F("h_MWW_MX_control_5_up_Ycut_eta_0_1p5",";MWW/MX;",100,0,2)
 h_MWW_MX_control_15_30=TH1F("h_MWW_MX_control_15_30",";MWW/MX;",100,0,2)
 h_MWW_MX_control_30_50=TH1F("h_MWW_MX_control_30_50",";MWW/MX;",100,0,2)
 h_MWW_MX_control_50_70=TH1F("h_MWW_MX_control_50_70",";MWW/MX;",100,0,2)
@@ -280,9 +291,18 @@ print num_events
 #SetBranchAddress(chain)
 
 it=0
-r.seed(15)
+#seed_initial=float(time.time())
+#print seed_initial
+#r.seed(seed_initial+seed_input)
+r.seed()
 for e in chain:
     it=it+1
+    if seed_input>0 and seed_input<7:
+        if not (it>=(seed_input-1)*5000000 and it<(seed_input*5000000)):
+            continue
+    if seed_input==7:
+        if not (it>=(seed_input-1)*5000000):
+            continue
     #if it>10000:
     #    continue
     run=e.run
@@ -517,12 +537,14 @@ for e in chain:
             rapidity_100=0.5*m.log(xi_1/xi_2)
             mrp_100=m.sqrt(169000000*xi_1*xi_2)
             h_MWW_MX_0_4_tracks_100events.Fill(mww_100/mrp_100,0.01)
+            if abs(e.jet_eta[0])<1.5:
+                h_MWW_MX_0_4_tracks_100events_jet_eta_0_1p5.Fill(mww_100/mrp_100,0.01)
             Yvalue_100=abs(yww_100-rapidity_100)
             passYcut_100=passYcutFunc2(Yvalue_100,signal_bin)
             if passYcut_100:
                 h_MWW_MX_0_4_tracks_100events_Ycut.Fill(mww_100/mrp_100,0.01)
-
-
+                if abs(e.jet_eta[0])<1.5:
+                    h_MWW_MX_0_4_tracks_100events_Ycut_jet_eta_0_1p5.Fill(mww_100/mrp_100,0.01)
 
     M_RP=-999.
     Rapidity_RP=-999.
@@ -724,8 +746,12 @@ for e in chain:
         h_Y_RP_5_up.Fill(Rapidity_RP,pileupw*rw_extrk*rw_passPPS)
         h_Y_CMS_minus_RP_5_up.Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_passPPS)         
         h_MWW_MX_5_up.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+        if abs(e.jet_eta[0])<1.5:
+            h_MWW_MX_5_up_eta_0_1p5.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
         if passYcut:
             h_MWW_MX_control_5_up_Ycut.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+            if abs(e.jet_eta[0])<1.5:
+                h_MWW_MX_control_5_up_Ycut_eta_0_1p5.Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
 
     if mjet_veto and passesBoosted and jet_pruning and not passesPPS and passPPS2 and pfcand_nextracks>4 and DATA:
         h_MWW_MX_5_up_notPPS.Fill(recoMWW/M_RP,pileupw)
