@@ -10,6 +10,8 @@ from ROOT import *
 from os import listdir
 from os.path import isfile, join
 
+
+
 def addPileupProtons(e,xi,era,sample):
     nVerticesCMS=e.nVertices
     f=TFile("xiEventsRun{0}.root".format(era))
@@ -132,8 +134,11 @@ def calculateSiRadEffic(x_strip,y_strip,era):
     else:
         return False
 
-def passPPSGeneralDataNew(e,xi):
+def passPPSGeneralData(e,xi):
     passPPSMultiRP=passPPSMulti(e,xi)    
+    passMultiRP=False
+    passPixelPixel=False
+    passMultiPixel=False
     if passPPSMultiRP: 
         xi["23"]=xi["multi_arm0"]
         xi["123"]=xi["multi_arm1"]
@@ -153,27 +158,6 @@ def passPPSGeneralDataNew(e,xi):
     return passPPS
 
 
-def passPPSGeneralData(e,xi,signal_bin):
-    passPPSMultiRP=passPPSMulti(e,xi)    
-    if signal_bin=="multiRP":
-        #if passMultiRP: 
-        if passPPSMultiRP: 
-            xi["23"]=xi["multi_arm0"]
-            xi["123"]=xi["multi_arm1"]
-            return True
-        else: return False
-    if not passPPSMultiRP:
-        passPPSNewPixel(e,xi)
-        if signal_bin=="pixel-pixel":
-            if len(xi["123"])==1 and len(xi["23"])==1:
-                return True
-            else: return False
-        if signal_bin=="multiPixel":
-            if (len(xi["123"])==1 and len(xi["23"])==2) or (len(xi["123"])==2 and len(xi["23"])==1):
-                return True
-            else: return False
-    return False
-
 def RandomEra():
     r0=r.random()
     era=""
@@ -189,58 +173,35 @@ def RandomEra():
         era="F"
     return era
 
-def passPPSGeneralMixDataMCNew(e,xi,signal_bin,sample,era):
+def passPPSGeneralMixDataMC(e,xi,sample,era):
     if sample!="Data":
         era=RandomEra()
     addPileupProtons(e,xi,era,sample)    
     passMRP=False
     if len(xi["multi_arm0"])==1 and len(xi["multi_arm1"])==1: 
         passMRP=True
-    if signal_bin=="multiRP":
-        #if passMultiRP: 
-        if passMRP:
-            xi["23"]=xi["multi_arm0"]
-            xi["123"]=xi["multi_arm1"]
-            return True
-        else: return False
-    if not passMRP:
-        if signal_bin=="pixel-pixel":
-            if len(xi["123"])==1 and len(xi["23"])==1:
-                return True
-            else: return False
-        if signal_bin=="multiPixel":
+    passMultiRP=False
+    passPixelPixel=False
+    passMultiPixel=False
+    if passMRP:
+        xi["23"]=xi["multi_arm0"]
+        xi["123"]=xi["multi_arm1"]
+        passMultiRP=True
+    else: 
+        passMultiRP=False
+        if len(xi["123"])==1 and len(xi["23"])==1:
+            passPixelPixel=True
+        else: 
+            passPixelPixel=False
             if (len(xi["123"])==1 and len(xi["23"])==2) or (len(xi["123"])==2 and len(xi["23"])==1):
-                return True
-            else: return False
-    return False
-
-def passPPSGeneralMixDataMC(e,xi,signal_bin,sample,era):
-    if sample!="Data":
-        era=RandomEra()
-    addPileupProtons(e,xi,era,sample)    
-    passMRP=False
-    if len(xi["multi_arm0"])==1 and len(xi["multi_arm1"])==1: 
-        passMRP=True
-    if signal_bin=="multiRP":
-        #if passMultiRP: 
-        if passMRP:
-            xi["23"]=xi["multi_arm0"]
-            xi["123"]=xi["multi_arm1"]
-            return True
-        else: return False
-    if not passMRP:
-        if signal_bin=="pixel-pixel":
-            if len(xi["123"])==1 and len(xi["23"])==1:
-                return True
-            else: return False
-        if signal_bin=="multiPixel":
-            if (len(xi["123"])==1 and len(xi["23"])==2) or (len(xi["123"])==2 and len(xi["23"])==1):
-                return True
-            else: return False
-    return False
+                passMultiPixel=True
+            else:
+                passMultiPixel=False
+    passPPS=[passMultiRP,passPixelPixel,passMultiPixel]
+    return passPPS
 
 
-def passPPSGeneralSignal(e,xi,signal_bin,sample):
+def passPPSGeneralSignal(e,xi,sample):
     nVerticesCMS=e.nVertices
     era=""
     #era=RandomEra()
@@ -264,7 +225,7 @@ def passPPSGeneralSignal(e,xi,signal_bin,sample):
     #See if have just pixels
     passPixel=passPPSNewPixel(e,xi)
     if not passPixel:
-        return False
+        return [False,False,False]
     passSiEffic=1.
     xi["weight"].append(passSiEffic)
     #return True
@@ -306,22 +267,8 @@ def passPPSGeneralSignal(e,xi,signal_bin,sample):
         #MultiPixel
         if (len(xi["23"])==2 and len(xi["123"])==1) or (len(xi["23"])==1 and len(xi["123"])==2):
             passMultiPixel=True
-
-    if signal_bin=="multiRP":
-        #if passMultiRP: 
-        if passPPSMultiRP: 
-            return True
-        else: return False
-
-    if signal_bin=="pixel-pixel":
-        if passPixelPixel: 
-            return True
-        else: return False
-
-    if signal_bin=="multiPixel":
-        if passMultiPixel: 
-            return True
-        else: return False
+    
+    return [passPPSMultiRP,passPixelPixel,passMultiPixel]
 
 
 def modifyJson(sample,num_events,batch):
@@ -572,4 +519,83 @@ def passPPSSimMixing(xi,signal_bin):
             xi["123"].append(xi_56_2nd)
     return passPPS
 
+h_extra_tracks_vs_MWW_PPS=[]
+h_extra_tracks_vs_MX_PPS=[]
+h_Y_CMS_minus_RP_vs_MWW_MX_PPS=[]
+h_num_extra_tracks_PPS=[]
+h_num_extra_tracks_PPS_noDRl=[]
+h_num_extra_tracks_PPS_reweight_extra_tracks=[]
+h_lepton_pt_passPPS=[]
+h_jet_pt_passPPS=[]
+h_tau21_passPPS=[]
+h_prunedMass_passPPS=[]
+h_WLeptonicPt_passPPS=[]
+h_recoMWW_passPPS=[]
+h_MET_passPPS=[]
+h_MX_passPPS=[]
+h_MWW_MX_passPPS=[]
+h_MWW_vs_MX_passPPS=[]
+h_Y_CMS_minus_RP_passPPS=[]
+h_xi_1_0_4_extratracks=[]
+h_xi_2_0_4_extratracks=[]
+h_Y_RP_0_4_extratracks=[]
+h_Y_CMS_minus_RP_0_4_extratracks=[]
+h_MX_0_4_extratracks=[]
+h_MWW_0_4_extratracks=[]
+h_MWW_MX_0_4_tracks=[]
+h_recoMWhad_0_4_tracks=[]
+h_tau21_0_4_tracks=[]
+h_prunedMass_0_4_tracks=[]
+h_MWW_MX_0_4_tracks_Ycut=[]
+h_MWW_MX_0_4_tracks_100events=[]
+h_MWW_MX_0_4_tracks_100events_Ycut=[]
+h_xi_1_0_4_extratracks_notPPS=[]
+h_xi_2_0_4_extratracks_notPPS=[]
+h_Y_RP_0_4_extratracks_notPPS=[]
+h_Y_CMS_minus_RP_0_4_extratracks_notPPS=[]
+h_MX_0_4_extratracks_notPPS=[]
+h_MWW_0_4_extratracks_notPPS=[]
+h_MWW_MX_0_4_tracks_notPPS=[]
+h_recoMWhad_0_4_tracks_notPPS=[]
+h_tau21_0_4_tracks_notPPS=[]
+h_prunedMass_0_4_tracks_notPPS=[]
+h_MWW_MX_0_4_tracks_notPPS_Ycut=[]
+h_xi_1_control=[]
+h_xi_2_control=[]
+h_Y_RP_control=[]
+h_Y_CMS_minus_RP_control=[]
+h_MX_control=[]
+h_MWW_control=[]
+h_MWW_MX_control=[]
+h_recoMWhad_control_control=[]
+h_tau21_control_control=[]
+h_prunedMass_control_control=[]
+h_MWW_MX_control_Ycut=[]
+h_MWW_MX_5_up_notPPS=[]
+h_MWW_MX_5_up_Ycut_notPPS=[]
+h_xi_1_control_notPPS=[]
+h_xi_2_control_notPPS=[]
+h_Y_RP_control_notPPS=[]
+h_Y_CMS_minus_RP_control_notPPS=[]
+h_MX_control_notPPS=[]
+h_MWW_control_notPPS=[]
+h_MWW_MX_control_notPPS=[]
+h_recoMWhad_control_control_notPPS=[]
+h_tau21_control_control_notPPS=[]
+h_prunedMass_control_control_notPPS=[]
+h_MWW_MX_control_Ycut_notPPS=[]
+h_xi_1_5_up=[]
+h_xi_2_5_up=[]
+h_MX_5_up=[]
+h_MWW_5_up=[]
+h_Y_RP_5_up=[]
+h_Y_CMS_minus_RP_5_up=[]
+h_MWW_MX_5_up=[]
+h_MWW_invertPrunedMass=[]
+h_MWW_MX_invertPrunedMass_Ycut=[]
+h_MWW_MX_control_5_up_Ycut=[]
+h_MWW_MX_control_15_30=[]
+h_MWW_MX_control_30_50=[]
+h_MWW_MX_control_50_70=[]
+h_MWW_MX_control_70_100=[]
 
