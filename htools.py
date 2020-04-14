@@ -325,8 +325,12 @@ def passPPSGeneralSignal(e,xi,signal_bin,sample):
 
 
 def modifyJson(sample,num_events,batch):
-    if "ext1" in sample: 
+    if "ext1_" in sample:
+        sample_tmp=sample[:-7]
+    elif "ext1" in sample: 
         sample_tmp=sample[:-5]
+    elif "pythia8_" in sample:
+        sample_tmp=sample[:-2]
     else: sample_tmp = sample
     changeNumEvents=False
     with open('samples_info.json') as json_file:
