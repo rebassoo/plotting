@@ -1,22 +1,10 @@
 Universe=vanilla
-#Universe=grid
 x509userproxy=/tmp/x509up_u31045
-#+DESIRED_Sites="T2_US_UCSD,T2_US_WISCONSIN,T2_US_FLORIDA,T2_US_PURDUE,T2_US_NEBRASKA,T2_US_CALTECH"
 +DESIRED_Sites="T2_US_UCSD"
 Notification          = Never
 transfer_input_files = /home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/histos_quick.py,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/htools.py,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/samples_info.json,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/xi.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/histos_xivalues.py,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/2017_ElectronTight.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/RunBCDEF_SF_MuID.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/RunBCDEF_SF_ISO.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/histos_datamixing0.py,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/xiEventsRunB.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/xiEventsRunC.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/xiEventsRunD.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/xiEventsRunE.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/xiEventsRunF.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/PreliminaryEfficiencies_October92019_1D2DMultiTrack.root,/home/users/rebassoo/work/2020_01_21_CorrectEfficienciesHistograms/pixelEfficiencies.root 
-#should_transfer_files = NO
-#Requirements   = OpSysAndVer == "CentOS7" 
-#transfer_output_files = FSQ-RunIISummer16DR80Premix-00036.root
-#Requirements = (OpSysAndVer =?= "SLC7")
-#Requirements = (OpSysAndVer =?= "CentOS7")
-#Requirements = (OpSysAndVer == "SLC7")
 Requirements = ((HAS_SINGULARITY=?=True) && (HAS_CVMFS_cms_cern_ch =?= true)) || (regexp("(uaf-[0-9]{1,2}|uafino)\.", TARGET.Machine) && !(TARGET.SlotID>(TotalSlots<14 ? 3:7) && regexp("uaf-[0-9]", TARGET.machine)))
 +SingularityImage="/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7" 
-#JOB_GLIDEIN_Entry_Name="CMSHTPC_T2_US_UCSD_gw7"
-#Grid_Resource=gt2 osg-gw-7.t2.ucsd.edu:/jobmanager-condor
-#grid_resource=condor osg-gw-7.t2.ucsd.edu osg-gw-7.t2.ucsd.edu:9619
-#grid_resource=condor osg-gw-6.t2.ucsd.edu osg-gw-6.t2.ucsd.edu:9619
 +JOB_Site = "$$(GLIDEIN_Site:Unknown)"
 +JOB_Gatekeeper = "$$(GLIDEIN_Gatekeeper:Unknown)"
 
