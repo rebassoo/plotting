@@ -247,7 +247,9 @@ def main(direc,Ycut,channel,background_method):
 
     if backgroundMC:
         histo_name="h_MWW_MX_0_4_tracks_100events"
+        #histo_name="h_MWW_MX_0_4_tracks_100events_jet_eta_0_1p5"
         if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_100events_Ycut"
+        #if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_100events_Ycut_jet_eta_0_1p5"
         hstack=THStack()
         hMC=[]
         fMC=[]
@@ -257,10 +259,12 @@ def main(direc,Ycut,channel,background_method):
         apply_extra_tracks_weight=True
         if channel=="muon":
             #extra_tracks_weight=2.2*ratioMC
-            extra_tracks_weight=2.2
+            #extra_tracks_weight=2.2
+            extra_tracks_weight=2.3
         if channel=="electron":
             #extra_tracks_weight=1.6835*ratioMC
-            extra_tracks_weight=1.6835
+            #extra_tracks_weight=1.6835
+            extra_tracks_weight=1.9
         for sample in MCsamples:
             fMC.append(TFile(directory+"/"+sample+".root"))
             fMC[it].cd()
