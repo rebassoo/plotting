@@ -34,7 +34,9 @@ if len(sys.argv) > 5:
 seed_input=0
 if len(sys.argv) > 7:
     seed_input=int(sys.argv[7])
-
+job_number=0
+if len(sys.argv) > 8:
+    job_number=int(sys.argv[8])
 
 METCUT=0
 pname="l"
@@ -71,9 +73,9 @@ if "LHEWpT" in output_name:
         output_name=output_name+"_ext1"
         sample_name=sample_name+"_ext1"
 #fout = TFile('histos_{0}/{1}.root'.format(channel,output_name),'recreate')
-if seed_input>0:
-    output_name=output_name+"_"+str(seed_input)
-    sample_name=sample_name+"_"+str(seed_input)
+if job_number>0:
+    output_name=output_name+"_"+str(job_number)
+    sample_name=sample_name+"_"+str(job_number)
 
 fout = TFile('{0}.root'.format(output_name),'recreate')
 fout.cd()
@@ -240,16 +242,17 @@ print num_events
 #SetBranchAddress(chain)
 
 it=0
-#r.seed(15)
+r.seed(seed_input+job_number)
 #r.seed(16)
-r.seed()
+#r.seed()
 for e in chain:
     it=it+1
-    if seed_input>0 and seed_input<7:
-        if not (it>=(seed_input-1)*5000000 and it<(seed_input*5000000)):
+    event_itt=5e6
+    if job_number>0 and job_number<7:
+        if not (it>=(job_number-1)*event_itt and it<(job_number*event_itt)):
             continue
-    if seed_input==7:
-        if not (it>=(seed_input-1)*5000000):
+    if job_number==7:
+        if not (it>=(job_number-1)*event_itt):
             continue
     #if it>5000:
     #    continue
@@ -461,9 +464,7 @@ for e in chain:
             #protonDataMixing(xi_signal,signal_bin)
             passPPS_100=passPPSGeneralMixDataMC(e,xi_signal,sample,era)
             
-            if not passPPS_100[0]: continue
-            if not passPPS_100[1]: continue
-            if not passPPS_100[2]: continue
+            if not passPPS_100[0] and not passPPS_100[1] and not passPPS_100[2]: continue
             #print "xi_signal",xi_signal
             mww_100=protonMWWMixing()
             yww_100=protonYWWMixing()

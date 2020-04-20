@@ -5,8 +5,9 @@ import sys
 from ptools import *
 from ROOT import *
 from htools import *
+#python makeSignalRegionPlotGeneral.py directory noYcut channel background_method signal_region
 
-def main(direc,Ycut,channel,background_method):
+def makePlot(direc,Ycut,channel,background_method,signal_region):
 
     backgroundMC=True
     rebin=5
@@ -14,7 +15,8 @@ def main(direc,Ycut,channel,background_method):
 
     #print channel
     #print direc.split("-")[4]
-    fout=TFile("combined_shapes_{0}_{1}.root".format(channel,direc.split("-")[4]),"recreate")
+    #fout=TFile("combined_shapes_{0}_{1}.root".format(channel,direc.split("-")[4]),"recreate")
+    fout=TFile("combined_shapes_{0}_{1}.root".format(channel,signal_region),"recreate")
     fout.cd()
 
     #signal_1e6=TH1F()
@@ -43,8 +45,9 @@ def main(direc,Ycut,channel,background_method):
     h0=TH1F()
     if background_method=="5_up" or background_method=="template_5up":
         deno=_file0.Get("h_MWW_extra_tracks_5_up_notPPS").GetEntries()
-        histo_name_control="h_MWW_MX_5_up"
-        if Ycut=="Ycut":     histo_name_control="h_MWW_MX_control_5_up_Ycut"
+        #histo_name_control="h_MWW_MX_5_up"
+        histo_name_control="h_MWW_MX_5_up"+"_"+signal_region
+        if Ycut=="Ycut":     histo_name_control="h_MWW_MX_control_5_up_Ycut"+"_"+signal_region
         h1=_file0.Get(histo_name_control)
         h1.Rebin(rebin)
         #print "h_MWW_MX_control.GetEntries(): ",h1.Integral(0,1001)
@@ -71,7 +74,8 @@ def main(direc,Ycut,channel,background_method):
         h0=h1.Clone()
         h0.SetLineColor(2)
         h0.SetLineWidth(2)
-        h_control=_file0.Get("h_MWW_5_up")
+        h_control=_file0.Get("h_MWW_5_up"+"_"+signal_region)
+        #h_control_notPPS=_file0.Get("h_MWW_extra_tracks_5_up_notPPS")
         h_control_notPPS=_file0.Get("h_MWW_extra_tracks_5_up_notPPS")
         ratio=h_control.GetEntries()/h_control_notPPS.GetEntries()
         ratioMC=h_control.GetEntries()/(h_control.GetEntries()+h_control_notPPS.GetEntries())
@@ -80,12 +84,12 @@ def main(direc,Ycut,channel,background_method):
 
     if background_method=="template":
         deno=_file0.Get("h_MWW_extra_tracks_5_15_notPPS").GetEntries()
-        h1=_file0.Get("h_MWW_MX_control_notPPS")
-        if Ycut=="Ycut": h1=_file0.Get("h_MWW_MX_control_Ycut_notPPS")
+        h1=_file0.Get("h_MWW_MX_control_notPPS"+"_"+signal_region)
+        if Ycut=="Ycut": h1=_file0.Get("h_MWW_MX_control_Ycut_notPPS"+"_"+signal_region)
         h1.Scale(num/deno)
 
-        h_control_temp=_file0.Get("h_MX_control")
-        h_control_notPPS_temp=_file0.Get("h_MX_control_notPPS")
+        h_control_temp=_file0.Get("h_MX_control"+"_"+signal_region)
+        h_control_notPPS_temp=_file0.Get("h_MX_control_notPPS"+"_"+signal_region)
         ratio=h_control_temp.GetEntries()/h_control_notPPS_temp.GetEntries()
         ratioMC=h_control_temp.GetEntries()/(h_control_temp.GetEntries()+h_control_notPPS_temp.GetEntries())
         print "Ratio: ",ratio
@@ -103,11 +107,11 @@ def main(direc,Ycut,channel,background_method):
 
     if background_method=="template_5up":
         deno=_file0.Get("h_MWW_extra_tracks_5_up_notPPS").GetEntries()
-        h1=_file0.Get("h_MWW_MX_5_up_notPPS")
-        if Ycut=="Ycut": h1=_file0.Get("h_MWW_MX_5_up_Ycut_notPPS")
+        h1=_file0.Get("h_MWW_MX_5_up_notPPS"+"_"+signal_region)
+        if Ycut=="Ycut": h1=_file0.Get("h_MWW_MX_5_up_Ycut_notPPS"+"_"+signal_region)
         #h1.Scale(num/deno)
         print "Scale factor for high to low extra tracks for template_5up is: ",scale_factor
-        h_control_temp=_file0.Get("h_MWW_5_up")
+        h_control_temp=_file0.Get("h_MWW_5_up"+"_"+signal_region)
         #h_control_notPPS_temp=_file0.Get("h_MX_control_notPPS")
         h_control_notPPS_temp=_file0.Get("h_MWW_extra_tracks_5_up_notPPS")
         ratio=h_control_temp.GetEntries()/h_control_notPPS_temp.GetEntries()
@@ -115,10 +119,13 @@ def main(direc,Ycut,channel,background_method):
         print "Ratio: ",ratio
         print "RatioMC: ",ratioMC
 
-        h1.Scale(num/deno)
-        #h1.Scale(ratio)
+        #h1.Scale(num/deno)
+        ##This is for the case where take events not Passing PPS and force every event to mix with control region
+        ##h1.Scale(ratio)
         scale_factor_1=num/deno
-        ratio=h_MWW_notPPS.GetEntries()/h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries()
+        #ratio=h_MWW_notPPS.GetEntries()/h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries()
+        ratio=h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries()/h_MWW_notPPS.GetEntries()
+        #h1.Scale(ratio)
         scale_factor_2=ratio
         scale_factor_1_error=scale_factor_1*(m.sqrt(1/num+1/deno))
         #scale_factor_2_error=scale_factor_2*(m.sqrt(1/(h_control_temp.GetEntries())+1/(h_control_notPPS_temp.GetEntries())))
@@ -131,8 +138,8 @@ def main(direc,Ycut,channel,background_method):
                 total_bin_error=m.sqrt( m.pow((scale_factor_1_error/scale_factor_1),2) + m.pow(entry_error/entry,2) +m.pow((scale_factor_2_error/scale_factor_2),2) )
             else:
                 total_bin_error=0
-            #h1.SetBinContent(i,entry*scale_factor_1*scale_factor_2)
-            #h1.SetBinError(i,entry*scale_factor*total_bin_error)
+            h1.SetBinContent(i,entry*scale_factor_1*scale_factor_2)
+            h1.SetBinError(i,entry*scale_factor_1*scale_factor_2*total_bin_error)
 
 
         h1.Rebin(rebin)
@@ -156,8 +163,8 @@ def main(direc,Ycut,channel,background_method):
     #######################################################################################
     #Make Signal plots
     #######################################################################################
-    histo_name="h_MWW_MX_0_4_tracks"
-    if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_Ycut"
+    histo_name="h_MWW_MX_0_4_tracks"+"_"+signal_region
+    if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_Ycut"+"_"+signal_region
     #_file1 = TFile("histos_electron/ExclusiveWW_a0w1e-6-SingleLepton-2017.root")
     _file1 = TFile("{0}/GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6.root".format(directory))
     h2=_file1.Get(histo_name)
@@ -246,9 +253,9 @@ def main(direc,Ycut,channel,background_method):
     leg.AddEntry(h1,"Template prediction","lep")
 
     if backgroundMC:
-        histo_name="h_MWW_MX_0_4_tracks_100events"
+        histo_name="h_MWW_MX_0_4_tracks_100events"+"_"+signal_region
         #histo_name="h_MWW_MX_0_4_tracks_100events_jet_eta_0_1p5"
-        if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_100events_Ycut"
+        if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_100events_Ycut"+"_"+signal_region
         #if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_100events_Ycut_jet_eta_0_1p5"
         hstack=THStack()
         hMC=[]
@@ -347,9 +354,11 @@ def main(direc,Ycut,channel,background_method):
         latex.DrawLatex(0.17,0.80,"{0}".format(directory[11:]))
     if channel=="electron":
         latex.DrawLatex(0.17,0.80,"{0}".format(directory[11:]))
-    c.Print("BackgroundPrediction_{0}_{1}{2}.pdf".format(directory[11:],background_method,ycut_str))
+    #c.Print("BackgroundPrediction_{0}_{1}{2}.pdf".format(directory[11:],background_method,ycut_str))
+    c.Print("BackgroundPrediction_{0}_{1}{2}.pdf".format(signal_region,background_method,ycut_str))
+    _file0.Close()
 
 if __name__=="__main__":
     #main(sys.argv[1],"h_MWW_MX_0_4_tracks","h_MWW_MX_5_up","muon")
     #if len(sys.argv)==5:
-    main(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4])
+    makePlot(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5])

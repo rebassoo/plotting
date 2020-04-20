@@ -84,7 +84,7 @@ print "Add number of events from Wjets pt binned ext to nominal Wjets pt binned"
 #Should check that get same entries all 7 jobs
 
 #This is for W1Jets
-for f in glob.glob("W1Jets*_ext1.json"):
+for f in glob.glob("*W1Jets*_ext1.json"):
     num_events_ext1=0
     #if "ext1" in f:
     subprocess.call("cp {0}.json {1}-original.json".format(f[:-10],f[:-10]),shell=True)
@@ -102,7 +102,7 @@ for f in glob.glob("W1Jets*_ext1.json"):
 
 
 #This is for W2Jets
-for f in glob.glob("W2Jets*_ext1_1.json"):
+for f in glob.glob("*W2Jets*_ext1_1.json"):
     num_events_ext1=0
     #if "ext1" in f:
     #subprocess.call("cp {0}.json {1}-original.json".format(f[:-10],f[:-10]),shell=True)
@@ -142,6 +142,7 @@ result = {}
 for f in glob.glob("*.json"):
     if "Run" in f: continue
     if "ext1" in f: continue
+    if "ext1_1" in f: continue
     if "pythia8_" in f: continue
     if "samples_info.json" in f: continue
     with open(f, "r") as infile:

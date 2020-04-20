@@ -53,8 +53,9 @@ do
 	do 
 	    #echo "I get here"
 	    #ls
+	    i_plus_a=$((a+i))
 	    cp "test_$i.sh" "test_${i}_${a}.sh"
-	    echo "$output $SIGNAL_BIN ${a}" >> "test_${i}_${a}.sh"
+	    echo "$output $SIGNAL_BIN ${i} ${a}" >> "test_${i}_${a}.sh"
 	    echo "Executable = test_${i}_${a}.sh" >> "test_${i}_${a}.jdl"
 	    cat base.jdl >> "test_${i}_${a}.jdl"
 	    #ls
@@ -63,7 +64,7 @@ do
 	done
 	rm "test_$i.sh"
     else
-	echo "$output $SIGNAL_BIN" >> "test_$i.sh"
+	echo "$output $SIGNAL_BIN ${i}">> "test_$i.sh"
 	echo "Executable = test_$i.sh" >> "test_$i.jdl"
 	cat base.jdl >> "test_$i.jdl"
 	condor_submit "test_$i.jdl"	
