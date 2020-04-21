@@ -123,13 +123,18 @@ def makePlot(direc,Ycut,channel,background_method,signal_region):
         ##This is for the case where take events not Passing PPS and force every event to mix with control region
         ##h1.Scale(ratio)
         scale_factor_1=num/deno
-        #ratio=h_MWW_notPPS.GetEntries()/h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries()
-        ratio=h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries()/h_MWW_notPPS.GetEntries()
+        num2=_file0.Get("h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning").GetEntries()
+        den2=_file0.Get("h_MWW_notPPS").GetEntries()
+        #ratio=h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries()/h_MWW_notPPS.GetEntries()
+        ratio=num2/den2
+        #ratio=1.
         #h1.Scale(ratio)
         scale_factor_2=ratio
         scale_factor_1_error=scale_factor_1*(m.sqrt(1/num+1/deno))
         #scale_factor_2_error=scale_factor_2*(m.sqrt(1/(h_control_temp.GetEntries())+1/(h_control_notPPS_temp.GetEntries())))
-        scale_factor_2_error=scale_factor_2*(m.sqrt(1/(h_MWW_notPPS.GetEntries())+1/(h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries())))
+        #scale_factor_2_error=scale_factor_2*(m.sqrt(1/(h_MWW_notPPS.GetEntries())+1/(h_pfcand_nextracks_MjetVeto_WleptonicCuts_wJetPruning.GetEntries())))
+        scale_factor_2_error=scale_factor_2*(m.sqrt(1/(num2)+1/(den2) ) )
+        #scale_factor_2_error=1.
         nbins=h1.GetNbinsX()
         for i in range(0,nbins+2):
             entry=h1.GetBinContent(i)
@@ -351,12 +356,13 @@ def makePlot(direc,Ycut,channel,background_method,signal_region):
     if Ycut=="Ycut":
         ycut_str="_ycut"
     if channel=="muon":
-        latex.DrawLatex(0.17,0.80,"{0}".format(directory[11:]))
+        latex.DrawLatex(0.17,0.80,"{0}".format(signal_region))
     if channel=="electron":
-        latex.DrawLatex(0.17,0.80,"{0}".format(directory[11:]))
+        latex.DrawLatex(0.17,0.80,"{0}".format(signal_region))
     #c.Print("BackgroundPrediction_{0}_{1}{2}.pdf".format(directory[11:],background_method,ycut_str))
     c.Print("BackgroundPrediction_{0}_{1}{2}.pdf".format(signal_region,background_method,ycut_str))
     _file0.Close()
+    fout.Close()
 
 if __name__=="__main__":
     #main(sys.argv[1],"h_MWW_MX_0_4_tracks","h_MWW_MX_5_up","muon")

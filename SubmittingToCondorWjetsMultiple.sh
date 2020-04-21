@@ -28,7 +28,7 @@ cp ../base.jdl .
 sed -i "s|REPLACE|$PWD1|g" base.jdl
 
 #for i in {0..1}
-for i in {1..54}
+for i in {1..56}
 #for i in {43..46}
 #for i in {6..11}
 #for i in {8..8}

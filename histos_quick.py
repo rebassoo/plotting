@@ -9,7 +9,7 @@ import time
 
 if len(sys.argv) < 5:
     print "Need to specify 5 inputs parameters, i.e.:"
-    print "  python histos_mue.py muon latest MuonEG crab_runBv3"
+    print "  python histos_mue.py muon latest MuonEG crab_runBv3 multiRP"
     print "  or"
     print "  python histos_mue.py muon specific MuonEG crab_runBv3/171116_215828/0001"
     sys.exit()
@@ -22,14 +22,14 @@ print sample_name
 file_dir=sys.argv[4]
 print file_dir
 batch=False
-signal_bin=""
+signal_bin="multiRP"
 if len(sys.argv) > 4:
     if sys.argv[5] == "-b":
         batch=True
 if len(sys.argv) < 6:
     print "Need to specify if batch submission and if it is multiRP, pixel-pixel, or multiPixel"
 #channel="electron"
-if len(sys.argv) > 5:
+if len(sys.argv) > 6:
     signal_bin=sys.argv[6]
 seed_input=0
 if len(sys.argv) > 7:
@@ -242,7 +242,11 @@ print num_events
 #SetBranchAddress(chain)
 
 it=0
-r.seed(seed_input+job_number)
+multiply_factor=seed_input-47
+if multiply_factor>0:
+    r.seed(seed_input+multiply_factor*job_number)
+else:
+    r.seed(seed_input)
 #r.seed(16)
 #r.seed()
 for e in chain:
@@ -477,9 +481,9 @@ for e in chain:
             for i in range(0,3):
                 if passPPS_100[i]: h_MWW_MX_0_4_tracks_100events[i].Fill(mww_100/mrp_100,0.01)
             Yvalue_100=abs(yww_100-rapidity_100)
-            passYcut_100=passYcutFunc2(Yvalue_100,signal_bin)
-            if passYcut_100:
-                for i in range(0,3):
+            passYcut_100=[passYcutFunc2(Yvalue_100,"multiRP"),passYcutFunc2(Yvalue_100,"pixel-pixel"),passYcutFunc2(Yvalue_100,"pixel-pixel")]
+            for i in range(0,3):
+                if passYcut_100[i]:
                     h_MWW_MX_0_4_tracks_100events_Ycut[i].Fill(mww_100/mrp_100,0.01)
 
 
