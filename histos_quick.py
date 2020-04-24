@@ -481,9 +481,9 @@ for e in chain:
             for i in range(0,3):
                 if passPPS_100[i]: h_MWW_MX_0_4_tracks_100events[i].Fill(mww_100/mrp_100,0.01)
             Yvalue_100=abs(yww_100-rapidity_100)
-            passYcut_100=[passYcutFunc2(Yvalue_100,"multiRP"),passYcutFunc2(Yvalue_100,"pixel-pixel"),passYcutFunc2(Yvalue_100,"pixel-pixel")]
+            passYcut_100=[passYcutFunc2(Yvalue_100,"multiRP"),passYcutFunc2(Yvalue_100,"pixel-pixel"),passYcutFunc2(Yvalue_100,"multiPixel")]
             for i in range(0,3):
-                if passYcut_100[i]:
+                if passYcut_100[i] and passPPS_100[i]:
                     h_MWW_MX_0_4_tracks_100events_Ycut[i].Fill(mww_100/mrp_100,0.01)
 
 
