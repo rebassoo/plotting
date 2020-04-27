@@ -9,6 +9,9 @@ python histos_quick.py latest electron GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6 cra
 python histos_quick.py latest electron GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6-signal-proton-propagation -b
 python histos_quick.py latest electron GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6-signal-proton-propagation -b
 python histos_quick.py latest electron GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6 crab_GGToWWTo3L3Nu_PtL-20_13TeV-fpmc-herwig6-signal-proton-propagation -b
+python histos_quick.py latest electron GGToWW_bSM-ACW5e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-ACW5e-6_13TeV-fpmc-herwig6-signal-proton-propagation-dilepton -b 
+python histos_quick.py latest electron GGToWW_bSM-ACW8e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-ACW8e-6_13TeV-fpmc-herwig6-signal-proton-propagation-dilepton -b 
+python histos_quick.py latest electron GGToWW_bSM-ACW2e-5_13TeV-fpmc-herwig6 crab_GGToWW_bSM-ACW2e-5_13TeV-fpmc-herwig6-signal-proton-propagation-dilepton -b 
 python histos_quick.py latest electron WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-0jets_JEC-proton-propagation -b
 python histos_quick.py latest electron WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-1jets_JEC-proton-propagation -b
 python histos_quick.py latest electron WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8 crab_WJets-2jets_JEC-proton-propagation -b

@@ -486,7 +486,8 @@ for e in chain:
                 if passYcut_100[i] and passPPS_100[i]:
                     h_MWW_MX_0_4_tracks_100events_Ycut[i].Fill(mww_100/mrp_100,0.01)
 
-
+    signal_samples=["multiRP","pixel-pixel","multiPixel"]
+    passYcut=[False,False,False]
     for i in range(0,3):
 
         M_RP=-999.
@@ -502,6 +503,7 @@ for e in chain:
                     M_RP=m.sqrt(169000000*xi_mult_45*xi_mult_56)
                     if xi["23"][0] > 0 and xi["123"][0] > 0:
                         Rapidity_RP=0.5*m.log(xi_mult_45/xi_mult_56)
+
         elif passPPS2[i]:
             if mjet_veto and passesBoosted and jet_pruning:
                 xi["23"]=xi_data_mix["23"]
@@ -514,16 +516,16 @@ for e in chain:
                     if xi["23"][0] > 0 and xi["123"][0] > 0:
                         Rapidity_RP=0.5*m.log(xi_mult_45/xi_mult_56)
 
-        passXiRmts=True
+        Yvalue=abs(recoYCMS-Rapidity_RP)
+        passYcut[i]=passYcutFunc2(Yvalue,signal_samples[i])
         if len(xi["23"])<1 or len(xi["123"])<1:
             continue
         #passesPPS=False
         if xi_mult_45<0.04 or xi_mult_56<0.04:
         #passesPPS=False
             continue
-
-        Yvalue=abs(recoYCMS-Rapidity_RP)
-        passYcut=passYcutFunc2(Yvalue,signal_bin)
+        #Yvalue=abs(recoYCMS-Rapidity_RP)
+        #passYcut=passYcutFunc2(Yvalue,signal_bin)
 
 
         if mjet_veto and passesBoosted and jet_pruning and passesPPS[i]:
@@ -567,7 +569,7 @@ for e in chain:
                 h_recoMWhad_0_4_tracks[i].Fill(recoMWhad,pileupw*rw_extrk*rw_passPPS)
                 h_tau21_0_4_tracks[i].Fill(tau21,pileupw)
                 h_prunedMass_0_4_tracks[i].Fill(prunedMass,pileupw)
-                if passYcut:
+                if passYcut[i]:
                     if ExclusiveMC:
                         h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw*xi["weight"][0])
                     else:h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw)
@@ -584,7 +586,7 @@ for e in chain:
                 h_recoMWhad_0_4_tracks_notPPS[i].Fill(recoMWhad,pileupw*rw_extrk)
                 h_tau21_0_4_tracks_notPPS[i].Fill(tau21,pileupw*rw_extrk)
                 h_prunedMass_0_4_tracks_notPPS[i].Fill(prunedMass,pileupw*rw_extrk)
-                if passYcut:
+                if passYcut[i]:
                     h_MWW_MX_0_4_tracks_notPPS_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
 
 
@@ -594,7 +596,7 @@ for e in chain:
         #Inverting the pruned mass cut to get MWW/MX distribution.
         if mjet_veto and passesBoosted and tau21<0.6 and prunedMass<50 and passesPPS[i]:    
             h_MWW_invertPrunedMass[i].Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
-            if passYcut:
+            if passYcut[i]:
                 h_MWW_MX_invertPrunedMass_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
 
 
@@ -611,7 +613,7 @@ for e in chain:
             h_recoMWhad_control_control[i].Fill(recoMWhad,pileupw*rw_extrk*rw_passPPS)
             h_tau21_control_control[i].Fill(tau21,pileupw*rw_extrk*rw_passPPS)
             h_prunedMass_control_control[i].Fill(prunedMass,pileupw*rw_extrk*rw_passPPS)
-            if passYcut:
+            if passYcut[i]:
                 h_MWW_MX_control_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
 
         if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks>4:
@@ -622,12 +624,12 @@ for e in chain:
             h_Y_RP_5_up[i].Fill(Rapidity_RP,pileupw*rw_extrk*rw_passPPS)
             h_Y_CMS_minus_RP_5_up[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_passPPS)         
             h_MWW_MX_5_up[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
-            if passYcut:
+            if passYcut[i]:
                 h_MWW_MX_control_5_up_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
 
         if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passPPS2[i] and pfcand_nextracks>4 and DATA:
             h_MWW_MX_5_up_notPPS[i].Fill(recoMWW/M_RP,pileupw)
-            if passYcut:
+            if passYcut[i]:
                 h_MWW_MX_5_up_Ycut_notPPS[i].Fill(recoMWW/M_RP,pileupw)
 
 
@@ -642,7 +644,7 @@ for e in chain:
             h_recoMWhad_control_control_notPPS[i].Fill(recoMWhad,pileupw*rw_extrk*rw_failPPS)
             h_tau21_control_control_notPPS[i].Fill(tau21,pileupw*rw_extrk*rw_failPPS)
             h_prunedMass_control_control_notPPS[i].Fill(prunedMass,pileupw*rw_extrk*rw_failPPS)
-            if passYcut:
+            if passYcut[i]:
                 h_MWW_MX_control_Ycut_notPPS[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_failPPS)
 
         #####################################################
