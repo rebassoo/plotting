@@ -217,6 +217,37 @@ def makePlot(direc,Ycut,channel,background_method,signal_region):
     h5.Rebin(rebin)
     h5.Draw("histsame")
 
+    _file6 = TFile("{0}/GGToWW_bSM-ACW8e-6_13TeV-fpmc-herwig6.root".format(directory))
+    h6=_file6.Get(histo_name)
+    print h6.Integral(0,1001)
+    ModifyHisto(h6,"GGToWW_bSM-ACW8e-6_13TeV-fpmc-herwig6",directory)
+    print h6.Integral(0,1001)
+    h6.SetLineColor(40)
+    h6.SetFillColor(0)
+    h6.Rebin(rebin)
+    #h6.Draw("histsame")
+
+    _file7 = TFile("{0}/GGToWW_bSM-ACW2e-5_13TeV-fpmc-herwig6.root".format(directory))
+    h7=_file7.Get(histo_name)
+    print h7.Integral(0,1001)
+    ModifyHisto(h7,"GGToWW_bSM-ACW2e-5_13TeV-fpmc-herwig6",directory)
+    print h7.Integral(0,1001)
+    h7.SetLineColor(40)
+    h7.SetFillColor(0)
+    h7.Rebin(rebin)
+    #h7.Draw("histsame")
+
+    _file8 = TFile("{0}/GGToWW_bSM-ACW5e-6_13TeV-fpmc-herwig6.root".format(directory))
+    h8=_file8.Get(histo_name)
+    print h8.Integral(0,1001)
+    ModifyHisto(h8,"GGToWW_bSM-ACW5e-6_13TeV-fpmc-herwig6",directory)
+    print h8.Integral(0,1001)
+    h8.SetLineColor(40)
+    h8.SetFillColor(0)
+    h8.Rebin(rebin)
+    #h8.Draw("histsame")
+
+
     #h0.Draw("esame")
     #sys.exit(1)
 
@@ -258,6 +289,7 @@ def makePlot(direc,Ycut,channel,background_method,signal_region):
     leg.AddEntry(h1,"Template prediction","lep")
 
     if backgroundMC:
+        #directory="2020-04-24-MuonAllSignalRegions"
         histo_name="h_MWW_MX_0_4_tracks_100events"+"_"+signal_region
         #histo_name="h_MWW_MX_0_4_tracks_100events_jet_eta_0_1p5"
         if Ycut=="Ycut":     histo_name="h_MWW_MX_0_4_tracks_100events_Ycut"+"_"+signal_region
@@ -334,15 +366,16 @@ def makePlot(direc,Ycut,channel,background_method,signal_region):
     h1.Write("background")
     diff_up.Write("background_alphaUp")
     diff_down.Write("background_alphaDown")
-    #h1.Scale(2)
     data_obs=h1.Clone()
     data_obs.Add(h1,h3)
     data_obs.Write("data_obs")
-    #h1.Write("data_obs")
     h2.Write("signal_1e6")
     h3.Write("background_ExclWW")
     h4.Write("signal_2e6")
     h5.Write("signal_5e6")
+    h6.Write("signal_aCW_5e6")
+    h7.Write("signal_aCW_8e6")
+    h8.Write("signal_aCW_2e5")
     fout.Write()
     fout.Close()
 
