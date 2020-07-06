@@ -161,9 +161,9 @@ subprocess.call("mv test* run/",shell=True)
 subprocess.call("mv log run/",shell=True)
 subprocess.call("mv makeBashScript.sh run/",shell=True)
 if channel=="muon":
-    subprocess.call("mv produceHistosSingleMu.txt run/",shell=True)
+    subprocess.call("mv produceHistosSingleMu*.txt run/",shell=True)
 if channel=="electron":
-    subprocess.call("mv produceHistosSingleE.txt run/",shell=True)
+    subprocess.call("mv produceHistosSingleE*.txt run/",shell=True)
 subprocess.call("mv base.jdl run/",shell=True)
 subprocess.call("mv merged_file.json samples_info.json",shell=True)
 

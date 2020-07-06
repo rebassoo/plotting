@@ -96,7 +96,7 @@ for e in chain:
         if channel=="electron" and e.electron_pt.size() == 0:
             continue
         if channel=="muon" and e.muon_pt.size() == 0:
-                continue
+            continue
         if channel=="dimuon" and e.muon_pt.size() < 2:
             continue
         if channel=="dielectron" and e.electron_pt.size() < 2:
@@ -135,14 +135,15 @@ for e in chain:
         jetPruning=True
         mjet_veto=True
         if dphiWW>2.5 and recoMWW>500 and MET>METCUT and WLeptonicPt>200:
-            passesBoosted=False
+            passesBoosted=True
         if prunedMass>50 and prunedMass<110 and tau21<0.6:
             jetPruning=True
         if e.num_bjets_ak4<1:
             mjet_veto=True
-        if mjet_veto and passesBoosted and jetPruning and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2:
+        if mjet_veto and passesBoosted and jetPruning and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2 and e.pfcand_nextracks<5:
             continue
-
+        #if mjet_veto and passesBoosted and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2:
+        #    outTree.Fill()
         outTree.Fill()
         
 
@@ -150,6 +151,7 @@ outTree.SetBranchStatus("*",0)
 outTree.SetBranchStatus("crossingAngle",1)
 outTree.SetBranchStatus("run",1)
 outTree.SetBranchStatus("event",1)
+outTree.SetBranchStatus("lumiblock",1)
 outTree.SetBranchStatus("proton_xi",1)
 outTree.SetBranchStatus("proton_ismultirp_",1)
 outTree.SetBranchStatus("proton_rpid",1)
@@ -157,8 +159,8 @@ outTree.SetBranchStatus("proton_arm",1)
 outTree.SetBranchStatus("proton_trackpixshift1",1)
 outTree.SetBranchStatus("proton_trackpixshift2",1)
 outTree.SetBranchStatus("nVertices",1)
-outTree.SetBranchStatus("electron_pt",1)
-outTree.SetBranchStatus("muon_pt",1)
+#outTree.SetBranchStatus("electron_pt",1)
+#outTree.SetBranchStatus("muon_pt",1)
 fout = TFile('{0}.root'.format(output_name),'recreate')
 fout.cd()
 outTree2 = outTree.CloneTree(0)

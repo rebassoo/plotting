@@ -16,7 +16,12 @@ channel="muon"
 #hdirectory="2019-11-15-MultiRP"
 #hdirectory="2019-11-19-Electron-MultiRP"
 #hdirectory="2020-03-25-Muon-MultiRP"
-hdirectory="2020-04-15-MuonAllSignalRegions"
+#hdirectory="2020-04-30-MuonAllDataMC-XiCMSCut"
+#hdirectory="2020-06-24-MuonAllDataMC-XiCMSCut-LessStrictMixing"
+hdirectory="2020-07-02-MuonAllDataMC-XiCMSCut"
+#hdirectory="2020-04-30-ElectronAllDataMC"
+#hdirectory="2020-04-30-ElectronAllDataMC-XiCMSCut"
+#hdirectory="Old/2020-04-28-MuonAllDataMC"
 #hdirectory="histos_electron_withDataProtonMixedIn_withBugFix"
 #hdirectory="OldFiles/histos_electron_withDataProtonMixedIn"
 #extra_tracks_weight=2.205
@@ -317,7 +322,7 @@ for i in range(min,max+1):
     h_ratio.Draw()
     num_bins=h_data.GetNbinsX()
     for i in range(0,num_bins):
-        print "Ratio: ",h_ratio.GetBinContent(i+1)
+        print "Ratio, error: ",h_ratio.GetBinContent(i+1),h_ratio.GetBinError(i+1)
     max_line=h_data.GetBinLowEdge(num_bins+1)
     line=TLine(0,1,max_line,1)
     line.SetLineColor(kBlack);

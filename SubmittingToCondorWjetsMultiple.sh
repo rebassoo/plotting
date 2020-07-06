@@ -17,7 +17,7 @@ SIGNAL_BIN="multiRP"
 #SIGNAL_BIN="multiPixel"
 #SIGNAL_BIN="pixel-pixel"
 #cp ../produceHistosSingleMu-Xi.txt .
-cp ../produceHistosSingleMu.txt .
+cp ../produceHistosSingleMu-dilepton.txt .
 cp ../htools.py .
 cp ../histos_quick.py .
 #cp ../produceHistosSingleE.txt .
@@ -27,21 +27,14 @@ cp ../xiEventsRun*root .
 cp ../base.jdl .
 sed -i "s|REPLACE|$PWD1|g" base.jdl
 
-#for i in {0..1}
-for i in {1..56}
-#for i in {43..46}
-#for i in {6..11}
-#for i in {8..8}
-#for i in {48..48}
-#for i in {1..3}
-#for i in {1..10}
-#for i in {4..4}
+#
+for i in {6..16}
+#for i in {1..59}
 #for i in {1..5}
-#for i in {1..1}
-#for i in {1..49}
+#for i in {1..16}
 do
     cat makeBashScript.sh >> "test_$i.sh"
-    output=`sed "${i}q;d" produceHistosSingleMu.txt`
+    output=`sed "${i}q;d" produceHistosSingleMu-dilepton.txt`
     #output=`sed "${i}q;d" produceHistosSingleMu-Xi.txt`
     #output=`sed "${i}q;d" produceHistosFew.txt`
     #echo "cp samples_info.json samples_info_$i.json" >> "test_$i.sh"

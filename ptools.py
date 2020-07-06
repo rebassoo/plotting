@@ -2,6 +2,26 @@
 #Finn Rebassoo, LLNL 02-03-2017
 import math as m
 import json
+from ROOT import *
+
+def writePlots(Ycut,channel,signal_region,background_method,justSignal=False):
+    latex=TLatex()
+    latex.SetNDC()
+    latex.SetTextSize(0.04)
+    latex.SetTextAlign(11)
+    #latex.DrawLatex(0.12,0.96,"CMS")
+    ycut_str=""
+    if Ycut=="Ycut":
+        ycut_str="_ycut"
+    if channel=="muon":
+        latex.DrawLatex(0.17,0.80,"{0}".format(signal_region))
+    if channel=="electron":
+        latex.DrawLatex(0.17,0.80,"{0}".format(signal_region))
+    #c.Print("BackgroundPrediction_{0}_{1}{2}.pdf".format(directory[11:],background_method,ycut_str))
+    if justSignal:
+        c.Print("SignalPrediction_{0}{1}_{2}.pdf".format(signal_region,ycut_str,channel))
+    else:
+        c.Print("BackgroundPrediction_{0}_{1}{2}_{3}.pdf".format(signal_region,background_method,ycut_str,channel))
 
 def calcAco(phi1,phi2):
     result = phi1-phi2
@@ -42,6 +62,9 @@ def legend_name(sample):
     if sample=="ExclusiveWW_a0w1e-6-SingleLepton-2017": name="#gamma#gamma #rightarrow WW #scale[1]{(a_{0}^{W}/#Lambda^{2}=1*10^{-6})}"#, a_{c}^{W}#Lambda^{2}=0)}"
     if sample=="ExclusiveWW_a0w2e-6-SingleLepton-2017": name="#gamma#gamma #rightarrow WW #scale[1]{(a_{0}^{W}/#Lambda^{2}=2*10^{-6})}"#, a_{c}^{W}#Lambda^{2}=0)}"
     if sample=="ExclusiveWW_a0w5e-6-SingleLepton-2017": name="#gamma#gamma #rightarrow WW #scale[1]{(a_{0}^{W}/#Lambda^{2}=5*10^{-6})}"#, a_{c}^{W}#Lambda^{2}=0)}"
+    if sample=="ExclusiveWW_aCw5e-6-SingleLepton-2017": name="#gamma#gamma #rightarrow WW #scale[1]{(a_{C}^{W}/#Lambda^{2}=5*10^{-6})}"#, a_{c}^{W}#Lambda^{2}=0)}"
+    if sample=="ExclusiveWW_aCw8e-6-SingleLepton-2017": name="#gamma#gamma #rightarrow WW #scale[1]{(a_{C}^{W}/#Lambda^{2}=8*10^{-6})}"#, a_{c}^{W}#Lambda^{2}=0)}"
+    if sample=="ExclusiveWW_aCw2e-5-SingleLepton-2017": name="#gamma#gamma #rightarrow WW #scale[1]{(a_{C}^{W}/#Lambda^{2}=5*10^{-5})}"#, a_{c}^{W}#Lambda^{2}=0)}"
     if sample=="ExclusiveWW_SM_FPMC-SingleLepton-2017": name="SM #gamma#gamma #rightarrow WW"
     if sample=="QCD_Pt_170to300_TuneCP5_13TeV_pythia8": name="QCD"# Pt binned"
     if sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8":name="t#bar{t}"# amcatnloFXFX-pythia8"

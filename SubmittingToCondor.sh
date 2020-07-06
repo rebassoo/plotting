@@ -17,7 +17,7 @@ mkdir log
 #SIGNAL_BIN="multiPixel"
 SIGNAL_BIN="pixel-pixel"
 #cp ../produceHistosSingleMu-Xi.txt .
-cp ../produceHistosSingleMu.txt .
+cp ../produceHistosSingleMu-dilepton.txt .
 cp ../htools.py .
 cp ../histos_quick.py .
 #cp ../produceHistosSingleE.txt .
@@ -28,19 +28,19 @@ cp ../base.jdl .
 sed -i "s|REPLACE|$PWD1|g" base.jdl
 
 #for i in {0..1}
-for i in {1..54}
+#for i in {1..59}
 #for i in {6..11}
 #for i in {8..8}
 #for i in {48..48}
 #for i in {1..3}
 #for i in {1..10}
 #for i in {4..4}
-#for i in {1..5}
+for i in {1..5}
 #for i in {1..1}
 #for i in {1..49}
 do
     cat makeBashScript.sh >> "test_$i.sh"
-    output=`sed "${i}q;d" produceHistosSingleMu.txt`
+    output=`sed "${i}q;d" produceHistosSingleMu-dilepton.txt`
     #output=`sed "${i}q;d" produceHistosSingleMu-Xi.txt`
     #output=`sed "${i}q;d" produceHistosFew.txt`
     echo "$output $SIGNAL_BIN" >> "test_$i.sh"
