@@ -237,8 +237,11 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
     
     if justSignal:
         leg.Draw("same")
-        writePlots(Ycut,channel,signal_region,"",justSignal)
+        writePlots(c,Ycut,channel,signal_region,"",justSignal)
+        _file0.Close()
+        fout.Close()
         return 0
+
     #######################################################################################
     #Make Background plots
     #######################################################################################
@@ -378,7 +381,7 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
     fout.Close()
 
     leg.Draw("same")
-    writePlots(Ycut,channel,signal_region,background_method,justSignal)
+    writePlots(c,Ycut,channel,signal_region,background_method,justSignal)
     _file0.Close()
     fout.Close()
 
