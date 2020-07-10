@@ -495,7 +495,8 @@ for e in chain:
         if sample=="ExclusiveMC":
             #passesPPS=passPPSGeneralSignal(e,xi,sample)
             passesPPS=passPPSGeneralSignal(e,xi,sample)
-            passesPPSMisReco=passPPSGeneralSignalMisReco(e,xi_misreco,sample)
+            if passesPPS[0]==0 and passesPPS[1]==0 and passesPPS[2]==0:
+                passesPPSMisReco=passPPSGeneralSignalMisReco(e,xi_misreco,sample)
             plotXYSignal(e,h_y_vs_x_signal)
             #passPPSMulti(e,xi_det)
             #passPPSNewPixel(e,xi_det)

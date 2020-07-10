@@ -507,8 +507,6 @@ def passPPSGeneralSignal(e,xi,sample):
     passPPSNewPixelXY(e,x_pixel,y_pixel)
     passAperature45=aperature(xi["23"][0],e.crossingAngle,"45",era)
     passAperature56=aperature(xi["123"][0],e.crossingAngle,"56",era)
-    #print passAperature45
-    #print passAperature56
     if not passAperature45 or not passAperature56:
         return [False,False,False]
     #print xi
@@ -605,16 +603,19 @@ def passPPSGeneralSignalMisReco(e,xi,sample):
     passPixEffic45=True
     passPixEffic56=True
     if len(xi["23"]) == 1 and len(xi["123"]) == 0:
-        failAperature45=aperature(xi["23"][0],e.crossingAngle,"45",era)
-        if failAperature45: return [False,False,False]
+        #print xi["23"][0]
+        passAperature45=aperature(xi["23"][0],e.crossingAngle,"45",era)
+        #print passAperature45
+        if not passAperature45: return [False,False,False]
+        #print "Get past aperture"
         passPixEffic45=calculatePixelRadEffic(x_pixel,y_pixel,era,"45")
         #if not calculatePixelRadEffic(x_pixel,y_pixel,era,"45"): return [False,False,False]
     if len(xi["23"]) == 0 and len(xi["123"]) == 1:
-        failAperature56=aperature(xi["123"][0],e.crossingAngle,"56",era)
-        if failAperature56: return [False,False,False]
+        passAperature56=aperature(xi["123"][0],e.crossingAngle,"56",era)
+        if not passAperature56: return [False,False,False]
         #if not calculatePixelRadEffic(x_pixel,y_pixel,era,"56"): return [False,False,False]
         passPixEffic56=calculatePixelRadEffic(x_pixel,y_pixel,era,"56")
-        
+
     passSiEffic=1.
     xi["weight"].append(passSiEffic)
     #return True

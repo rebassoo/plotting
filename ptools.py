@@ -4,7 +4,7 @@ import math as m
 import json
 from ROOT import *
 
-def writePlots(Ycut,channel,signal_region,background_method,justSignal=False):
+def writePlots(c,Ycut,channel,signal_region,background_method,justSignal=False):
     latex=TLatex()
     latex.SetNDC()
     latex.SetTextSize(0.04)
