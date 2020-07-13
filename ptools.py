@@ -15,13 +15,15 @@ def writePlots(c,Ycut,channel,signal_region,background_method,justSignal=False):
         ycut_str="_ycut"
     if channel=="muon":
         latex.DrawLatex(0.17,0.80,"{0}".format(signal_region))
+        channel="mu"
     if channel=="electron":
         latex.DrawLatex(0.17,0.80,"{0}".format(signal_region))
+        channel="e"
     #c.Print("BackgroundPrediction_{0}_{1}{2}.pdf".format(directory[11:],background_method,ycut_str))
     if justSignal:
-        c.Print("SignalPrediction_{0}{1}_{2}.pdf".format(signal_region,ycut_str,channel))
+        c.Print("SignalPrediction_{0}{1}_{2}.pdf".format(signal_region.lower(),ycut_str,channel))
     else:
-        c.Print("BackgroundPrediction_{0}_{1}{2}_{3}.pdf".format(signal_region,background_method,ycut_str,channel))
+        c.Print("BackgroundPrediction_{0}_{1}{2}_{3}.pdf".format(signal_region.lower(),background_method,ycut_str,channel))
 
 def calcAco(phi1,phi2):
     result = phi1-phi2

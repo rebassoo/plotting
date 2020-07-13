@@ -4,13 +4,14 @@ from makeSignalRegionPlotGeneral import *
 
 #muon_directory="2020-04-30-MuonAllDataMC"
 #muon_directory="2020-04-30-MuonAllDataMC-XiCMSCut"
-muon_directory="2020-07-02-MuonAllDataMC-XiCMSCut"
+#muon_directory="2020-07-02-MuonAllDataMC-XiCMSCut"
 #muon_directory="2020-06-24-MuonAllDataMC-XiCMSCut-LessStrictMixing"
 #electron_directory="2020-04-30-ElectronAllDataMC"
 #electron_directory="2020-04-30-ElectronAllDataMC-XiCMSCut"
+electron_directory="2020-07-08-ElectronAllDataMC-XiCMSCut"
 
-Ycut=["noYcut","Ycut"]
-#Ycut=["Ycut"]
+#Ycut=["noYcut","Ycut"]
+Ycut=["Ycut"]
 #Ycut=["noYcut"]
 signal_regions=["MultiRP","PixelPixel","MultiPixel"]
 #signal_regions=["MultiRP"]
@@ -21,6 +22,6 @@ signal_regions=["MultiRP","PixelPixel","MultiPixel"]
 for y in Ycut:
     for s in signal_regions:
         #makePlot(muon_directory,y,"muon","template_5up",s)
-        makePlot(muon_directory,y,"muon","template_5up",s,True)
-        #makePlot(electron_directory,y,"electron","template_5up",s)
+        #makePlot(muon_directory,y,"muon","template_5up",s,True)
+        makePlot(electron_directory,y,"electron","template_5up",s)
         
