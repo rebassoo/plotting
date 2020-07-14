@@ -16,7 +16,9 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
     #print channel
     #print direc.split("-")[4]
     #fout=TFile("combined_shapes_{0}_{1}.root".format(channel,direc.split("-")[4]),"recreate")
-    fout=TFile("combined_shapes_{0}_{1}.root".format(channel,signal_region.lower()),"recreate")
+    if channel == "muon" : channel_abr=channel[:2]
+    if channel == "e" : channel_abr=channel[:1]
+    fout=TFile("combined_shapes_{0}_{1}.root".format(channel_abr,signal_region.lower()),"recreate")
     fout.cd()
 
     c=TCanvas("c","",800,800)
