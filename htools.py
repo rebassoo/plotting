@@ -11,12 +11,45 @@ from ROOT import *
 from os import listdir
 from os.path import isfile, join
 
+class eventListMixing:
+    def __init__(self):
+        self.data={"A":[],"B":[],"C":[],"D":[]}
+    def add_event(self,era,number):
+        self.data.setdefault(era,[]).append(number)
+    def already_mixed(self,era,number):
+        #print number
+        #self.data.setdefault(era,[]).append(number)
+        #print self.data
+        #print self.data[era]
+        if number in self.data[era[0]]:
+            return True
+        else:
+            return False
+        #if era, number is already in list than return false, otherwise true
+
+
+def plot_number_protons(e,h_signal_protons_eacharm,year,xi_tmp):
+    #year="2018"
+    #sample="ExclusiveWW"
+    #xi_tmp = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
+    #era=RandomEraFine2018()
+    #passPPSMultiRP=passPPSMulti(e,xi_tmp,era)
+    if len(xi_tmp["multi_arm0"]) == 0 or len(xi_tmp["multi_arm1"]) == 0:
+        h_signal_protons_eacharm.Fill(-1,-1)
+        return 0
+    #passAperture45=aperture(xi_tmp["multi_arm0"][0],e.crossingAngle,"45",era,year)
+    #passAperture56=aperture(xi_tmp["multi_arm1"][0],e.crossingAngle,"56",era,year)
+    #if not passAperture45 or not passAperture56:
+    #    h_signal_protons_eacharm.Fill(-1,-1)
+    #    return 0
+    #addPileupProtons(e,xi_tmp,era,sample,year)        
+    h_signal_protons_eacharm.Fill(len(xi_tmp["multi_arm0"]),len(xi_tmp["multi_arm1"]))
 
 def plotXYSignal(e,h_y_vs_x_signal):
     x_ = {"3":[],"103":[],"23":[],"123":[]}
     y_ = {"3":[],"103":[],"23":[],"123":[]}
     passPPSNewPixelXY(e,x_,y_)
-    passPPSNewStrip(e,x_,y_)
+    #passPPSNewStrip(e,x_,y_)
     selection_det=["3","23","103","123"]
     i=0
     for tex in selection_det:
@@ -24,166 +57,183 @@ def plotXYSignal(e,h_y_vs_x_signal):
             h_y_vs_x_signal[i].Fill(x_[tex][0],y_[tex][0])
         i=i+1
 
-def addPileupProtons(e,xi,era,sample):
+def findEra(run):
+    if (run >= 315252 and run <= 316995):
+        return "A"
+    if (run >= 316998 and run <= 317696):
+        return "B1"
+    if (run >= 318662 and run <= 319312):
+        return "B2"
+    if (run >= 319313 and run <= 320393):
+        return "C"
+    if (run >= 320394 and run <= 322633):
+        return "D1"
+    if (run >= 323363 and run <= 325273):
+        return "D2"
+        
+
+def RandomEraFine2018():
+    r0=r.random()
+    era=""
+    if r0<0.2172:
+        era="A"
+    if r0>=0.2172 and r0<0.3318:
+        era="B1"
+    if r0>=0.3318 and r0<0.3390:
+        era="B2"
+    if r0>=0.3390 and r0<0.4562:
+        era="C"
+    if r0>=0.4562 and r0<0.8131:
+        era="D1"
+    if r0>=0.8131:
+        era="D2"
+    return era
+
+def RandomEra2018():
+    #RunA 12.10 fb-1
+    #RunB1 6.38 fb-1
+    #RunB2 0.40 fb-1
+    #RunC  6.5297 fb-1
+    #RunD1 19.88 fb-1
+    #RunD2 10.4157 fb-1
+    
+    #These are based on CMS ratios not PPS json
+    r0=r.random()
+    era=""
+    if r0<0.229:
+        era="A"
+    if r0>=0.229 and r0<0.344:
+        era="B"
+    if r0>=0.344 and r0<0.456:
+        era="C"
+    if r0>=0.456:
+        era="D"
+    return era
+
+
+def addPileupProtons(e,xi,era,sample,year,evm,tree=0,entries=0):
     nVerticesCMS=e.nVertices
-    f=TFile("xiEventsRun{0}.root".format(era))
-    #f=TFile("xiEvents.root")
-    tree=f.Get("SlimmedNtuple")
-    entries=tree.GetEntries()
-    passBothArms=False
-    for i in range(200):
+    if sample != "DATA":
+        if e.muon_pt.size()>0:
+            f=TFile("xiEventsRun{0}-2018.root".format(era[0]))
+        if e.electron_pt.size()>0:
+            f=TFile("xiEventsRun{0}-2018-e.root".format(era[0]))
+        #f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
+        #f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
+        tree=f.Get("SlimmedNtuple")
+        entries=tree.GetEntries()
+
+    getMatch=False
+    for i in range(300):
         if i > 199:
             print "Taking many samples of data to get proper nvertex matching between CMS and PPS"
         r5=r.random()
+        #print r5
         #entry=int(r5*2146214)
         entry=int(r5*entries)
         #print entry
         tree.GetEntry(entry)
-        nVerticesPPS=tree.nVertices
-        if abs(nVerticesPPS-nVerticesCMS)<5:
-        #if abs(nVerticesPPS-nVerticesCMS)<100:
-            p_rpid=tree.proton_rpid
-            p_xi=tree.proton_xi
-            p_ismultirp=tree.proton_ismultirp_
-            p_arm=tree.proton_arm
-            p_trackpixshift1=tree.proton_trackpixshift1
-            p_trackpixshift2=tree.proton_trackpixshift2
-            passBothArms=True
-            count_45_pixel=0
-            count_56_pixel=0
-            ii=0
-            ii_multi=0
-            for detId in p_rpid:
-                if p_ismultirp[ii]==1:
-                    if sample=="ExclusiveMC": continue
-                    if p_arm[ii]==0:
-                        if p_trackpixshift1[ii]==0 and p_trackpixshift2[ii_multi]==0:
-                            xi["multi_arm0"].append(p_xi[ii])
-                    if p_arm[ii]==1:
-                        if p_trackpixshift1[ii]==0 and p_trackpixshift2[ii_multi]==0:
-                            xi["multi_arm1"].append(p_xi[ii])
-                    ii_multi=ii_multi+1
-                if detId==3:
-                    #passBothArms=False
-                    xi["3"].append(p_xi[ii])
-                if detId==23 and p_ismultirp[ii]==0:
-                    if p_trackpixshift1[ii]==0:
-                    #count_45_pixel=count_45_pixel+1
-                        xi["23"].append(p_xi[ii])
-                if detId==103:
-                    xi["103"].append(p_xi[ii])
-                    #passBothArms=False
-                if detId == 123 and p_ismultirp[ii]==0: 
-                    if p_trackpixshift1[ii]==0:
-                    #count_56_pixel=count_56_pixel+1
-                        xi["123"].append(p_xi[ii])
-                #print "i before break is: ",i
-                #if count_56_pixel > 1 or count_45_pixel > 1:
-                #    passBothArms=False
-                ii=ii+1
+        #These come from this twiki: https://twiki.cern.ch/twiki/bin/viewauth/CMS/TaggedProtonsPixelEfficiencies#Run_periods
+        #print "tree.run: ",tree.run
+        #This is so that in case of mixing data protons with data won't subdivide eras
+        #Could find the subdivided era from the data event based on findEra and then mix in with same sub-era
+        era_mixed=era
+        if len(era)>1:
+            era_mixed=findEra(tree.run)
+            if era != era_mixed:
+            #print era
+                continue
+        #nVerticesPPS=tree.nVertices
+        #if (abs(nVerticesPPS-nVerticesCMS)<5 and i < 150) or (abs(nVerticesPPS-nVerticesCMS)<100 and i > 149):
+        #if abs(nVerticesPPS-nVerticesCMS)<100 or year == "2018":
+        if year == "2018":
+            getMatch=True
+            if sample != "MC":
+                if evm.already_mixed(era,entry): 
+                    continue
+                else:
+                    evm.add_event(era,entry)
+            passPPSMulti(tree,xi,era_mixed)
             break
+    if not getMatch:
+        print "Don't get a match,era: ",era
+    return 0
 
-def aperature(xi,xangle,arm,era):
-    aperaturelimit=0.0
-    if era == "B" or era == "C" or era =="D":
-        era = "2017preTS2"
-    if era == "E" or era == "F":
-        era = "2017postTS2"
+def aperture(xi,xangle,arm,era,year):
+    aperturelimit=0.0
+    if year == "2017":
+        if era == "B" or era == "C" or era =="D":
+            era = "2017preTS2"
+        if era == "E" or era == "F":
+            era = "2017postTS2"
     #print era
     if era == "2016preTS2":
         if arm == "45":
-            aperaturelimit = 0.111
+            aperturelimit = 0.111
         if arm == "56":
-            aperaturelimit = 0.138
+            aperturelimit = 0.138
     if era == "2016postTS2":
         if arm == "45":
-            aperaturelimit = 0.104
-        if arm == "56":#Note - 1 strip RP was not in, so no aperature cuts derieved
-            aperaturelimit = 999.9
+            aperturelimit = 0.104
+        if arm == "56":#Note - 1 strip RP was not in, so no aperture cuts derieved
+            aperturelimit = 999.9
     if era == "2017preTS2":
-        #print "AP: ",aperaturelimit
-        #print "xangle: ",xangle
         if arm == "45":
-            aperaturelimit = 0.066 + (3.54e-4 * xangle)
-            #print "AP: ",aperaturelimit
+            aperturelimit = 0.066 + (3.54e-4 * xangle)
+            #print "AP: ",aperturelimit
         if arm == "56":
-            aperaturelimit = 0.062 + (5.96e-4 * xangle)
+            aperturelimit = 0.062 + (5.96e-4 * xangle)
     if era == "2017postTS2":
         if arm == "45":
-            aperaturelimit = 0.073 + (4.11e-4 * xangle)
+            aperturelimit = 0.073 + (4.11e-4 * xangle)
         if arm == "56":
-            aperaturelimit = 0.067 + (6.87e-4 * xangle)
-    if era == "2018":
+            aperturelimit = 0.067 + (6.87e-4 * xangle)
+    if year == "2018":
         if arm == "45":
-            aperaturelimit = 0.079 + (4.21e-4 * xangle);
+            aperturelimit = 0.079 + (4.21e-4 * xangle);
         if arm == "56":
-            aperaturelimit = 0.074 + (6.6e-4 * xangle);
+            aperturelimit = 0.074 + (6.6e-4 * xangle);
     #print "xi:", xi
-    #print "aperaturelimit: ",aperaturelimit
-    if xi<aperaturelimit:
+    #print "aperturelimit: ",aperturelimit
+    if xi<aperturelimit:
         return True
     else:
         return False
 
-def pixelLimits(x,y,era,arm):
-    x_min=0.
-    x_max=1000.
-    y_min=-1000.
-    y_max=1000.
+def pixelLimits2018(x,y,era,rpid):
+    xmin=0.
+    xmax=1000.
+    ymin=0.
+    ymax=1000.
+    dic={}
+    #print "era", era
+    if era == "A":
+        #[xmin,xmax,ymin,ymax]
+        dic={"3":[2.850,17.927,-11.598,3.698],"23":[2.421,24.62,-10.898,4.398],"103":[3.275,18.498,-11.298,3.298],"123":[2.421,20.045,-10.398,5.098]}
+    if era == "B1":
+        dic={"3":[2.850,17.927,-11.598,3.698],"23":[2.421,24.620,-10.898,4.198],"103":[3.275,18.070,-11.198,4.098],"123":[2.564,20.045,-10.398,5.098]}
+    if era == "B2":
+        dic={"3":[2.564,17.640,-11.598,4.198],"23":[2.140,24.479,-11.398,3.798],"103":[3.275,17.931,-10.498,4.098],"123":[2.279,24.760,-10.598,4.498]}
     if era == "C":
-        if r.random<0.6179316777:
-            era = "C1"
-        else:
-            era = "C2"
-    if era == "F":
-        if r.random<0.128651:
-            era = "F1"
-        elif ran1>0.128651 and ran1<0.7252057066:
-            era = "F2"
-        else:
-            era = "F3"
-    if era == "B" or era == "C1":
-        if arm == "45":
-            x_min=1.995
-            if era == "C1": x_min=1.860
-            x_max=24.479
-            y_min=-11.098
-            y_max=4.298
-        if arm == "56":
-            x_min=2.422
-            x_max=24.620
-            y_min=-10.698
-            y_max=4.698
-    #print arm
-    if era == "E" or era == "F1":
-        if arm == "45":
-            x_min=1.995
-            x_max=24.479
-            y_min=-10.098
-            y_max=4.998
-        if arm == "56":
-            x_min=2.422
-            x_max=24.620
-            y_min=-9.698
-            if era == "F1": y_min=-9.798
-            y_max=5.498
-            if era == "F1": y_max=5.398
-    #print "x, y: ",x,y
-    #print "x_min: ",x_min
-    #print "x_max: ",x_max
-    #print "y_min: ",y_min
-    #print "y_max: ",y_max
-    if x>x_min and x<x_max and y>y_min and y<y_max:
+        dic={"3":[2.564,17.930,-11.098,4.198],"23":[2.421,24.620,-11.398,3.698],"103":[3.275,17.931,-10.498,4.698],"123":[2.279,24.760,-10.598,4.398]}
+    if era == "D1":
+        dic={"3":[2.850,17.931,-11.098,4.098],"23":[2.421,24.620,-11.398,3.698],"103":[3.275,17.931,-10.498,4.698],"123":[2.279,24.760,-10.598,4.398]}
+    if era == "D2":
+        dic={"3":[2.850,17.931,-10.598,4.498],"23":[2.421,24,620,-11.698,3.298],"103":[3.275,17.931,-9.998,4.698],"123":[2.279,24.760,-10.598,3.898]}
+    #print dic
+    list_xy=dic[rpid]
+    if rpid == "3" or rpid =="103":
+        x=x*m.cos((-8/180.)*m.pi)-y*m.sin((-8/180.)*m.pi)
+        y=x*m.sin((-8/180.)*m.pi)+y*m.cos((-8/180.)*m.pi)
+        
+    if x>list_xy[0] and x<list_xy[1] and y>list_xy[2] and y<list_xy[3]:
         return True
     else:
-        #print "x, y: ",x,y
-        #print "x_min: ",x_min
-        #print "x_max: ",x_max
-        #print "y_min: ",y_min
-        #print "y_max: ",y_max
         return False
 
-def calculateMultiMultiRPEffic(x_strip,y_strip,era,arm):
+
+
+def calculateMultiRPEffic2017(x_strip,y_strip,era,arm):
     f=TFile("pixelEfficiencies_multiRP.root")
     effic45=1.
     effic56=1.
@@ -235,14 +285,12 @@ def calculateMultiMultiRPEffic(x_strip,y_strip,era,arm):
     weight=effic45*effic56
     return weight
 
-
-
-
 def passYcutFunc2(Yvalue_,signal_bin):
     #print Yvalue_
     #print signal_bin
     passYcut_=False
-    if signal_bin=="multiPixel" and Yvalue_<0.6:
+    #if signal_bin=="multiPixel" and Yvalue_<0.6:
+    if signal_bin=="multiPixel" and Yvalue_<0.4:
         passYcut_=True
     if signal_bin=="pixel-pixel" and Yvalue_<0.4:
         passYcut_=True
@@ -251,12 +299,17 @@ def passYcutFunc2(Yvalue_,signal_bin):
     #print passYcut_
     return passYcut_
 
-def muonScaleFactor(pt,eta):
+def muonScaleFactor(pt,eta,year,batch_prefix):
     #currently not doing anything for pt>120 GeV
     #Also not doing anything for isolation
     #f=TFile("RunBCDEF_SF_ISO.root")
-    f=TFile("RunBCDEF_SF_MuID.root")
-    h=f.Get("NUM_TightID_DEN_genTracks_pt_abseta")
+    h=TH2F()
+    if year == "2017":
+        f=TFile("{0}RunBCDEF_SF_MuID.root".format(batch_prefix))
+        h=f.Get("NUM_TightID_DEN_genTracks_pt_abseta")
+    if year == "2018":
+        f=TFile("{0}RunABCD_SF_ID.root".format(batch_prefix))
+        h=f.Get("NUM_TightID_DEN_TrackerMuons_pt_abseta")
     sf=1.
     if pt<120:
         bin_x=h.GetXaxis().FindBin(pt)
@@ -264,189 +317,107 @@ def muonScaleFactor(pt,eta):
         sf=h.GetBinContent(bin_x,bin_y)
     return sf
 
-def electronScaleFactor(pt,eta):
-    f=TFile("2017_ElectronTight.root")
-    h=f.Get("EGamma_SF2D")
+def electronScaleFactor(pt,eta,year,batch_prefix):
+    h=TH2F()
+    if year == "2017":
+        f=TFile("{0}2017_ElectronTight.root".format(batch_prefix))
+        h=f.Get("EGamma_SF2D")
+    if year == "2018":
+        f=TFile("{0}2018_ElectronTight.root".format(batch_prefix))
+        h=f.Get("EGamma_SF2D")
     sf=1.
-    if pt<500:
+    if pt < 500:
         bin_y=h.GetYaxis().FindBin(pt)
         bin_x=h.GetXaxis().FindBin(eta)
         sf=h.GetBinContent(bin_x,bin_y)
     return sf
 
-def calculatePixelRadEffic(x_pixel,y_pixel,era,sector):
+def calculatePixelRadEffic2018(x_pixel,y_pixel,era,rp):
     f=TFile("pixelEfficiencies_radiation.root")
     effic45=1.
     effic56=1.
     #print era
     r1=0.
     r2=0.
-    if era == "C":
-        if r.random<0.6179316777:
-            era == "C1"
-        else:
-            era == "C2"
-    if era == "F":
-        if r.random<0.128651:
-            era == "F1"
-    if era != "B" and era != "E" or era != "C1" or era !="C2":
-        return 1.
-    if len(x_pixel["23"])>0:
-        #print "x_pixel: ",x_pixel["23"][0]
-        #print "y_pixel: ",y_pixel["23"][0]
-        x45=x_pixel["23"][0]
-        y45=y_pixel["23"][0]
-        if not pixelLimits(x45,y45,era,"45"):
-            print "Outside pixel min,max 45, era: ",era
-            return 0.
+    if rp == "3":
         r1=r.random()
-        h45=f.Get("Pixel/2017/2017{0}/h45_220_2017{1}_all_2D".format(era,era))
-        #h45=f.Get("Pixels/2017/2017{0}/h45_220_2017{1}_all_2D".format("all",""))
-        effic45=h45.GetBinContent(h45.FindBin(x45,y45))
-    if len(x_pixel["123"])>0:
-        #print "x_pixel: ",x_pixel["123"][0]
-        #print "y_pixel: ",y_pixel["123"][0]
-        x56=x_pixel["123"][0]
-        y56=y_pixel["123"][0]
-        if not pixelLimits(x56,y56,era,"56"):
-            print "Outside pixel min,max 56, era: ",era
-            return 0.
-        r2=r.random()
-        h56=f.Get("Pixel/2017/2017{0}/h56_220_2017{1}_all_2D".format(era,era))
-        #h56=f.Get("Pixels/2017/2017{0}/h56_220_2017{1}_all_2D".format("all",""))
-        effic56=h56.GetBinContent(h56.FindBin(x56,y56))
-    if sector == "45":
-        if r1<effic45: 
+        h45=f.Get("Pixel/2018/2018{0}/h45_210_2018{1}_all_2D".format(era,era))
+        effic45=h45.GetBinContent(h45.FindBin(x_pixel,y_pixel))
+        if r1 < effic45: 
             return True
         else: return False
-    if sector == "56":
-        if r2<effic56:
+    if rp == "103":
+        r2=r.random()
+        h56=f.Get("Pixel/2018/2018{0}/h56_210_2018{1}_all_2D".format(era,era))
+        effic56=h56.GetBinContent(h56.FindBin(x_pixel,y_pixel))
+        if r2 < effic56:
             return True
         else: return False
-    weight=effic45*effic56
-    #print weight
-    return weight
-    if r1<effic45 and r2<effic56:
-        return True
-    else:
-        return False
+    print "Rp number is not 3 or 103, something is incorrect in pixel radiation correctoin"
+    return False
 
-
-
-def calculateSiRadEffic(x_strip,y_strip,era,sector):
-    #if len(x_strip["3"])*len(x_strip["103"])*len(y_strip["3"])*len(y_strip["103"])!=1:
-    #    print "Not exactly 1 strip in each arm even though passing multiRP"
-    f=TFile("PreliminaryEfficiencies_October92019_1D2DMultiTrack.root")
-    effic45=1.
-    effic56=1.
-    if len(x_strip["3"])>0:
-        x45=x_strip["3"][0]
-        y45=y_strip["3"][0]
-        r1=r.random()
-        #h45=f.Get("Strips/2017/2017{0}/h45_2017{1}_all_2D".format(era,era))
-        h45=f.Get("Strips/2017/2017{0}/h45_2017{1}_all_2D".format("all",""))
-        effic45=h45.GetBinContent(h45.FindBin(x45,y45))
-    if len(x_strip["103"])>0:
-        x56=x_strip["103"][0]
-        y56=y_strip["103"][0]
-        r2=r.random()
-        #h56=f.Get("Strips/2017/2017{0}/h56_2017{1}_all_2D".format(era,era))
-        h56=f.Get("Strips/2017/2017{0}/h56_2017{1}_all_2D".format("all",""))
-        effic56=h56.GetBinContent(h56.FindBin(x56,y56))
-
-    if sector == "45":
-        return effic45
-    if sector == "56":
-        return effic56
-    weight=effic45*effic56
-    return weight
-    if r1<effic45 and r2<effic56:
-        return True
-    else:
-        return False
-
-def passPPSGeneralData(e,xi,era,sample):
-
+def passPPSGeneralData(e,xi,era,sample,year,long_string,tree2):
     passPPSMultiRP=False
-    #passPPSNewPixel=False
-    if sample=="SingleElectron":
-        f2=TFile("ElectronDataProtonsRun{0}.root".format(era))
-        tree2=f2.Get("SlimmedNtuple")
-        #entry=getProtonsElectrons(e,era)
-        i=0
-        for ev in tree2:
-            if ev.run == e.run and ev.event ==e.event and ev.lumiblock==e.lumiblock:
-                passPPSMultiRP=passPPSMulti(ev,xi)    
-                passPPSNewPixel(ev,xi)
-                i=1
-        if i==0:
-            print "Couldn't find a match"
-    else:
-        passPPSMultiRP=passPPSMulti(e,xi)    
+    era=findEra(e.run)
+    if sample == "SingleElectron" or year == "2018":
+        if year == "2018":
+            str_event="{0}:{1}:{2}\n".format(e.run,e.lumiblock,e.event)
+            #print str_event
+            index=int(long_string.find(str_event))
+            #print index
+            entry=0
+            if index < 0:
+                print "Run, event lumiblock not found"
+                print "Run, etc.: {0}:{1}:{2}".format(e.run,e.lumiblock,e.event)
+            elif index < 10 and index >-1: 
+                print long_string[:index-1]
+                entry = int(long_string[:index-1])
+            else:
+            #if str_event in long_string:
+                sub_string=long_string[index-8:index-1]
+                #entry=0
+                if "\n" in sub_string:
+                    entry = int(sub_string.split("\n")[1])
+                else:
+                    #print sub_string
+                    #print str_event
+                    entry = int(sub_string)
+                if entry == 0: "Looking for the substring didn't work"
+
+            tree2.GetEntry(entry-2)
+            if index > -1:
+                passPPSMultiRP=passPPSMulti(tree2,xi,era)
+            else:
+                return [False,False,False]
+        else:
+            print "Problem with year in passPPSGeneralData"
+
     passMultiRP=False
-    passPixelPixel=False
     passMultiPixel=False
-    if passPPSMultiRP: 
+    if passPPSMultiRP and len(xi["multi_arm0"]) == 1 and len(xi["multi_arm1"]) == 1:
         xi["23"]=xi["multi_arm0"]
         xi["123"]=xi["multi_arm1"]
         passMultiRP=True
     else: 
         passMultiRP=False
-        if sample!="SingleElectron":
-            passPPSNewPixel(e,xi)
-        if len(xi["123"])==1 and len(xi["23"])==1:
-            passPixelPixel=True
-        else: 
-            passPixelPixel=False
-            if (len(xi["123"])==1 and len(xi["23"])==2) or (len(xi["123"])==2 and len(xi["23"])==1):
-                passMultiPixel=True
-            else:
-                passMultiPixel=False
-    passPPS=[passMultiRP,passPixelPixel,passMultiPixel]
+        if (len(xi["multi_arm0"]) == 1 and len(xi["multi_arm1"]) == 2) \
+           or (len(xi["multi_arm0"]) == 2 and len(xi["multi_arm1"]) == 1):
+            xi["23"]=xi["multi_arm0"]
+            xi["123"]=xi["multi_arm1"]
+            passMultiPixel=True
+
+    passPPS=[passMultiRP,False,passMultiPixel]
+    #print passPPS
     return passPPS
 
 
-def RandomEra():
-    r0=r.random()
-    era=""
-    if r0<0.1146:
-        era="B"
-    if r0>0.1146 and r0<0.348:
-        era="C"
-    if r0>0.348 and r0<0.4514:
-        era="D"
-    if r0>0.4514 and r0<0.67695:
-        era="E"
-    if r0>0.67695:
-        era="F"
-    return era
 
-def RandomEraFine():
-    r0=r.random()
-    era=""
-    if r0<0.1146:
-        era="B"
-    if r0>0.1146 and r0<0.348:
-        era="C1"
-        if r0>0.2588252536:
-            era="C2"
-    if r0>0.348 and r0<0.4514:
-        era="D"
-    if r0>0.4514 and r0<0.67695:
-        era="E"
-    if r0>0.67695:
-        era="F1"
-        if r0>0.71851 and r0<0.9112277035:
-            era="F2"
-        else:
-            era="F3"
-    return era
-
-
-def passPPSGeneralMixDataMC(e,xi,sample,era):
-    if sample!="Data":
-        era=RandomEra()
-    addPileupProtons(e,xi,era,sample)    
+def passPPSGeneralMixDataMC(e,xi,sample,era,year,tree,entries,evm):
+    if sample != "Data":
+        era=RandomEraFine2018()
+    else:
+        era=findEra(e.run)
+    addPileupProtons(e,xi,era,sample,year,evm,tree,entries)    
     passMRP=False
     if len(xi["multi_arm0"])==1 and len(xi["multi_arm1"])==1: 
         passMRP=True
@@ -459,215 +430,53 @@ def passPPSGeneralMixDataMC(e,xi,sample,era):
         passMultiRP=True
     else: 
         passMultiRP=False
-        if len(xi["123"])==1 and len(xi["23"])==1:
-            passPixelPixel=True
-        else: 
-            passPixelPixel=False
-            if (len(xi["123"])==1 and len(xi["23"])==2) or (len(xi["123"])==2 and len(xi["23"])==1):
+        if year=="2018":
+            if (len(xi["multi_arm0"])==1 and len(xi["multi_arm1"])==2) \
+               or (len(xi["multi_arm0"])==2 and len(xi["multi_arm1"])==1):
+                xi["23"]=xi["multi_arm0"]
+                xi["123"]=xi["multi_arm1"]
                 passMultiPixel=True
-            else:
-                passMultiPixel=False
     passPPS=[passMultiRP,passPixelPixel,passMultiPixel]
     return passPPS
 
 
-def passPPSGeneralSignal(e,xi,sample):
+def passPPSGeneralSignal(e,xi,sample,year,era,evm):
     #print "Regular Signal"
     nVerticesCMS=e.nVertices
-    era=""
-    era=RandomEra()
-    #r0=r.random()
-    #era=""
-    #if r0<0.1146:
-    #    era="B"
-    #if r0>0.1146 and r0<0.348:
-    #    era="C"
-    #if r0>0.348 and r0<0.4514:
-    #    era="D"
-    #if r0>0.4514 and r0<0.67695:
-    #    era="E"
-    #if r0>0.67695:
-    #    era="F"
+    era=RandomEraFine2018()
+    if year != "2018":
+        print "Wrong year to use passPPSGeneraSignal"
 
-    #Randomly Select era based on lumi differences
-    #Then input that into calculateSiRadEffic and xiEvents below.
-    #First see if have multiRP for signal
-    passPPSMultiRP=passPPSMulti(e,xi)    
-    #print 'xi["multi_arm0"],xi["multi_arm1"]',xi["multi_arm0"],xi["multi_arm1"]
-    #See if have just pixels
-    passPixel=passPPSNewPixel(e,xi)
-    #print e.crossingAngle
-    #print 'xi["23"],xi["123"]',xi["23"],xi["123"]
-    passPPSStripXi(e,xi)
-    #print 'xi["3"],xi["103"]',xi["3"],xi["103"]
-    if not passPixel:
-        return [False,False,False]
-    x_pixel = {"23":[],"123":[]}
-    y_pixel = {"23":[],"123":[]}
-    passPPSNewPixelXY(e,x_pixel,y_pixel)
-    passAperature45=aperature(xi["23"][0],e.crossingAngle,"45",era)
-    passAperature56=aperature(xi["123"][0],e.crossingAngle,"56",era)
-    if not passAperature45 or not passAperature56:
-        return [False,False,False]
-    #print xi
-    #passPixEffic=calculatePixelRadEffic(x_pixel,y_pixel,era,"-99")
-    passPixEffic45=calculatePixelRadEffic(x_pixel,y_pixel,era,"45")
-    passPixEffic56=calculatePixelRadEffic(x_pixel,y_pixel,era,"56")
-    passSiEffic=1.
-    xi["weight"].append(passSiEffic)
-    #return True
-    x_strip = {"3":[],"103":[]}
-    y_strip = {"3":[],"103":[]}
-    if passPPSMultiRP:
-        pass2Strip=passPPSNewStrip(e,x_strip,y_strip)
-        if pass2Strip:
-            passSiEffic=calculateSiRadEffic(x_strip,y_strip,era,"-99")
-            rnum=r.random()
-            #print rnum
-            if rnum<passSiEffic:
-                passPPSMultiRP=True
-            else:
-                passPPSMultiRP=False
-        else:
-            #xi["weight"].append(1-passSiEffic)
-            print "For some reason have 2 multiRP but not 2 strip tracks"
-
-    #This adds strips and pixels
-    #print xi
-    addPileupProtons(e,xi,era,sample)
+    passPPSMultiRP=passPPSMulti(e,xi,era,True,True)
+    ns_multiRP_arm0=len(xi["multi_arm0"])
+    ns_multiRP_arm1=len(xi["multi_arm1"])
+    #print "xi before: ",xi
+    addPileupProtons(e,xi,era,sample,year,evm)
     passPixelPixel=False
     passMultiPixel=False
-
-    #Should only be mixing in data where there is strips.
-    if passPPSMultiRP and (len(xi["23"])==1 and len(xi["123"])==1):
-        #print 'xi["23"],xi["123"]',xi["23"],xi["123"]
-        #print 'xi["3"],xi["103"]',xi["3"],xi["103"]
-        #print 'xi["multi_arm0"],xi["multi_arm1"]',xi["multi_arm0"],xi["multi_arm1"]
-        multiMultiRPEffic=calculateMultiMultiRPEffic(x_strip,y_strip,era,"-99")
-        ##print multiMultiRPEffic
-        #print "multiMultiRPEffic: ",multiMultiRPEffic
-        if multiMultiRPEffic < 0.001:
-            print "multiMultiRPEffic is close to or zero: ",multiMultiRPEffic
-        if r.random()>multiMultiRPEffic:
-            passPPSMultiRP=False
+    xi["23"]=xi["multi_arm0"]
+    xi["123"]=xi["multi_arm1"]
+    ismisreco=False
+    #output is [[bool],[bool,bool,bool]], where the first list denotes if misreco,
+    #and the second list denotes if passes each of the signal regions
+    if (len(xi["multi_arm0"])==1 and len(xi["multi_arm1"])==1):
+        if ns_multiRP_arm0 == 1  and ns_multiRP_arm1 == 1:
+            return [False,[True,False,False]]
         else:
-            xi["23"]=xi["multi_arm0"]
-            xi["123"]=xi["multi_arm1"]
-    else:
-        passPPSMultiRP=False
+            return [True,[True,False,False]]
 
-    if (len(xi["23"])>1 or len(xi["123"])>1) or not passPPSMultiRP: #then multi-pixel or pixel-pixel
-        passPPSMultiRP=False
-        #pixel-pixel
-        if not passPixEffic45 or not passPixEffic56:
-            return [False,False,False]
-        if (len(xi["23"])==1 and len(xi["123"])==1):
-                passPixelPixel=True
-        #MultiPixel
-        if (len(xi["23"])==2 and len(xi["123"])==1) or (len(xi["23"])==1 and len(xi["123"])==2):
-            passMultiPixel=True
-    
-    return [passPPSMultiRP,passPixelPixel,passMultiPixel]
-
-
-def passPPSGeneralSignalMisReco(e,xi,sample):
-    #print "Misreco Signal"
-    nVerticesCMS=e.nVertices
-    era=""
-    #era=RandomEra()
-    r0=r.random()
-    era=""
-    if r0<0.1146:
-        era="B"
-    if r0>0.1146 and r0<0.348:
-        era="C"
-    if r0>0.348 and r0<0.4514:
-        era="D"
-    if r0>0.4514 and r0<0.67695:
-        era="E"
-    if r0>0.67695:
-        era="F"
-
-    #Randomly Select era based on lumi differences
-    #Then input that into calculateSiRadEffic and xiEvents below.
-    #First see if have multiRP for signal
-    passPPSMultiRP=passPPSMulti(e,xi)    
-    #See if have just pixels
-    passPixel=passPPSNewPixel(e,xi)
-    x_pixel = {"23":[],"123":[]}
-    y_pixel = {"23":[],"123":[]}
-    passPPSNewPixelXY(e,x_pixel,y_pixel)
-    if (len(xi["23"])>0 and  len(xi["123"])>0):
-        return [False,False,False]
-
-    passPixEffic45=True
-    passPixEffic56=True
-    if len(xi["23"]) == 1 and len(xi["123"]) == 0:
-        #print xi["23"][0]
-        passAperature45=aperature(xi["23"][0],e.crossingAngle,"45",era)
-        #print passAperature45
-        if not passAperature45: return [False,False,False]
-        #print "Get past aperture"
-        passPixEffic45=calculatePixelRadEffic(x_pixel,y_pixel,era,"45")
-        #if not calculatePixelRadEffic(x_pixel,y_pixel,era,"45"): return [False,False,False]
-    if len(xi["23"]) == 0 and len(xi["123"]) == 1:
-        passAperature56=aperature(xi["123"][0],e.crossingAngle,"56",era)
-        if not passAperature56: return [False,False,False]
-        #if not calculatePixelRadEffic(x_pixel,y_pixel,era,"56"): return [False,False,False]
-        passPixEffic56=calculatePixelRadEffic(x_pixel,y_pixel,era,"56")
-
-    passSiEffic=1.
-    xi["weight"].append(passSiEffic)
-    #return True
-    x_strip = {"3":[],"103":[]}
-    y_strip = {"3":[],"103":[]}
-    pass2Strip=passPPSNewStrip(e,x_strip,y_strip)
-    passSiEffic=False
-    multiMultiRPEffic=1.
-    if len(xi["multi_arm0"])>0:
-        passSiEffic=calculateSiRadEffic(x_strip,y_strip,era,45)
-        xi["arm_mr"].append("56")
-        multiMultiRPEffic=calculateMultiMultiRPEffic(x_strip,y_strip,era,"45")
-        
-    if len(xi["multi_arm1"])>0:
-        passSiEffic=calculateSiRadEffic(x_strip,y_strip,era,56)
-        xi["arm_mr"].append("45")
-        multiMultiRPEffic=calculateMultiMultiRPEffic(x_strip,y_strip,era,"56")
-
-    rnum=r.random()
-    passPPSMultiRP1=False
-    if rnum<passSiEffic:
-        passPPSMultiRP1=True
-
-    sampleMisReco=sample+"MisReco"
-    addPileupProtons(e,xi,era,sampleMisReco)
-    passPixelPixel=False
-    passMultiPixel=False
-    passPPSMultiRP=False
-
-    #Should only be mixing in data where there is strips.
-    if passPPSMultiRP1 and len(xi["multi_arm0"])>0 and len(xi["multi_arm1"])>0 and (len(xi["23"])==1 and len(xi["123"])==1):
-        passPPSMultiRP=True
-        if r.random()>multiMultiRPEffic:
-            passPPSMultiRP=False
-            xi["23"]=[xi["multi_arm0"][0]]
-            xi["123"]=[xi["multi_arm1"][0]]
-    else:
-        passPPSMultiRP=False
-    #if len(xi["3"])==0 and len(xi["103"])==0 then multi-pixel
-
-    if (len(xi["23"])>1 or len(xi["123"])>1) or not passPPSMultiRP: #then multi-pixel or pixel-pixel
-        passPPSMultiRP=False
-        if not passPixEffic45 or not passPixEffic56:
-            return [False,False,False]
-        #pixel-pixel
-        if (len(xi["23"])==1 and len(xi["123"])==1):
-            passPixelPixel=True
-        #MultiPixel
-        if (len(xi["23"])==2 and len(xi["123"])==1) or (len(xi["23"])==1 and len(xi["123"])==2):
-            passMultiPixel=True
-    
-    return [passPPSMultiRP,passPixelPixel,passMultiPixel]
+    if (len(xi["multi_arm0"])==1 and len(xi["multi_arm1"])==2):
+        if ns_multiRP_arm0 == 1  and ns_multiRP_arm1 == 1:
+            return [False,[False,False,True]]
+        else:
+            return [True,[False,False,True]]
+    if (len(xi["multi_arm0"])==2 and len(xi["multi_arm1"])==1):
+        if ns_multiRP_arm0 == 1  and ns_multiRP_arm1 == 1:
+            return [False,[False,False,True]]
+        else:
+            return [True,[False,False,True]]
+    return [False,[False,False,False]]
+    #return [False,False,False]
 
 
 
@@ -707,20 +516,19 @@ def GetDphi(phi1,phi2):
     return result
 
 
-def protonYWWMixing():
-    file_xi=TFile("xi.root")
+def protonYWWMixing(batch_prefix,year):
+    file_xi=TFile("{0}xi{1}.root".format(batch_prefix,year))
     h_YWW=file_xi.Get("h_YCMS_5_up_all")
     YWW=h_YWW.GetRandom()
     return YWW
 
-def protonMWWMixing():
-    file_xi=TFile("xi.root")
+def protonMWWMixing(batch_prefix,year):
+    file_xi=TFile("{0}xi{1}.root".format(batch_prefix,year))
     h_MWW=file_xi.Get("h_MWW_5_up_all")
     MWW=h_MWW.GetRandom()
     return MWW
 
-
-def passPPSMulti(e,xi):
+def passPPSMulti(e,xi,era="99",fiducialpxl=True,signal=False):
     left=False
     right=False
     passesPPS=False
@@ -729,57 +537,64 @@ def passPPSMulti(e,xi):
     for xi_ in e.proton_xi:
         if e.proton_arm[ii]==0 and e.proton_ismultirp_[ii]==1:
             if e.proton_trackpixshift1[ii]==0 and e.proton_trackpixshift2[ii_multi]==0:
-                xi["multi_arm0"].append(xi_)
-                left=True
+                #print "aperature 45: ",aperature(xi_,e.crossingAngle,"45",era[0])
+                if not fiducialpxl:
+                    if aperture(xi_,e.crossingAngle,"45",era[0],"2018"):
+                        xi["multi_arm0"].append(xi_)
+                        left=True
+                elif aperture(xi_,e.crossingAngle,"45",era[0],"2018"):
+                    #if stripLimits(e.proton_trackx1[ii],e.proton_tracky1[ii],era,e.proton_arm[ii]):
+                    if e.proton_rpid2[ii_multi] != 23:
+                        print "There is an issue with multiRP in sector 45"
+                    if pixelLimits2018(e.proton_trackx1[ii_multi],e.proton_tracky1[ii_multi],era,"3"):
+                        if pixelLimits2018(e.proton_trackx2[ii_multi],e.proton_tracky2[ii_multi],era,"23"):
+                            passrad=calculatePixelRadEffic2018(e.proton_trackx1[ii_multi],e.proton_tracky1[ii_multi],era,"3")
+                            if signal and passrad:
+                                xi["multi_arm0"].append(xi_)
+                                left=True
+                            if not signal:
+                                xi["multi_arm0"].append(xi_)
+                                left=True
         if e.proton_arm[ii]==1 and e.proton_ismultirp_[ii]==1:
             if e.proton_trackpixshift1[ii]==0 and e.proton_trackpixshift2[ii_multi]==0:
-                xi["multi_arm1"].append(xi_)
-                right=True
+                #print "aperature 56: ",aperature(xi_,e.crossingAngle,"56",era[0])
+                if not fiducialpxl:
+                    if aperture(xi_,e.crossingAngle,"56",era[0],"2018"):
+                        xi["multi_arm1"].append(xi_)
+                        right=True                    
+                elif aperture(xi_,e.crossingAngle,"56",era[0],"2018"):
+                    if e.proton_rpid2[ii_multi] != 123:
+                        print "There is an issue with multiRP in sector 56"
+                    #if stripLimits(e.proton_trackx1[ii],e.proton_tracky1[ii],era,e.proton_arm[ii]):
+                    if pixelLimits2018(e.proton_trackx1[ii_multi],e.proton_tracky1[ii_multi],era,"103"):
+                        if pixelLimits2018(e.proton_trackx2[ii_multi],e.proton_tracky2[ii_multi],era,"123"):
+                            passrad=calculatePixelRadEffic2018(e.proton_trackx1[ii_multi],e.proton_tracky1[ii_multi],era,"103")
+                            if signal and passrad:
+                                xi["multi_arm1"].append(xi_)
+                                right=True
+                            if not signal:
+                                xi["multi_arm1"].append(xi_)
+                                right=True
+
         if e.proton_ismultirp_[ii]==1: ii_multi=ii_multi+1
         ii=ii+1
     if left and right: passesPPS=True
     return passesPPS
 
-def passPPSNewStrip(e,x_strip,y_strip):
-    ii=0
-    for detId_rp in e.pps_track_rpid:
-        #pixel
-        if detId_rp == 3:
-            x_strip["3"].append(e.pps_track_x[ii])
-            y_strip["3"].append(e.pps_track_y[ii])
-        #pixel
-        if detId_rp == 103:
-            x_strip["103"].append(e.pps_track_x[ii])
-            y_strip["103"].append(e.pps_track_y[ii])
-        ii=ii+1
-    return True
-
-
-def passPPSNewPixel(e,xi):
-    ii=0
-    for detId_rp in e.proton_rpid:
-        #pixel
-        if detId_rp == 23 and e.proton_ismultirp_[ii]==0: 
-            if e.proton_trackpixshift1[ii]==0:
-                xi["23"].append(e.proton_xi[ii])
-        #pixel
-        if detId_rp == 123 and e.proton_ismultirp_[ii]==0: 
-            if e.proton_trackpixshift1[ii]==0:
-                xi["123"].append(e.proton_xi[ii])
-        ii=ii+1
-    if len(xi["123"])==1 and len(xi["23"])==1:
-        return True
-    else:
-        return False
-
 def passPPSNewPixelXY(e,x_pixel,y_pixel):
     ii=0
     for detId_rp in e.pps_track_rpid:
         #pixel
+        if detId_rp == 3:
+            x_pixel["3"].append(e.pps_track_x[ii])
+            y_pixel["3"].append(e.pps_track_y[ii])
         if detId_rp == 23:
             x_pixel["23"].append(e.pps_track_x[ii])
             y_pixel["23"].append(e.pps_track_y[ii])
         #pixel
+        if detId_rp == 103:
+            x_pixel["103"].append(e.pps_track_x[ii])
+            y_pixel["103"].append(e.pps_track_y[ii])
         if detId_rp == 123:
             x_pixel["123"].append(e.pps_track_x[ii])
             y_pixel["123"].append(e.pps_track_y[ii])
@@ -787,7 +602,7 @@ def passPPSNewPixelXY(e,x_pixel,y_pixel):
     return True
 
 
-def passPPSNewPixelMixSignal(e,xi):
+def passPPSNewPixelMixSignal(e,xi,year,tree,entries):
     ii=0
     for detId_rp in e.proton_rpid:
         #pixel
@@ -799,25 +614,13 @@ def passPPSNewPixelMixSignal(e,xi):
             if e.proton_trackpixshift1[ii]==0:
                 xi["123"].append(e.proton_xi[ii])
         ii=ii+1
-    era=RandomEra()
-    addPileupProtons(e,xi,era,"ExclusiveMC")
+    era=RandomEra2018()
+    addPileupProtons(e,xi,era,"ExclusiveMC",year,evm,tree,entries)
     if len(xi["123"])==1 and len(xi["23"])==1:
         return True
     else:
         return False
 
-def passPPSStripXi(e,xi):
-    ii=0
-    for detId_rp in e.proton_rpid:
-        if detId_rp == 3 and e.proton_ismultirp_[ii]==0: 
-            xi["3"].append(e.proton_xi[ii])
-        if detId_rp == 103 and e.proton_ismultirp_[ii]==0: 
-            xi["103"].append(e.proton_xi[ii])
-        ii=ii+1
-    if len(xi["103"])==1 and len(xi["3"])==1:
-        return True
-    else:
-        return False
 
 
 def AddFilesToChain(chain,ListOfFiles,DATA):
@@ -898,6 +701,40 @@ def GetListOfFiles(sample_name,file_dir,DATA,directory_type):
 
     return ListOfFiles,output_name
 
+
+def writeoutTree(outTree,output_name,i):
+    outTree.SetBranchStatus("*",0)
+    outTree.SetBranchStatus("crossingAngle",1)
+    outTree.SetBranchStatus("run",1)
+    outTree.SetBranchStatus("event",1)
+    outTree.SetBranchStatus("lumiblock",1)
+    outTree.SetBranchStatus("proton_xi",1)
+    outTree.SetBranchStatus("proton_ismultirp_",1)
+    outTree.SetBranchStatus("proton_rpid",1)
+    outTree.SetBranchStatus("proton_arm",1)
+    outTree.SetBranchStatus("proton_trackpixshift1",1)
+    outTree.SetBranchStatus("proton_trackpixshift2",1)
+    outTree.SetBranchStatus("proton_thx",1)
+    outTree.SetBranchStatus("proton_trackx1",1)
+    outTree.SetBranchStatus("proton_tracky1",1)
+    outTree.SetBranchStatus("proton_trackx2",1)
+    outTree.SetBranchStatus("proton_tracky2",1)
+    outTree.SetBranchStatus("proton_rpid1",1)
+    outTree.SetBranchStatus("proton_rpid2",1)
+    outTree.SetBranchStatus("nVertices",1)
+    fout = TFile('{0}_{1}.root'.format(output_name,i),'recreate')
+    fout.cd()
+    outTree2 = outTree.CloneTree(0)
+
+    nEntries = outTree.GetEntries()
+    for ita in range(nEntries):
+        #it=it+1
+        outTree.GetEntry(ita+1)
+        outTree2.Fill()
+
+    fout.Write()
+    fout.Close()
+    return 0
 
 h_extra_tracks_vs_MWW_PPS=[]
 h_extra_tracks_vs_MX_PPS=[]

@@ -8,25 +8,17 @@ import datetime
 import sys
 
 #rebin=128
-rebin=1
-channel="muon"
-#channel="electron"
-#hdirectory="histos_muon_withSimPUPropagation"
-#hdirectory="OldHistos/2019-11-08-Electron-MultiRP"
-#hdirectory="2019-11-15-MultiRP"
-#hdirectory="2019-11-19-Electron-MultiRP"
-#hdirectory="2020-03-25-Muon-MultiRP"
-#hdirectory="2020-04-30-MuonAllDataMC-XiCMSCut"
-#hdirectory="2020-06-24-MuonAllDataMC-XiCMSCut-LessStrictMixing"
-hdirectory="2020-07-02-MuonAllDataMC-XiCMSCut"
-#hdirectory="2020-04-30-ElectronAllDataMC"
-#hdirectory="2020-04-30-ElectronAllDataMC-XiCMSCut"
-#hdirectory="Old/2020-04-28-MuonAllDataMC"
-#hdirectory="histos_electron_withDataProtonMixedIn_withBugFix"
-#hdirectory="OldFiles/histos_electron_withDataProtonMixedIn"
+rebin=5
+#channel="muon"
+channel="electron"
+#hdirectory="2020-07-17-JustMCBackground-JustCMS"
+#hdirectory="2020-07-20-MuonMCOnly"
+#hdirectory="2020-08-31-MuonAllDataMC"
+#hdirectory="2020-09-23-MuonAllDataMC"
+hdirectory="2020-09-23-ElectronAllDataMC"
 #extra_tracks_weight=2.205
 #extra_tracks_weight=1.042862
-extra_tracks_weight=1/1.0199
+extra_tracks_weight=2.86
 #extra_tracks_weight=1.81
 #extra_tracks_weight=1.6835
 #apply_extra_tracks_weight=True
@@ -40,36 +32,42 @@ MCsignalsamples=[
 #"ExclusiveWW_a0w2p5e-6-SingleLepton-2017",
 #"ExclusiveWW_a0w1e-6-SingleLepton-2017",
 #"ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
-#"GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6"
+#"GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6-2018"
 ]
 
 MCsamples2=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
-MCsamples=[#"WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8","WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-#"WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8","W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8","W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
-"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"QCD_Pt_170to300_TuneCP5_13TeV_pythia8","QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
-"QCD_Pt_470to600_TuneCP5_13TeV_pythia8","QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
-"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8","QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
-"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8","QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
-"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8","QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
-"ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8","ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
-"ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8","ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
-"ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
-"WW_TuneCP5_13TeV-pythia8","WZ_TuneCP5_13TeV-pythia8","ZZ_TuneCP5_13TeV-pythia8",
-#"GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6"
-#"TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
-#"QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
-#"QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
-#"QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
-#"QCD_Pt-600to800_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
-#"QCD_Pt-800to1000_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
-#"QCD_Pt-1000toInf_MuEnrichedPt5_TuneCP5_13TeV_pythia8"
-#"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+MCsamples=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8","WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+           "WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+           #"W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8","W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
+           #"W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8","W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
+           #"W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
+           #"W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
+           "DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+           "TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+           #"TTJets_TuneCP5_13TeV-madgraphMLM-pythia8", 
+           #"QCD_Pt_170to300_TuneCP5_13TeV_pythia8","QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt_470to600_TuneCP5_13TeV_pythia8","QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8","QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8","QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8","QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
+           "ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8",
+           "ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8",
+           "ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8",
+           "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+           "ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+           #"ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8","ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
+           #"ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8","ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+           #"ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+           "WW_TuneCP5_13TeV-pythia8","WZ_TuneCP5_13TeV-pythia8","ZZ_TuneCP5_13TeV-pythia8",
+           #"GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6"
+           #"TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
+           #"QCD_Pt-170to300_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt-300to470_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt-470to600_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt-600to800_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt-800to1000_MuEnrichedPt5_TuneCP5_13TeV_pythia8",
+           #"QCD_Pt-1000toInf_MuEnrichedPt5_TuneCP5_13TeV_pythia8"
+           #"DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8",
 ]
 
 gStyle.SetOptStat(0)
@@ -124,7 +122,6 @@ scaleFacBottomPad = yswidth/float((ylwidth-yswidth))
 yBorder = (ylwidth-yswidth)/float(ylwidth)
 c1 = TCanvas( 'c', 'Example', 500, 700 )
 
-
 udate=str(datetime.datetime.now())
 pdffile="Plots-{0}-{1}-{2}.pdf".format(udate.split(' ')[0],udate.split(' ')[1].split(':')[0],udate.split(' ')[1].split(':')[1])
 c1.Print(pdffile+'[')
@@ -137,7 +134,8 @@ toppad=TPad()
 bottompad=TPad()
 thisPad.Divide(1,2,0,0)
 toppad = thisPad.cd(1)
-    #toppad.SetBottomMargin(0.02)
+#toppad.SetLogy()
+#toppad.SetBottomMargin(0.02)
 toppad.SetBottomMargin(0.0375)
 toppad.SetTopMargin(0.05)
 toppad.SetRightMargin(0.035)
@@ -257,7 +255,7 @@ for i in range(min,max+1):
         if maxhisto > maxhisto_data and maxhisto>max:
             max=hsignalMC[itt].GetMaximum()
         hsignalMC[itt].Draw("histsame")
-        if "ExclusiveWW" in sample:
+        if "GG" in sample:
             leg.AddEntry(hsignalMC[itt],legend_name(sample),"l")            
         itt=itt+1
 
@@ -277,7 +275,7 @@ for i in range(min,max+1):
 
     len_a=len(hMC)
     for sample in reversed(MCsamples):
-        if sample =="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" or sample=="WW_TuneCP5_13TeV-pythia8" or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8" or sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample == "W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8" or sample =="ExclusiveWW_SM_FPMC-SingleLepton-2017":
+        if sample =="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" or sample=="WW_TuneCP5_13TeV-pythia8" or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8" or sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample == "W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8" or sample =="ExclusiveWW_SM_FPMC-SingleLepton-2017" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8":
             leg.AddEntry(hMC[len_a-1],legend_name(sample),"f")
         len_a=len_a-1
 
@@ -294,7 +292,7 @@ for i in range(min,max+1):
     latex.SetTextAlign(11)
     #latex.DrawLatex(0.12,0.92,"CMS")
     latex.DrawLatex(0.12,0.96,"CMS")
-    latex.DrawLatex(0.67,0.96,"37.5 fb^{-1} (13 TeV)")
+    latex.DrawLatex(0.67,0.96,"55.7 fb^{-1} (13 TeV)")
 
 
 

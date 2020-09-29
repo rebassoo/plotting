@@ -31,4 +31,6 @@ seed=$(($2+$3))
 echo "ls ---"
 ls
 which python
+#tar xvzf inputfiles2018-mu.tar.gz
+#tar xvzf inputfiles2018-e.tar.gz
 python -V

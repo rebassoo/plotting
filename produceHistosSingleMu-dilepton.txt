@@ -1,8 +1,10 @@
-python histos_quick.py latest muon SingleMuon crab_Run2017B-withDilepton -b
-python histos_quick.py latest muon SingleMuon crab_Run2017C-withDilepton -b
-python histos_quick.py latest muon SingleMuon crab_Run2017D-withDilepton -b
-python histos_quick.py latest muon SingleMuon crab_Run2017E-withDilepton -b
-python histos_quick.py latest muon SingleMuon crab_Run2017F-withDilepton -b
+python histos_quick.py latest muon SingleMuon crab_Run2018A-withDilepton -b
+python histos_quick.py latest muon SingleMuon crab_Run2018B-withDilepton -b
+python histos_quick.py latest muon SingleMuon crab_Run2018C-withDilepton -b
+python histos_quick.py latest muon SingleMuon crab_Run2018D-withDilepton -b
+
+
+
 python histos_quick.py latest muon GGToWWToJJENu_PtL-15_13TeV-fpmc-herwig6 crab_GGToWWToJJENu_PtL-15_13TeV-fpmc-herwig6-signal-proton-propagation-dilepton -b
 python histos_quick.py latest muon GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6 crab_GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6-signal-proton-propagation-dilepton -b
 python histos_quick.py latest muon GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6 crab_GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6-signal-proton-propagation-dilepton -b

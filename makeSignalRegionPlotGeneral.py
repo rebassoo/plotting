@@ -7,16 +7,21 @@ from ROOT import *
 from htools import *
 #python makeSignalRegionPlotGeneral.py directory noYcut channel background_method signal_region
 
-def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False):
-
+def makeplot(direc,Ycut,channel,background_method,signal_region,year,justSignal=False):
     backgroundMC=True
+    #backgroundMC=False
     rebin=5
-    maximum=4
-
+    if year == "2018":
+        maximum=10
+    if year == "2017":
+        maximum=4
     #print channel
     #print direc.split("-")[4]
     #fout=TFile("combined_shapes_{0}_{1}.root".format(channel,direc.split("-")[4]),"recreate")
-    fout=TFile("combined_shapes_{0}_{1}.root".format(channel,signal_region),"recreate")
+    #fout=TFile("combined_shapes_{0}_{1}.root".format(channel,signal_region),"recreate")
+    if channel == "muon" : channel_abr=channel[:2]
+    if channel == "electron" : channel_abr=channel[:1]
+    fout=TFile("combined_shapes_{0}_{1}_{2}.root".format(channel_abr,signal_region.lower(),year),"recreate")
     fout.cd()
 
     c=TCanvas("c","",800,800)
@@ -38,7 +43,8 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
         deno=_file0.Get("h_MWW_extra_tracks_5_up_notPPS").GetEntries()
         #histo_name_control="h_MWW_MX_5_up"
         histo_name_control="h_MWW_MX_5_up"+"_"+signal_region
-        if Ycut=="Ycut":     histo_name_control="h_MWW_MX_control_5_up_Ycut"+"_"+signal_region
+        if Ycut=="Ycut":     
+            histo_name_control="h_MWW_MX_control_5_up_Ycut"+"_"+signal_region
         h1=_file0.Get(histo_name_control)
         h1.Rebin(rebin)
         #print "h_MWW_MX_control.GetEntries(): ",h1.Integral(0,1001)
@@ -142,7 +148,7 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
         h1.Sumw2()
         h1.SetStats(0)
         h1.GetYaxis().SetRangeUser(0,10)
-        h1.GetXaxis().SetTitle("MWW/MX")
+        h1.GetXaxis().SetTitle("M_{WW}/M_{X}")
         h1.GetYaxis().SetTitle("Events")
         print "Data total prediction: ",h1.Integral(0,1001) 
         h1.SetMaximum(maximum)
@@ -166,78 +172,123 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
     if Ycut=="Ycut":     histo_name_misreco="h_MWW_MX_0_4_tracks_misreco_Ycut"+"_"+signal_region
 
     SignalSamples=[
-    "GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6.root",
-    "GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6.root",
-    "GGToWWToJJENu_PtL-15_13TeV-fpmc-herwig6.root",
-    "GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6.root",    
-    "GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6.root",
-    "GGToWW_bSM-ACW5e-6_13TeV-fpmc-herwig6.root",
-    "GGToWW_bSM-ACW8e-6_13TeV-fpmc-herwig6.root",
-    "GGToWW_bSM-ACW2e-5_13TeV-fpmc-herwig6.root"
+    "GGToWW_SM_13TeV-fpmc-herwig6",    
+    "GGToWW_bSM-A0W5e-6_13TeV-fpmc-herwig6",    
+    "GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6",    
+    "GGToWW_bSM-A0W1e-6_13TeV-fpmc-herwig6",
+    "GGToWW_bSM-A0W5e-7_13TeV-fpmc-herwig6",    
+    "GGToWW_bSM-ACW2e-5_13TeV-fpmc-herwig6",
+    "GGToWW_bSM-ACW8e-6_13TeV-fpmc-herwig6",
+    "GGToWW_bSM-ACW5e-6_13TeV-fpmc-herwig6",
+    "GGToWW_bSM-ACW2e-6_13TeV-fpmc-herwig6"
     ]
+    if year == "2017":
+        if channel == "muon": SignalSamples[0]="GGToWWToJJMuNu_PtL-15_13TeV-fpmc-herwig6"
+        if channel == "electron": SignalSamples[0]="GGToWWToJJENu_PtL-15_13TeV-fpmc-herwig6"
     fSig=[]
     hSig=[]
     hSigMisReco=[]
     it=0
-    #directory_muon="2020-04-29-MuonJustSignalMC-Dilepton"
-    #directory_electron="2020-04-29-ElectronJustSignalMC-Dilepton"
     for sig in SignalSamples:
-        if "MuNu" in sig and channel=="electron":
-            continue
-        if "ENu" in sig and channel=="muon":
-            continue
-        fSig.append(TFile("{0}/".format(directory)+sig))
+        if year == "2017":
+            fSig.append(TFile("{0}/".format(directory)+sig+".root"))
+        if year == "2018":
+            fSig.append(TFile("{0}/".format(directory)+sig+"-{0}.root".format(year)))
+            sig=sig+"-2018"
         fSig[it].cd()
         hSig.append(fSig[it].Get(histo_name))
         hSigMisReco.append(fSig[it].Get(histo_name_misreco))
         #print sig[:-5]
-        ModifyHisto(hSig[it],sig[:-5],directory)
+        #ModifyHisto(hSig[it],sig[:-5],directory)
+        ModifyHisto(hSig[it],sig,directory)
         hSig[it].Rebin(rebin)
-        hSig[it].SetLineColor(6+it)
-        if it > 3:
-            hSig[it].SetLineColor(42+it)
         hSig[it].SetFillColor(0)
-        if justSignal and it==0:
-            hSig[it].SetStats(0)
-            hSig[it].SetMaximum(maximum)
-            hSig[it].GetXaxis().SetTitle("MWW/MX")
-            hSig[it].GetYaxis().SetTitle("Events")
-            hSig[it].Draw("hist")
-        hSig[it].Draw("histsame")
-        #ModifyHisto(hSigMisReco[it],sig[:-5],directory_muon)
-        ModifyHisto(hSigMisReco[it],sig[:-5],directory)
+        #ModifyHisto(hSigMisReco[it],sig[:-5],directory)
+        ModifyHisto(hSigMisReco[it],sig,directory)
+        if it == 0:
+            hSig[it].SetLineColor(7)
+            hSigMisReco[it].SetLineColor(7)
+        if it == 1:
+            hSig[it].SetLineColor(9)
+            hSigMisReco[it].SetLineColor(9)
+        if it == 2:
+            hSig[it].SetLineColor(8)
+            hSigMisReco[it].SetLineColor(8)
+        if it == 3:
+            hSig[it].SetLineColor(6)
+            hSigMisReco[it].SetLineColor(6)
+        if it == 4:
+            hSig[it].SetLineColor(11)
+            hSigMisReco[it].SetLineColor(11)
+        if it > 4:
+            hSig[it].SetLineColor(42+it)
+            hSigMisReco[it].SetLineColor(42+it)
+
+
         hSigMisReco[it].Rebin(rebin)
-        hSigMisReco[it].SetLineColor(6+it)
         hSigMisReco[it].SetFillColor(0)
         hSigMisReco[it].SetLineStyle(2)
-        hSigMisReco[it].Draw("histsame")
+        print "Line Color: ",hSig[it].GetLineColor()
+        if it < 4:
+            hSig[it].Draw("histsame")
+            hSigMisReco[it].Draw("histsame")
+            print "I get here!!!"
+        if justSignal and it == 0:
+            hSig[it].SetStats(0)
+            hSig[it].SetMaximum(maximum)
+            hSig[it].GetXaxis().SetTitle("M_{WW}/M_{X}")
+            hSig[it].GetYaxis().SetTitle("Events")
+            hSig[it].Draw("hist")
+            hSigMisReco[it].Draw("histsame")
+
         it=it+1
 
-    leg=TLegend(0.61,0.402,0.81,0.892)
+    #leg=TLegend(0.61,0.402,0.81,0.892)
+    leg=TLegend(0.61,0.402,0.81,0.86)
+    if justSignal:
+        leg=TLegend(0.63,0.452,0.78,0.86)
     leg.SetFillColor(0)
     leg.SetLineColor(0)
     leg.SetTextSize(0.022)
     leg.SetTextFont(42)
     if not justSignal:
-        leg.AddEntry(h0,"ABCD prediction","lep")
-        leg.AddEntry(h1,"Template prediction","lep")
+        #leg.AddEntry(0,"Data-driven background prediction")
+        #leg.AddEntry(h0,"ABCD prediction","lep")
+        leg.AddEntry(h0,"Nominal","lep")
+        #leg.AddEntry(h1,"Template prediction","lep")
+        leg.AddEntry(h1,"Cross-check","lep")
+        hclear=TH1F()
+        hclear.SetLineColor(0)
+        leg.AddEntry(hclear,"","l")
 
-    leg.AddEntry(hSig[0],legend_name("ExclusiveWW_a0w1e-6-SingleLepton-2017"),"l")
-    leg.AddEntry(hSig[2],legend_name("ExclusiveWW_a0w2e-6-SingleLepton-2017"),"l")
-    leg.AddEntry(hSig[3],legend_name("ExclusiveWW_a0w5e-6-SingleLepton-2017"),"l")
-    leg.AddEntry(hSig[4],legend_name("ExclusiveWW_aCw5e-6-SingleLepton-2017"),"l")
-    leg.AddEntry(hSig[5],legend_name("ExclusiveWW_aCw8e-6-SingleLepton-2017"),"l")
-    leg.AddEntry(hSig[6],legend_name("ExclusiveWW_aCw2e-5-SingleLepton-2017"),"l")
-    leg.AddEntry(hSig[1],legend_name("ExclusiveWW_SM_FPMC-SingleLepton-2017"),"l")
+    #leg.AddEntry(hSig[4],legend_name("ExclusiveWW_aCw5e-6-SingleLepton-2017"),"l")
+    #leg.AddEntry(hSig[5],legend_name("ExclusiveWW_aCw8e-6-SingleLepton-2017"),"l")
+    #leg.AddEntry(hSig[6],legend_name("ExclusiveWW_aCw2e-5-SingleLepton-2017"),"l")
 
+    
     #leg.AddEntry(hSig[0],"misreco, "+legend_name("ExclusiveWW_a0w1e-6-SingleLepton-2017"),"l")
     #leg.AddEntry(hSig[1],"misreco, "+legend_name("ExclusiveWW_SM_FPMC-SingleLepton-2017"),"l")
     #leg.AddEntry(hSig[2],"misreco, "+legend_name("ExclusiveWW_a0w2e-6-SingleLepton-2017"),"l")
     #leg.AddEntry(hSig[3],"misreco, "+legend_name("ExclusiveWW_a0w5e-6-SingleLepton-2017"),"l")
     
     if justSignal:
+
+        leg.AddEntry(hSig[1],legend_name(SignalSamples[1])[28:],"l")
+        leg.AddEntry(hSig[2],legend_name(SignalSamples[2])[28:],"l")
+        leg.AddEntry(hSig[3],legend_name(SignalSamples[3])[28:],"l")
+        leg.AddEntry(hSig[0],legend_name(SignalSamples[0])[:2],"l")
+
+        leg.AddEntry(hSigMisReco[1],"misreco: "+\
+                     legend_name(SignalSamples[1])[28:],"l")
+        leg.AddEntry(hSigMisReco[2],"misreco: "+\
+                     legend_name(SignalSamples[2:])[28:],"l")
+        leg.AddEntry(hSigMisReco[3],"misreco: "+\
+                     legend_name(SignalSamples[3])[28:],"l")
+        leg.AddEntry(hSigMisReco[0],"misreco: "+\
+                     legend_name(SignalSamples[0])[:2],"l")
+
         leg.Draw("same")
-        writePlots(c,Ycut,channel,signal_region,"",justSignal)
+        writePlots(c,Ycut,channel,signal_region,"",year,justSignal)
         _file0.Close()
         fout.Close()
         return 0
@@ -245,31 +296,48 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
     #######################################################################################
     #Make Background plots
     #######################################################################################
-
-    MCsamples=[#"WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8","WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8","WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-            "W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8", "W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8","W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8","W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
-        #"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",#"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",#"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-        "TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-        #"QCD_Pt_170to300_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_470to600_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8",
-        #"QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
-        "ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8",
-        "ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
-        "ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
-        "ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
-        "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
-        "DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-        "WW_TuneCP5_13TeV-pythia8",
-        "WZ_TuneCP5_13TeV-pythia8",
-        "ZZ_TuneCP5_13TeV-pythia8"
+    MCsamples=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+               "WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+               "WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+               "TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+               "DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+               "DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+               "DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+               #"TTJets_TuneCP5_13TeV-madgraphMLM-pythia8", 
+               "ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8",
+               "ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8",
+               "ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8",
+               "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+               "ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+               "WW_TuneCP5_13TeV-pythia8","WZ_TuneCP5_13TeV-pythia8","ZZ_TuneCP5_13TeV-pythia8",
     ]
+    if year == "2017":
+        MCsamples=[#"WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+            #"WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8"
+            #,"WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+            "W1JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8", 
+            "W1JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
+            "W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
+            "W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
+            "W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8",
+            "W2JetsToLNu_LHEWpT_150-250_TuneCP5_13TeV-amcnloFXFX-pythia8",
+            "W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8",
+            "W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
+            #"DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+            #"DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+            #"DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+            "TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+            "ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8",
+            "ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
+            "ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
+            "ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+            "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
+            "DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+            "WW_TuneCP5_13TeV-pythia8",
+            "WZ_TuneCP5_13TeV-pythia8",
+            "ZZ_TuneCP5_13TeV-pythia8"
+        ]
+
 
     if backgroundMC:
         #directory="2020-04-24-MuonAllSignalRegions"
@@ -284,17 +352,21 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
         u=histo_name
         digits=False
         apply_extra_tracks_weight=True
-        if channel=="muon":
-            #extra_tracks_weight=2.2*ratioMC
-            #extra_tracks_weight=2.2
-            #extra_tracks_weight=2.3
-            #extra_tracks_weight=2.58
-            extra_tracks_weight=2.16
-        if channel=="electron":
-            #extra_tracks_weight=1.6835*ratioMC
-            #extra_tracks_weight=1.6835
-            #extra_tracks_weight=1.9
-            extra_tracks_weight=2.41
+        if channel == "muon":
+            if year == "2018":
+                extra_tracks_weight=2.86
+                extra_tracks_weight_error=0.3937
+            if year == "2017":
+                extra_tracks_weight=2.16
+                extra_tracks_weight_error=0.211
+        if channel == "electron":
+            if year == "2018":
+                extra_tracks_weight=2.58
+                extra_tracks_weight_error=0.353
+            if year == "2017":
+                extra_tracks_weight=2.41
+                #Need to check this
+                extra_tracks_weight_error=0.23
         for sample in MCsamples:
             fMC.append(TFile(directory+"/"+sample+".root"))
             fMC[it].cd()
@@ -314,7 +386,18 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
 
         len_a=len(hMC)
         for sample in reversed(MCsamples):
-            if sample =="WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" or sample=="WW_TuneCP5_13TeV-pythia8" or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8" or sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample =="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" or sample == "W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8" or sample =="ExclusiveWW_SM_FPMC-SingleLepton-2017":
+            if sample == "WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8" \
+               or sample=="WW_TuneCP5_13TeV-pythia8" \
+               or sample=="TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8" \
+               or sample =="ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8" \
+               or sample =="QCD_Pt_170to300_TuneCP5_13TeV_pythia8" \
+               or sample=="WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8" \
+               or sample =="TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8" \
+               or sample=="WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" \
+               or sample =="DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8" \
+               or sample =="DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8" \
+               or sample == "W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8" \
+               or sample =="ExclusiveWW_SM_FPMC-SingleLepton-2017":
                 leg.AddEntry(hMC[len_a-1],legend_name(sample),"f")
             len_a=len_a-1
 
@@ -322,22 +405,49 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
         hstack.SetMaximum(maximum)
         hstack.Draw("hist same")
         h_mc_errors=hstack.GetStack().Last().Clone()
+        nbins=h_mc_errors.GetNbinsX()
+        for i in range(nbins):
+            entry=h_mc_errors.GetBinContent(i)            
+            entry_error=h_mc_errors.GetBinError(i)
+            if entry > 0:
+                total_bin_error=m.sqrt( m.pow((entry_error/entry),2) + m.pow( (extra_tracks_weight_error/extra_tracks_weight),2) )
+                h_mc_errors.SetBinError(i,total_bin_error*entry)
         h_mc_errors.SetLineColor(1)
         h_mc_errors.SetFillStyle(2)
         h_mc_errors.SetFillColor(1)
         h_mc_errors.SetFillStyle(3005)
         h_mc_errors.Draw("e2 same")
 
+    leg.AddEntry(hSig[0],legend_name(SignalSamples[0]),"l")
+    leg.AddEntry(hclear,"","l")
+    leg.AddEntry(hSig[1],legend_name(SignalSamples[1]),"l")
+    leg.AddEntry(hSig[2],legend_name(SignalSamples[2]),"l")
+    leg.AddEntry(hSig[3],legend_name(SignalSamples[3]),"l")
+    #leg.AddEntry(hSig[4],legend_name(SignalSamples[4]),"l")
+    #leg.AddEntry(hSig[5],legend_name(SignalSamples[5]),"l")
+    #leg.AddEntry(hSig[6],legend_name(SignalSamples[6]),"l")
+    #leg.AddEntry(hSig[7],legend_name(SignalSamples[7]),"l")
+    #leg.AddEntry(hSig[8],legend_name(SignalSamples[8]),"l")
+
+
+
+
     h0.Draw("esame")
     h1.Draw("esame")
     hSig[0].Draw("histsame")
+    print "LINE COLOR: ",hSig[0].GetLineColor()
     hSig[1].Draw("histsame")
     hSig[2].Draw("histsame")
     hSig[3].Draw("histsame")
-    #h2.Draw("histsame")
-    #h3.Draw("histsame")
-    #h4.Draw("histsame")
-    #h5.Draw("histsame")
+    #hSig[4].Draw("histsame")
+    hSigMisReco[0].Draw("histsame")
+    hSigMisReco[1].Draw("histsame")
+    hSigMisReco[2].Draw("histsame")
+    hSigMisReco[3].Draw("histsame")
+    #hSigMisReco[4].Draw("histsame")
+
+    #hSig[2].Draw("histsame")
+    #hSig[3].Draw("histsame")
 
     diff_up=h1.Clone()
     diff_down=h1.Clone()
@@ -353,35 +463,37 @@ def makePlot(direc,Ycut,channel,background_method,signal_region,justSignal=False
         diff_down.SetBinContent(i,h0_bc-diff)
 
     fout.cd()
-    #h1.Write("background")
-    #This uses ABCD as default
     h0.Write("background")
     diff_up.Write("background_alphaUp")
     diff_down.Write("background_alphaDown")
     data_obs=h1.Clone()
     data_obs.Add(h1,hSig[1])
     data_obs.Write("data_obs")
-    hSig[0].Write("signal_1e6")
-    hSig[1].Write("background_ExclWW")
-    hSig[2].Write("signal_2e6")
-    hSig[3].Write("signal_5e6")
-    hSig[4].Write("signal_aCW_5e6")
-    hSig[5].Write("signal_aCW_8e6")
-    hSig[6].Write("signal_aCW_2e5")
+    hSig[0].Write("background_ExclWW")
+    hSig[4].Write("signal_a0w_5e-7")
+    hSig[3].Write("signal_a0w_1e-6")
+    hSig[2].Write("signal_a0w_2e-6")
+    hSig[1].Write("signal_a0w_5e-6")
+    hSig[8].Write("signal_acw_2e-6")
+    hSig[7].Write("signal_acw_5e-6")
+    hSig[6].Write("signal_acw_8e-6")
+    hSig[5].Write("signal_acw_2e-5")
+    hSigMisReco[0].Write("background_ExclWW_misreco")
+    hSigMisReco[4].Write("signal_a0w_5e-7_misreco")
+    hSigMisReco[3].Write("signal_a0w_1e-6_misreco")
+    hSigMisReco[2].Write("signal_a0w_2e-6_misreco")
+    hSigMisReco[1].Write("signal_a0w_5e-6_misreco")
+    hSigMisReco[8].Write("signal_acw_2e-6_misreco")
+    hSigMisReco[7].Write("signal_acw_5e-6_misreco")
+    hSigMisReco[6].Write("signal_acw_8e-6_misreco")
+    hSigMisReco[5].Write("signal_acw_2e-5_misreco")
 
-    hSigMisReco[0].Write("signal_1e6_misreco")
-    hSigMisReco[1].Write("background_ExclWW_misreco")
-    hSigMisReco[2].Write("signal_2e6_misreco")
-    hSigMisReco[3].Write("signal_5e6_misreco")
-    hSigMisReco[4].Write("signal_aCW_5e6_misreco")
-    hSigMisReco[5].Write("signal_aCW_8e6_misreco")
-    hSigMisReco[6].Write("signal_aCW_2e5_misreco")
 
     fout.Write()
     fout.Close()
 
     leg.Draw("same")
-    writePlots(c,Ycut,channel,signal_region,background_method,justSignal)
+    writePlots(c,Ycut,channel,signal_region,background_method,year,justSignal)
     _file0.Close()
     fout.Close()
 

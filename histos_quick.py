@@ -22,21 +22,21 @@ print sample_name
 file_dir=sys.argv[4]
 print file_dir
 batch=False
-signal_bin="multiRP"
+#signal_bin="multiRP"
 if len(sys.argv) > 4:
     if sys.argv[5] == "-b":
         batch=True
 if len(sys.argv) < 6:
     print "Need to specify if batch submission and if it is multiRP, pixel-pixel, or multiPixel"
 #channel="electron"
-if len(sys.argv) > 6:
-    signal_bin=sys.argv[6]
+#if len(sys.argv) > 6:
+#    signal_bin=sys.argv[6]
 seed_input=0
-if len(sys.argv) > 7:
-    seed_input=int(sys.argv[7])
+if len(sys.argv) > 6:
+    seed_input=int(sys.argv[6])
 job_number=0
-if len(sys.argv) > 8:
-    job_number=int(sys.argv[8])
+if len(sys.argv) > 7:
+    job_number=int(sys.argv[7])
 
 METCUT=0
 pname="l"
@@ -48,11 +48,14 @@ if channel=="electron":
 if channel=="muon": 
     METCUT=40
     pname="#mu"
+year="2017"
+if "2018" in file_dir:
+    year="2018"
 
 DATA=False
 ExclusiveMC=False
 sample=""
-if sample_name == "SingleElectron" or sample_name == "SingleMuon":    
+if sample_name == "SingleElectron" or sample_name == "SingleMuon" or sample_name == "EGamma":    
     DATA=True
     sample="Data"
 elif (sample_name == "ExclusiveWW" or ("GGToWW" in sample_name)):   
@@ -260,6 +263,7 @@ h_pt_lepton_vs_Mass=TH2F("h_pt_lepton_vs_Mass","",100,0,2000,120,0,1200)
 h_pt_jet_vs_Mass=TH2F("h_pt_jet_vs_Mass","",100,0,2000,120,0,1200)
 h_xiCMS_vs_xiPPS_45=TH2F("h_xiCMS_vs_xiPPS_45",";;",200,0,1,200,0,1)
 h_xiCMS_vs_xiPPS_56=TH2F("h_xiCMS_vs_xiPPS_56",";;",200,0,1,200,0,1)
+h_signal_protons_eacharm=TH2F("h_signal_protons_eacharm",";;",10,-0.5,9.5,10,-0.5,9.5)
 
 Run=0.
 event=0.
@@ -278,15 +282,61 @@ else:
 #r.seed(16)
 #r.seed()
 re_dict={}
+era=""
+batch_prefix=""
+if not batch: batch_prefix="inputfiles/"
+if DATA:
+    era=file_dir[12]
+    #era=findEra(e.run)
+else:
+    if year == "2018":
+        era=RandomEraFine2018()
+    if year == "2017":
+        era=RandomEra()
+
+#Obtain list of events with corresponding index
+if year == "2018" and DATA:
+    if channel == "muon":
+        fp=open('{0}passingEventsMuonRun{1}-WithIndex.txt'.format(batch_prefix,era[0]),'r')
+    if channel == "electron":
+        fp=open('{0}passingEventsElectronRun{1}-WithIndex.txt'.format(batch_prefix,era[0]),'r')
+    #fp=open('passingEventsMuonRun{0}.txt'.format("B"),'r')
+    long_string=fp.read()
+else:
+    long_string=""
+
+#Obtain ntuple for protons to mix in for data/MC and with proper corrections for data
+f2=TFile()
+print "era: ",era
+if year=="2018":
+    #f2=TFile("SingleMuon_Run2018{0}-justProtons.root".format(era))
+    if channel == "muon":
+        f2=TFile("{0}xiEventsRun{1}-2018.root".format(batch_prefix,era[0]))
+    if channel == "electron":
+        f2=TFile("{0}xiEventsRun{1}-2018-e.root".format(batch_prefix,era[0]))
+    #f2=TFile("2020-07-17-RunsABCD-AllProtons/SingleMuon_Run2018A-justProtons.root")
+elif year == "2017" and channel == "electron":
+    f2=TFile("{0}ElectronDataProtonsRun{0}.root".format(batch_prefix,era))
+treeProtons=f2.Get("SlimmedNtuple")
+treeProtonsEntries=treeProtons.GetEntries()
+
+evm=eventListMixing()
+
+print("Just before loop --- %s seconds ---" % (time.time() - start_time))
 for e in chain:
+    #print("Start of loop --- %s seconds ---" % (time.time() - start_time))
     #For events with no Xi cut remove the overlap with centrally produced samples
     #if "GG" in sample_name:
-    if "noXiCut" in sample_name:
+
+    #print e.crossingAngle
+
+    if "GGToWW" in sample_name:
         #if e.gen_proton_xi[0]<0.2 and e.gen_proton_xi[1]<0.2:
         if e.gen_proton_xi[0]>0.2 or e.gen_proton_xi[1]>0.2:
             if e.gen_proton_xi[0]<0.01 or e.gen_proton_xi[1]<0.01:
                 continue
-        
+    if it == 0:
+        print "Get to first event in loop"
     it=it+1
     event_itt=5e6
     if job_number>0 and job_number<7:
@@ -295,13 +345,14 @@ for e in chain:
     if job_number==7:
         if not (it>=(job_number-1)*event_itt):
             continue
-    #if it>5000:
-    #    continue
+    #if it>500:
+    #    break
     run=e.run
     #print run
     event=e.event
     #print event
-    runstring=str(run)
+    lumi=e.lumiblock
+    runstring=str(run)+":"+str(lumi)
     if DATA:
         if runstring in re_dict:
             list0=re_dict[runstring]
@@ -316,7 +367,6 @@ for e in chain:
     #print re_dict
     if event==241461846:
         print "event 241461846"
-    lumi=e.lumiblock
     pileupw=e.pileupWeight
 
     jet_veto=False
@@ -347,7 +397,7 @@ for e in chain:
         l_eta=e.electron_eta[0]
         l_phi=e.electron_phi[0]
         if not DATA:
-            pileupw=pileupw*electronScaleFactor(l_pt,l_eta)
+            pileupw=pileupw*electronScaleFactor(l_pt,l_eta,year,batch_prefix)
     if channel=="muon":
         l_pt=e.muon_pt[0]
         if l_pt<50:
@@ -355,7 +405,7 @@ for e in chain:
         l_eta=e.muon_eta[0]
         l_phi=e.muon_phi[0]
         if not DATA:
-            pileupw=pileupw*muonScaleFactor(l_pt,l_eta)
+            pileupw=pileupw*muonScaleFactor(l_pt,l_eta,year,batch_prefix)
     
     dphi_lepton_jet=GetDphi(l_phi,e.jet_phi[0])
     deta_lepton_jet=l_eta-e.jet_eta[0]
@@ -426,6 +476,7 @@ for e in chain:
         h_pfcand_nextracks_MjetVeto_WleptonicCuts.Fill(pfcand_nextracks,pileupw)
         h_num_vertices_MjetVeto_WleptonicCuts.Fill(e.nVertices)
         h_num_vertices_preweight_MjetVeto_WleptonicCuts.Fill(e.nVertices,pileupw)
+        #print "{}:{}:{}".format(run,e.lumiblock,event)
         #additionalDileptonPlots(e)
         if channel=="dimuon":
             l1 = TLorentzVector(e.muon_px[0],e.muon_py[0],e.muon_pz[0],e.muon_e[0])
@@ -470,77 +521,60 @@ for e in chain:
             h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_400_up.Fill(pfcand_nextracks,pileupw)
         if WLeptonicPt > 600:
             h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_600_up.Fill(pfcand_nextracks,pileupw)
+    
+    #Only look at CMS stuff
+    #continue
 
     ######################################################################
     #Now Add PPS requirements
     ######################################################################
     #Look to see if passing PPS
     xi = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
-    xi_misreco = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[],"arm_mr":[]}
     xi_data_mix = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
     #passesPPS=[]
     rw_extrk=1.
     rw_passPPS=1.
     rw_failPPS=1.
     
-    era=""
-    if DATA:
-        era=file_dir[12]
     #Better way to get protons. For MC will mix in data protons
     #Here need to submit for 3 different signal regions
     passesPPS=[False,False,False]
     passesPPSMisReco=[False,False,False]
+    ismisreco=False
     if mjet_veto and passesBoosted and tau21<0.6:
         #passesPPS=passPPSGeneral(e,xi,signal_bin,sample)
-        if sample=="ExclusiveMC":
+        if sample == "ExclusiveMC":
             #passesPPS=passPPSGeneralSignal(e,xi,sample)
-            passesPPS=passPPSGeneralSignal(e,xi,sample)
-            if passesPPS[0]==0 and passesPPS[1]==0 and passesPPS[2]==0:
-                passesPPSMisReco=passPPSGeneralSignalMisReco(e,xi_misreco,sample)
+            output=passPPSGeneralSignal(e,xi,sample,year,era,evm)
+            #print output
+            if output[0] == False:
+                ismisreco=False
+                passesPPS=output[1]
+                #print "ismisreco: ",ismisreco
+            else:
+                ismisreco=True
+                passesPPSMisReco=output[1]
             plotXYSignal(e,h_y_vs_x_signal)
+            plot_number_protons(e,h_signal_protons_eacharm,year,xi)
             #passPPSMulti(e,xi_det)
             #passPPSNewPixel(e,xi_det)
             #passPPSNewStrip(e,xi_det)
-        if sample=="Data":
-            passesPPS=passPPSGeneralData(e,xi,era,sample_name)
-            #passesPPSmultiRP=passPPSGeneralData(e,xi,"multiRP")
-            #passesPPSmultiPixel=passPPSGeneralData(e,xi,"multiPixel")
-            #passesPPSPixelPixel=passPPSGeneralData(e,xi,"pixel-pixel")
-        if sample=="MC":
-            passesPPS=passPPSGeneralMixDataMC(e,xi,sample,era)
-
-    #Look to get normalization ratio of high to low extra tracks with looking at low MWW/MX and for 
-    if mjet_veto and passesBoosted and jet_pruning:
-        xi_extra_tracks_norm = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
-        if sample=="Data":
-            passPPSNewPixel(e,xi_extra_tracks_norm)
-        if sample=="ExclusiveMC":
-            passPPSNewPixelMixSignal(e,xi_extra_tracks_norm)
-        if len(xi_extra_tracks_norm["23"])>0 and len(xi_extra_tracks_norm["123"])>0:
-        #if (len(xi_extra_tracks_norm["23"])==1 and len(xi_extra_tracks_norm["123"])==1) or (len(xi_extra_tracks_norm["23"])==2 and len(xi_extra_tracks_norm["123"])==1) or (len(xi_extra_tracks_norm["23"])==1 and len(xi_extra_tracks_norm["123"])==2 ):
-            xi_et_1=max(xi_extra_tracks_norm["23"])
-            xi_et_2=max(xi_extra_tracks_norm["123"])
-            #if xi_1<0.04 or xi_2<0.04:
-            #    continue
-            rapidity_et=0.5*m.log(xi_et_1/xi_et_2)
-            mrp_et=m.sqrt(169000000*xi_et_1*xi_et_2)
-            if sample=="ExclusiveMC":
-                h_mww_mx_ratio_et_norm.Fill(recoMWW/mrp_et)
-            if sample=="Data" and pfcand_nextracks>4:
-                h_mww_mx_ratio_et_norm.Fill(recoMWW/mrp_et)
-            if (recoMWW/mrp_et)<0.8:
-                h_pfcand_nextracks_lowMWW_MX_PPStag.Fill(pfcand_nextracks)
+        if sample == "Data":
+            passesPPS=passPPSGeneralData(e,xi,era,sample_name,year,long_string,treeProtons)
+        if sample == "MC":
+            passesPPS=passPPSGeneralMixDataMC(e,xi,sample,era,year,treeProtons,treeProtonsEntries,evm)
 
     #Mixing in protons with data events not passing PPS, currently there is overlap between control regions.
     failsAllPPS=False
-    #print passesPPS
-    if passesPPS[0]==0 and passesPPS[1]==0 and passesPPS[2]==0:
+    if passesPPS[0] == 0 and passesPPS[1] == 0 and passesPPS[2] == 0:
         failsAllPPS=True
 
     passPPS2=[False,False,False]
     #if mjet_veto and passesBoosted and jet_pruning and DATA and not passesPPS:
     if mjet_veto and passesBoosted and jet_pruning and DATA and failsAllPPS:
-        passPPS2=passPPSGeneralMixDataMC(e,xi_data_mix,sample,era)
+        #print("Write before passPPSGeneralMixDataMC --- %s seconds ---" % (time.time() - start_time))
+        passPPS2=passPPSGeneralMixDataMC(e,xi_data_mix,sample,era,year,treeProtons,treeProtonsEntries,evm)
+        #print("Write after passPPSGeneralMixDataMC --- %s seconds ---" % (time.time() - start_time))
 
     #Inverting the pruned mass cut to get MWW/MX distribution.
     if mjet_veto and passesBoosted and tau21<0.6 and prunedMass<50 and failsAllPPS:    
@@ -584,42 +618,45 @@ for e in chain:
     #print passesPPSMisReco
     signal_samples=["multiRP","pixel-pixel","multiPixel"]
     for i in range(0,3):
-        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passesPPSMisReco[i] and sample=="ExclusiveMC" and pfcand_nextracks<5:
+        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and \
+           passesPPSMisReco[i] and sample == "ExclusiveMC" and pfcand_nextracks < 5:
             #print xi_misreco["23"]
-            xi_misreco_1=max(xi_misreco["23"])
-            xi_misreco_2=max(xi_misreco["123"])
+            xi_misreco_1=max(xi["23"])
+            xi_misreco_2=max(xi["123"])
             rapidity_misreco=0.5*m.log(xi_misreco_1/xi_misreco_2)
             mrp_misreco=m.sqrt(169000000*xi_misreco_1*xi_misreco_2)
             Yvalue_misreco=abs(recoYCMS-rapidity_misreco)
             #passYcut_misreco=[passYcutFunc2(Yvalue_misreco,"multiRP"),passYcutFunc2(Yvalue_misreco,"pixel-pixel"),passYcutFunc2(Yvalue_misreco,"multiPixel")]
             passYcut_misreco=passYcutFunc2(Yvalue_misreco,signal_samples[i])
-            if i == 0:
-                if xi_misreco["arm_mr"][0] == "45":
-                    #h_xi1_0_4_tracks_misreco[i].Fill(xi_misreco_1)
-                    h_xi1_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[0])
-                    #h_gen_xi1_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[0])
-                if xi_misreco["arm_mr"][0] == "56":
-                    #h_xi2_0_4_tracks_misreco[i].Fill(xi_misreco_2)
-                    h_xi2_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[1])
-                    #h_gen_xi2_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[1])
+            #print signal_samples[i]
+            if i < 0:
+                if xi["arm_mr"][0] == "45":
+                    #h_xi1_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[0])
+                    h_xi1_0_4_tracks_misreco[i].Fill(xi_misreco_1)
+                if xi["arm_mr"][0] == "56":
+                    #h_xi2_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[1])
+                    h_xi2_0_4_tracks_misreco[i].Fill(xi_misreco_2)
             if xi_misreco_1>0.04 and xi_misreco_2>0.04:
                 h_MWW_MX_0_4_tracks_misreco[i].Fill(recoMWW/mrp_misreco,pileupw)
                 if passYcut_misreco:
                     h_MWW_MX_0_4_tracks_misreco_Ycut[i].Fill(recoMWW/mrp_misreco,pileupw)
 
 
+    if ismisreco:
+        continue
 
-    if not ExclusiveMC and not DATA and mjet_veto and passesBoosted and jet_pruning and pfcand_nextracks<5:
+    if not ExclusiveMC and not DATA and mjet_veto and passesBoosted and \
+       jet_pruning and pfcand_nextracks < 5:
         for i in range(1,num_dataev_mixed_in):
             xi_signal = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
             #xi_signal = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[]}
             #protonDataMixing(xi_signal,signal_bin)
-            passPPS_100=passPPSGeneralMixDataMC(e,xi_signal,sample,era)
+            passPPS_100=passPPSGeneralMixDataMC(e,xi_signal,sample,era,year,treeProtons,treeProtonsEntries,evm)
             
             if not passPPS_100[0] and not passPPS_100[1] and not passPPS_100[2]: continue
             #print "xi_signal",xi_signal
-            mww_100=protonMWWMixing()
-            yww_100=protonYWWMixing()
+            mww_100=protonMWWMixing(batch_prefix,year)
+            yww_100=protonYWWMixing(batch_prefix,year)
             xi_1=max(xi_signal["23"])
             xi_2=max(xi_signal["123"])
             if xi_1<0.04 or xi_2<0.04:
@@ -633,6 +670,7 @@ for e in chain:
             for i in range(0,3):
                 if passYcut_100[i] and passPPS_100[i]:
                     h_MWW_MX_0_4_tracks_100events_Ycut[i].Fill(mww_100/mrp_100,0.01)
+
 
 
     passYcut=[False,False,False]
@@ -670,13 +708,8 @@ for e in chain:
         passYcut[i]=passYcutFunc2(Yvalue,signal_samples[i])
         if len(xi["23"])<1 or len(xi["123"])<1:
             continue
-        #passesPPS=False
         if xi_mult_45<0.04 or xi_mult_56<0.04:
-        #passesPPS=False
             continue
-        #Yvalue=abs(recoYCMS-Rapidity_RP)
-        #passYcut=passYcutFunc2(Yvalue,signal_bin)
-
 
         if mjet_veto and passesBoosted and jet_pruning and passesPPS[i]:
             h_xiCMS_45_passPPS[i].Fill(xiCMS_45,pileupw)
@@ -718,14 +751,18 @@ for e in chain:
                 h_Y_RP_0_4_extratracks[i].Fill(Rapidity_RP,pileupw*rw_extrk*rw_passPPS)
                 h_Y_CMS_minus_RP_0_4_extratracks[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_passPPS) 
                 if ExclusiveMC:
-                    h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS*xi["weight"][0])
+                    #h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS*xi["weight"][0])
+                    #print "Get to fill: h_MWW_MX_0_4_tracks[i]"
+                    h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
                 else:h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
                 h_recoMWhad_0_4_tracks[i].Fill(recoMWhad,pileupw*rw_extrk*rw_passPPS)
                 h_tau21_0_4_tracks[i].Fill(tau21,pileupw)
                 h_prunedMass_0_4_tracks[i].Fill(prunedMass,pileupw)
                 if passYcut[i]:
                     if ExclusiveMC:
-                        h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw*xi["weight"][0])
+                        #h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw*xi["weight"][0])
+                        #print "Get to fill: h_MWW_MX_0_4_tracks_Ycut[i]"
+                        h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw)
                     else:h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw)
 
         #Signal plots in data, only looking at MWW/MX<0.8

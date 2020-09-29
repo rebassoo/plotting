@@ -50,7 +50,8 @@ print "Number of data root files is: ",(ii-mc_it)
 if channel=="muon":
     subprocess.call("hadd SingleMuonTotal.root SingleMuon_*root",shell=True)
 if channel=="electron":
-    subprocess.call("hadd SingleElectronTotal.root SingleElectron_*root",shell=True)
+    #subprocess.call("hadd SingleElectronTotal.root SingleElectron_*root",shell=True)
+    subprocess.call("hadd SingleElectronTotal.root EGamma_*root",shell=True)
 
 
 #
