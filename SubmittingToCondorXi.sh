@@ -16,7 +16,7 @@ mkdir log
 #SIGNAL_BIN="multiRP"
 #SIGNAL_BIN="multiPixel"
 #SIGNAL_BIN="pixel-pixel"
-cp ../produceHistosSingleMu-Xi.txt .
+cp ../produceHistos-Xi.txt .
 #cp ../produceHistosSingleMu.txt .
 cp ../htools.py .
 #cp ../histos_quick.py .
@@ -28,12 +28,14 @@ cp ../makeBashScript.sh .
 cp ../base.jdl .
 sed -i "s|REPLACE|$PWD1|g" base.jdl
 
-for i in {1..10}
+for i in {1..1}
+#for i in {4..4}
 #for i in {6..10}
 do
     cat makeBashScript.sh >> "test_$i.sh"
+    echo "tar xvzf passingEvents.tar.gz" >> "test_$i.sh"
     #output=`sed "${i}q;d" produceHistosSingleMu.txt`
-    output=`sed "${i}q;d" produceHistosSingleMu-Xi.txt`
+    output=`sed "${i}q;d" produceHistos-Xi.txt`
     #output=`sed "${i}q;d" produceHistosFew.txt`
     echo "$output" >> "test_$i.sh"
     #echo "cp samples_info.json samples_info_$i.json" >> "test_$i.sh"

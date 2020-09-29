@@ -38,7 +38,7 @@ if channel=="muon":
 
 DATA=False
 ExclusiveMC=False
-if sample_name == "SingleElectron" or sample_name == "SingleMuon":    DATA=True
+if sample_name == "SingleElectron" or sample_name == "SingleMuon" or sample_name == "EGamma":    DATA=True
 if sample_name == "ExclusiveWW" or ("GGToWW" in sample_name):   ExclusiveMC=True
 print "ExclusiveMC", ExclusiveMC
 
@@ -70,7 +70,25 @@ print num_events
 
 
 it=0
-
+chain.SetBranchStatus("*",0)
+chain.SetBranchStatus("crossingAngle",1)
+chain.SetBranchStatus("run",1)
+chain.SetBranchStatus("event",1)
+chain.SetBranchStatus("lumiblock",1)
+chain.SetBranchStatus("proton_xi",1)
+chain.SetBranchStatus("proton_ismultirp_",1)
+chain.SetBranchStatus("proton_rpid",1)
+chain.SetBranchStatus("proton_arm",1)
+chain.SetBranchStatus("proton_trackpixshift1",1)
+chain.SetBranchStatus("proton_trackpixshift2",1)
+chain.SetBranchStatus("proton_trackx1",1)
+chain.SetBranchStatus("proton_tracky1",1)
+chain.SetBranchStatus("proton_trackx2",1)
+chain.SetBranchStatus("proton_tracky2",1)
+chain.SetBranchStatus("proton_rpid1",1)
+chain.SetBranchStatus("proton_rpid2",1)
+chain.SetBranchStatus("proton_thx",1)
+chain.SetBranchStatus("nVertices",1)
 #chain.SetBranchStatus("*",0)
 #chain.SetBranchStatus("crossingAngle",1)
 #chain.SetBranchStatus("run",1)
@@ -86,13 +104,62 @@ it=0
 #fout.cd()
 outTree = chain.CloneTree(0)
 
+era=""
+if DATA:
+    era=file_dir[12]
+
+if sample_name == "SingleMuon":
+    fp=open('passingEventsMuonRun{0}.txt'.format(era),'r')
+if sample_name == "SingleElectron" or sample_name == "EGamma":
+    fp=open('passingEventsElectronRun{0}.txt'.format(era),'r')
+long_string=fp.read()
+re_dict={}
 nEntries = chain.GetEntries()
+iterate_fill=0
+file_iterate=0
 for e in chain:
 #for it in range(nEntries):
-    it=it+1
+    #chain.GetEntry(it+1)
     chain.GetEntry(it+1)
+    it=it+1
+    #print it
+    if it == 1200000:
+        writeoutTree(outTree,output_name,file_iterate)
+        file_iterate=file_iterate+1
+        outTree=chain.CloneTree(0)
+    run=e.run
+    lumi=e.lumiblock
+    event=e.event
+    runstring=str(run)+":"+str(lumi)
+    if DATA:
+        if runstring in re_dict:
+            list0=re_dict[runstring]
+            #Skip event if it is a duplicate
+            if int(event) in list0:
+                print "Duplicate event"
+                continue
+            else:
+                list0.append(int(event))
+        else:
+            re_dict[runstring]=[int(event)]
+    str_event="{0}:{1}:{2}\n".format(run,lumi,event)
+    #if str_event not in long_string:
+    #    continue
+    if (it % 100000) == 0:
+        print it
+    #if it>100:
+    #    break
     #continue
     if DATA:
+        if "2018" in file_dir:
+            #print "Get Here"
+            iterate_fill=iterate_fill+1
+            if str_event in long_string: 
+                str_it="{0}:{1}:{2}:{3}".format(iterate_fill,run,lumi,event)
+                print str_it
+            outTree.Fill()
+            continue
+
         if channel=="electron" and e.electron_pt.size() == 0:
             continue
         if channel=="muon" and e.muon_pt.size() == 0:
@@ -114,9 +181,9 @@ for e in chain:
             if not DATA:
                 pileupw=pileupw*muonScaleFactor(l_pt,l_eta)
 
-        #print "muon_pt 1st method:",muon_pt[0]
+        print "muon_pt 1st method:",muon_pt[0]
         #print "muon_pt 2nd method:",e.muon_pt[0]
-         
+        
         dphi_lepton_jet=GetDphi(l_phi,e.jet_phi[0])
         deta_lepton_jet=l_eta-e.jet_eta[0]
         deltaR=m.sqrt(dphi_lepton_jet*dphi_lepton_jet+deta_lepton_jet*deta_lepton_jet   )
@@ -144,41 +211,11 @@ for e in chain:
             continue
         #if mjet_veto and passesBoosted and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2:
         #    outTree.Fill()
+        print "Get Here Last"
         outTree.Fill()
-        
 
-outTree.SetBranchStatus("*",0)
-outTree.SetBranchStatus("crossingAngle",1)
-outTree.SetBranchStatus("run",1)
-outTree.SetBranchStatus("event",1)
-outTree.SetBranchStatus("lumiblock",1)
-outTree.SetBranchStatus("proton_xi",1)
-outTree.SetBranchStatus("proton_ismultirp_",1)
-outTree.SetBranchStatus("proton_rpid",1)
-outTree.SetBranchStatus("proton_arm",1)
-outTree.SetBranchStatus("proton_trackpixshift1",1)
-outTree.SetBranchStatus("proton_trackpixshift2",1)
-outTree.SetBranchStatus("nVertices",1)
-#outTree.SetBranchStatus("electron_pt",1)
-#outTree.SetBranchStatus("muon_pt",1)
-fout = TFile('{0}.root'.format(output_name),'recreate')
-fout.cd()
-outTree2 = outTree.CloneTree(0)
-
-
-nEntries = outTree.GetEntries()
-#for e in chain:
-for ita in range(nEntries):
-    #it=it+1
-    outTree.GetEntry(ita+1)
-    outTree2.Fill()
-
-
-#outTree.GetCurrentFile().Write()
-#outTree.GetCurrentFile().Close()
-fout.Write()
-fout.Close()
-print fout
+print "file_iterate: ",file_iterate
+writeoutTree(outTree,output_name,file_iterate)
 print("--- %s seconds ---" % (time.time() - start_time))
 #if batch:
 #    os.listdir(".")
