@@ -140,11 +140,12 @@ for e in chain:
             jetPruning=True
         if e.num_bjets_ak4<1:
             mjet_veto=True
-        if mjet_veto and passesBoosted and jetPruning and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2 and e.pfcand_nextracks<5:
-            continue
-        #if mjet_veto and passesBoosted and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2:
-        #    outTree.Fill()
-        outTree.Fill()
+        #if mjet_veto and passesBoosted and jetPruning and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2 and e.pfcand_nextracks<5:
+        #    continue
+        #outTree.Fill()
+        if mjet_veto and passesBoosted and deltaR>(m.pi/2) and dphi_jet_met>2 and dphi_jet_Wl>2:
+            outTree.Fill()
+
         
 
 outTree.SetBranchStatus("*",0)
@@ -158,6 +159,13 @@ outTree.SetBranchStatus("proton_rpid",1)
 outTree.SetBranchStatus("proton_arm",1)
 outTree.SetBranchStatus("proton_trackpixshift1",1)
 outTree.SetBranchStatus("proton_trackpixshift2",1)
+outTree.SetBranchStatus("proton_trackx1",1)
+outTree.SetBranchStatus("proton_tracky1",1)
+outTree.SetBranchStatus("proton_trackx2",1)
+outTree.SetBranchStatus("proton_tracky2",1)
+outTree.SetBranchStatus("proton_rpid1",1)
+outTree.SetBranchStatus("proton_rpid2",1)
+outTree.SetBranchStatus("proton_thx",1)
 outTree.SetBranchStatus("nVertices",1)
 #outTree.SetBranchStatus("electron_pt",1)
 #outTree.SetBranchStatus("muon_pt",1)

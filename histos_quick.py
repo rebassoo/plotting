@@ -41,11 +41,11 @@ if len(sys.argv) > 8:
 METCUT=0
 pname="l"
 mname=""
-if channel=="electron": 
+if channel == "electron": 
     METCUT=100
     pname="e"
     mname="_e"
-if channel=="muon": 
+if channel == "muon": 
     METCUT=40
     pname="#mu"
 
@@ -73,7 +73,7 @@ if "LHEWpT" in output_name:
         output_name=output_name+"_ext1"
         sample_name=sample_name+"_ext1"
 #fout = TFile('histos_{0}/{1}.root'.format(channel,output_name),'recreate')
-if job_number>0:
+if job_number > 0:
     output_name=output_name+"_"+str(job_number)
     sample_name=sample_name+"_"+str(job_number)
 
@@ -132,6 +132,9 @@ h_pfcand_nextracks_lowMWW_MX_PPStag=TH1F("h_pfcand_nextracks_lowMWW_MX_PPStag","
 h_MWW_5_up_all=TH1F("h_MWW_5_up_all{0}".format(mname),";;",150,0,3000)
 h_YCMS_5_up_all=TH1F("h_YCMS_5_up_all{0}".format(mname),";Y RP;",120,-3,3)
 
+h_tau21_0_4_extratracks=TH1F("h_tau21_0_4_extratracks",";tau21;",100,0,2)
+h_prunedMass_0_4_extratracks=TH1F("h_prunedMass_0_4_extratracks",";pruned Mass [GeV];",200,0,1000)
+
 h_num_extra_tracks_nominal=TH1F("h_num_extra_tracks_nominal",";Number of extra tracks;",100,-0.5,99.5)
 
 #In this case notPPS should be not passing all criteria
@@ -182,6 +185,7 @@ for i in range(0,3):
     h_MWW_MX_0_4_tracks.append(TH1F("h_MWW_MX_0_4_tracks_{0}".format(selection[i]),";MWW/MX;",100,0,2))
     h_xi1_0_4_tracks_misreco.append(TH1F("h_xi1_0_4_tracks_misreco_{0}".format(selection[i]),";MWW/MX;",128,0,0.32))
     h_xi2_0_4_tracks_misreco.append(TH1F("h_xi2_0_4_tracks_misreco_{0}".format(selection[i]),";MWW/MX;",128,0,0.32))
+    h_Y_CMS_minus_RP_0_4_tracks_misreco.append(TH1F("h_Y_CMS_minus_RP_0_4_tracks_misreco_{0}".format(selection[i]),";Y RP;",60,-3,3))
     h_MWW_MX_0_4_tracks_misreco.append(TH1F("h_MWW_MX_0_4_tracks_misreco_{0}".format(selection[i]),";MWW/MX;",100,0,2))
     h_recoMWhad_0_4_tracks.append(TH1F("h_recoMWhad_0_4_tracks_{0}".format(selection[i]),";M_{W_{had}} [GeV];",100,0,200))
     h_tau21_0_4_tracks.append(TH1F("h_tau21_0_4_tracks_{0}".format(selection[i]),";tau21;",100,0,2))
@@ -271,28 +275,34 @@ print num_events
 
 it=0
 multiply_factor=seed_input-47
-if multiply_factor>0:
+if multiply_factor > 0:
     r.seed(seed_input+multiply_factor*job_number)
 else:
     r.seed(seed_input)
+#r.seed(seed_input)
 #r.seed(16)
 #r.seed()
 re_dict={}
+#This is to check whether data mixing already occurred
+evm=eventListMixing()
 for e in chain:
     #For events with no Xi cut remove the overlap with centrally produced samples
     #if "GG" in sample_name:
     if "noXiCut" in sample_name:
-        #if e.gen_proton_xi[0]<0.2 and e.gen_proton_xi[1]<0.2:
-        if e.gen_proton_xi[0]>0.2 or e.gen_proton_xi[1]>0.2:
-            if e.gen_proton_xi[0]<0.01 or e.gen_proton_xi[1]<0.01:
+        #if e.gen_proton_xi[0] < 0.2 and e.gen_proton_xi[1] < 0.2:
+        if e.gen_proton_xi[0] > 0.2 or e.gen_proton_xi[1] > 0.2:
+            if e.gen_proton_xi[0] < 0.01 or e.gen_proton_xi[1] < 0.01:
                 continue
+
+    #print e.crossingAngle
         
     it=it+1
+    #print "        it           "
     event_itt=5e6
-    if job_number>0 and job_number<7:
+    if job_number > 0 and job_number < 7:
         if not (it>=(job_number-1)*event_itt and it<(job_number*event_itt)):
             continue
-    if job_number==7:
+    if job_number == 7:
         if not (it>=(job_number-1)*event_itt):
             continue
     #if it>5000:
@@ -322,25 +332,25 @@ for e in chain:
     jet_veto=False
     mjet_veto=False
     #Look at events passing preselection and jet veto
-    if e.num_jets_ak4<1 and e.num_bjets_ak8 < 1:
+    if e.num_jets_ak4 < 1 and e.num_bjets_ak8 < 1:
         jet_veto=True
-    if e.num_bjets_ak4<1:
+    if e.num_bjets_ak4 < 1:
         mjet_veto=True
 
     #Make sure there is the correct number of leptons in sample or continue
-    if channel=="electron" and e.electron_pt.size() == 0:
+    if channel == "electron" and e.electron_pt.size() == 0:
         continue
-    if channel=="electron" and e.electron_pt.size() > 1:
+    if channel == "electron" and e.electron_pt.size() > 1:
         continue
-    if channel=="muon" and e.muon_pt.size() == 0:
+    if channel == "muon" and e.muon_pt.size() == 0:
         continue
-    if channel=="muon" and e.muon_pt.size() > 1:
+    if channel == "muon" and e.muon_pt.size() > 1:
         continue
-    if channel=="dimuon" and e.muon_pt.size() < 2:
+    if channel == "dimuon" and e.muon_pt.size() < 2:
         continue
-    if channel=="dielectron" and e.electron_pt.size() < 2:
+    if channel == "dielectron" and e.electron_pt.size() < 2:
         continue
-    if channel=="electron":
+    if channel == "electron":
         l_pt=e.electron_pt[0]
         if l_pt<50:
             continue
@@ -348,7 +358,7 @@ for e in chain:
         l_phi=e.electron_phi[0]
         if not DATA:
             pileupw=pileupw*electronScaleFactor(l_pt,l_eta)
-    if channel=="muon":
+    if channel == "muon":
         l_pt=e.muon_pt[0]
         if l_pt<50:
             continue
@@ -366,12 +376,12 @@ for e in chain:
     h_deltaphi_jet_met.Fill(dphi_jet_met,pileupw)
     h_deltaphi_jet_Wleptonic.Fill(dphi_jet_Wl,pileupw)
 
-    if channel=="electron" or channel=="muon":
-        if deltaR<= (m.pi/2):
+    if channel == "electron" or channel == "muon":
+        if deltaR <= (m.pi/2):
             continue
-        if dphi_jet_met<=2:
+        if dphi_jet_met <=2:
             continue
-        if dphi_jet_Wl<=2:
+        if dphi_jet_Wl <=2:
             continue
 
 
@@ -397,18 +407,15 @@ for e in chain:
 
     #Plots after jet pruning requirements.
     jet_pruning=False
-    #if tau21<0.6 and prunedMass>40 and prunedMass<120:
-    #if tau21<0.6 and prunedMass>50 and prunedMass<110:
-    if prunedMass>50 and prunedMass<110 and tau21<0.6:
-    #if prunedMass>50 and prunedMass<110:
+    if prunedMass > 50 and prunedMass < 110 and tau21 < 0.6:
         jet_pruning=True
 
     passesBoosted=False
-    if dphiWW>2.5 and recoMWW>500 and MET>METCUT and WLeptonicPt>200:
+    if dphiWW > 2.5 and recoMWW > 500 and MET > METCUT and WLeptonicPt > 200:
         passesBoosted=True
 
     #Looking at Mauricio jet veto with W leptonic cuts
-    if e.num_bjets_ak4<1 and passesBoosted:
+    if e.num_bjets_ak4 < 1 and passesBoosted:
         h_pt_lepton_vs_Mass.Fill(recoMWW,l_pt)
         h_pt_jet_vs_Mass.Fill(recoMWW,e.jet_pt[0])
         h_lepton_pt_MjetVeto_WleptonicCuts.Fill(l_pt,pileupw)
@@ -442,7 +449,7 @@ for e in chain:
             h_lepton2_eta_MjetVeto_WleptonicCuts.Fill(e.electron_eta[1],pileupw)
             h_MassLL_MjetVeto_WleptonicCuts.Fill(lCombined.M(),pileupw)
 
-    if e.num_bjets_ak4<1 and passesBoosted and jet_pruning:
+    if e.num_bjets_ak4 < 1 and passesBoosted and jet_pruning:
         h_lepton_pt_MjetVeto_WleptonicCuts_wJetPruning.Fill(l_pt,pileupw)
         h_jet_pt_MjetVeto_WleptonicCuts_wJetPruning.Fill(e.jet_pt[0],pileupw)
         h_tau21_MjetVeto_WleptonicCuts_wJetPruning.Fill(tau21,pileupw)
@@ -453,15 +460,19 @@ for e in chain:
         h_xiCMS_56_wJetPruning.Fill(xiCMS_56,pileupw)
         #if xiCMS_45>0.2 or xiCMS_56>0.2:
         #    continue
-        if pfcand_nextracks>4:
+        if pfcand_nextracks > 4:
             h_MWW_5_up_all.Fill(recoMWW,pileupw)
             h_YCMS_5_up_all.Fill(recoYCMS,pileupw)
 
     if xiCMS_45 > 0.2 or xiCMS_56 > 0.2:
         continue
 
+    if pfcand_nextracks < 5 and not DATA:
+        h_tau21_0_4_extratracks.Fill(tau21,pileupw)
+        h_prunedMass_0_4_extratracks.Fill(prunedMass,pileupw)
+
     #Looking at extra tracks as a function of W pt
-    if e.num_bjets_ak4<1 and passesBoosted and ( (DATA and pfcand_nextracks >4) or not DATA):
+    if e.num_bjets_ak4 < 1 and passesBoosted and ((DATA and pfcand_nextracks > 4) or not DATA):
         if WLeptonicPt > 200 and WLeptonicPt < 300:
             h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_200_300.Fill(pfcand_nextracks,pileupw)
         if WLeptonicPt > 300 and WLeptonicPt < 400:
@@ -475,11 +486,8 @@ for e in chain:
     #Now Add PPS requirements
     ######################################################################
     #Look to see if passing PPS
-    xi = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
-    xi_misreco = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[],"arm_mr":[]}
+    xi = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[],"marm0_tight":[],"marm1_tight":[]}
     xi_data_mix = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
-    #passesPPS=[]
-    rw_extrk=1.
     rw_passPPS=1.
     rw_failPPS=1.
     
@@ -490,33 +498,31 @@ for e in chain:
     #Here need to submit for 3 different signal regions
     passesPPS=[False,False,False]
     passesPPSMisReco=[False,False,False]
-    if mjet_veto and passesBoosted and tau21<0.6:
-        #passesPPS=passPPSGeneral(e,xi,signal_bin,sample)
-        if sample=="ExclusiveMC":
-            #passesPPS=passPPSGeneralSignal(e,xi,sample)
-            passesPPS=passPPSGeneralSignal(e,xi,sample)
-            if passesPPS[0]==0 and passesPPS[1]==0 and passesPPS[2]==0:
-                passesPPSMisReco=passPPSGeneralSignalMisReco(e,xi_misreco,sample)
+    ismisreco=False
+    if mjet_veto and passesBoosted and tau21 < 0.6:
+        if sample == "ExclusiveMC":
+            output=passPPSGeneralSignal(e,xi,sample,evm,time)
+            #print output
+            if output[0] == False:
+                ismisreco=False
+                passesPPS=output[1]
+            else:
+                ismisreco=True
+                passesPPSMisReco=output[1]
             plotXYSignal(e,h_y_vs_x_signal)
-            #passPPSMulti(e,xi_det)
-            #passPPSNewPixel(e,xi_det)
-            #passPPSNewStrip(e,xi_det)
-        if sample=="Data":
+        if sample == "Data":
             passesPPS=passPPSGeneralData(e,xi,era,sample_name)
-            #passesPPSmultiRP=passPPSGeneralData(e,xi,"multiRP")
-            #passesPPSmultiPixel=passPPSGeneralData(e,xi,"multiPixel")
-            #passesPPSPixelPixel=passPPSGeneralData(e,xi,"pixel-pixel")
-        if sample=="MC":
-            passesPPS=passPPSGeneralMixDataMC(e,xi,sample,era)
+        if sample == "MC":
+            passesPPS=passPPSGeneralMixDataMC(e,xi,sample,era,evm)
 
     #Look to get normalization ratio of high to low extra tracks with looking at low MWW/MX and for 
     if mjet_veto and passesBoosted and jet_pruning:
         xi_extra_tracks_norm = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
         if sample=="Data":
             passPPSNewPixel(e,xi_extra_tracks_norm)
-        if sample=="ExclusiveMC":
-            passPPSNewPixelMixSignal(e,xi_extra_tracks_norm)
-        if len(xi_extra_tracks_norm["23"])>0 and len(xi_extra_tracks_norm["123"])>0:
+        #if sample=="ExclusiveMC":
+        #    passPPSNewPixelMixSignal(e,xi_extra_tracks_norm,evm)
+        if len(xi_extra_tracks_norm["23"]) > 0 and len(xi_extra_tracks_norm["123"]) > 0:
         #if (len(xi_extra_tracks_norm["23"])==1 and len(xi_extra_tracks_norm["123"])==1) or (len(xi_extra_tracks_norm["23"])==2 and len(xi_extra_tracks_norm["123"])==1) or (len(xi_extra_tracks_norm["23"])==1 and len(xi_extra_tracks_norm["123"])==2 ):
             xi_et_1=max(xi_extra_tracks_norm["23"])
             xi_et_2=max(xi_extra_tracks_norm["123"])
@@ -524,9 +530,9 @@ for e in chain:
             #    continue
             rapidity_et=0.5*m.log(xi_et_1/xi_et_2)
             mrp_et=m.sqrt(169000000*xi_et_1*xi_et_2)
-            if sample=="ExclusiveMC":
+            if sample == "ExclusiveMC":
                 h_mww_mx_ratio_et_norm.Fill(recoMWW/mrp_et)
-            if sample=="Data" and pfcand_nextracks>4:
+            if sample == "Data" and pfcand_nextracks > 4:
                 h_mww_mx_ratio_et_norm.Fill(recoMWW/mrp_et)
             if (recoMWW/mrp_et)<0.8:
                 h_pfcand_nextracks_lowMWW_MX_PPStag.Fill(pfcand_nextracks)
@@ -534,24 +540,24 @@ for e in chain:
     #Mixing in protons with data events not passing PPS, currently there is overlap between control regions.
     failsAllPPS=False
     #print passesPPS
-    if passesPPS[0]==0 and passesPPS[1]==0 and passesPPS[2]==0:
+    if passesPPS[0] == 0 and passesPPS[1] == 0 and passesPPS[2] == 0:
         failsAllPPS=True
 
     passPPS2=[False,False,False]
     #if mjet_veto and passesBoosted and jet_pruning and DATA and not passesPPS:
     if mjet_veto and passesBoosted and jet_pruning and DATA and failsAllPPS:
-        passPPS2=passPPSGeneralMixDataMC(e,xi_data_mix,sample,era)
+        passPPS2=passPPSGeneralMixDataMC(e,xi_data_mix,sample,era,evm)
 
     #Inverting the pruned mass cut to get MWW/MX distribution.
-    if mjet_veto and passesBoosted and tau21<0.6 and prunedMass<50 and failsAllPPS:    
-        h_MWW_invertPrunedMass_notPPS.Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
+    if mjet_veto and passesBoosted and tau21 < 0.6 and prunedMass < 50 and failsAllPPS:    
+        h_MWW_invertPrunedMass_notPPS.Fill(recoMWW,pileupw*rw_passPPS)
 
-    if mjet_veto and passesBoosted and prunedMass>50 and prunedMass<110 and tau21>0.6 and failsAllPPS:    
-        h_MWW_invertTau21_notPPS.Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
+    if mjet_veto and passesBoosted and prunedMass > 50 and prunedMass < 110 and tau21 > 0.6 and failsAllPPS:    
+        h_MWW_invertTau21_notPPS.Fill(recoMWW,pileupw*rw_passPPS)
         h_extracks_invertTau21_notPPS.Fill(pfcand_nextracks,pileupw)
 
     if mjet_veto and passesBoosted and jet_pruning and failsAllPPS:    
-        h_MWW_nominalTau21_notPPS.Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
+        h_MWW_nominalTau21_notPPS.Fill(recoMWW,pileupw*rw_passPPS)
         h_extracks_nominalTau21_notPPS.Fill(pfcand_nextracks,pileupw)
 
     #Looking at control region not passing PPS to get ratio of high to low for MWW.
@@ -560,15 +566,15 @@ for e in chain:
         h_xiCMS_56_notPPS.Fill(xiCMS_56,pileupw)
         h_MWW_notPPS.Fill(recoMWW,pileupw*rw_failPPS)        
         h_extra_tracks_vs_MWW_notPPS.Fill(recoMWW,pfcand_nextracks,pileupw*rw_failPPS)
-    if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and pfcand_nextracks<5:
+    if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and pfcand_nextracks < 5:
         h_MWW_extra_tracks_0_4_notPPS.Fill(recoMWW,pileupw*rw_failPPS)        
-    if mjet_veto and prunedMass<50 and tau21<0.6 and failsAllPPS and pfcand_nextracks<5:    
+    if mjet_veto and prunedMass < 50 and tau21 < 0.6 and failsAllPPS and pfcand_nextracks < 5:    
         h_MWW_extra_tracks_0_4_notPPS_InvertPrunedMass.Fill(recoMWW,pileupw*rw_failPPS)        
-    if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and pfcand_nextracks>4 and pfcand_nextracks<16:
+    if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and pfcand_nextracks > 4 and pfcand_nextracks < 16:
         h_MWW_extra_tracks_5_15_notPPS.Fill(recoMWW,pileupw*rw_failPPS)
-    if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and pfcand_nextracks>4:
+    if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and pfcand_nextracks > 4:
         h_MWW_extra_tracks_5_up_notPPS.Fill(recoMWW,pileupw*rw_failPPS)
-    if mjet_veto and prunedMass<50 and tau21<0.6 and failsAllPPS and pfcand_nextracks>4:    
+    if mjet_veto and prunedMass < 50 and tau21 < 0.6 and failsAllPPS and pfcand_nextracks > 4:    
         h_MWW_extra_tracks_5_up_notPPS_InvertPrunedMass.Fill(recoMWW,pileupw*rw_failPPS)        
 
 
@@ -579,42 +585,45 @@ for e in chain:
         if DATA:
             h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_failPPS)
         else:
-            h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_extrk*rw_failPPS)
+            h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_failPPS)
 
     #print passesPPSMisReco
+    #Plotting misreco
     signal_samples=["multiRP","pixel-pixel","multiPixel"]
     for i in range(0,3):
-        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passesPPSMisReco[i] and sample=="ExclusiveMC" and pfcand_nextracks<5:
-            #print xi_misreco["23"]
-            xi_misreco_1=max(xi_misreco["23"])
-            xi_misreco_2=max(xi_misreco["123"])
+        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passesPPSMisReco[i] and sample=="ExclusiveMC" and pfcand_nextracks < 5:
+            #print signal_samples[i]
+            #print xi_misreco
+            #print xi_misreco["123"]
+            xi_misreco_1=max(xi["23"])
+            xi_misreco_2=max(xi["123"])
             rapidity_misreco=0.5*m.log(xi_misreco_1/xi_misreco_2)
             mrp_misreco=m.sqrt(169000000*xi_misreco_1*xi_misreco_2)
             Yvalue_misreco=abs(recoYCMS-rapidity_misreco)
-            #passYcut_misreco=[passYcutFunc2(Yvalue_misreco,"multiRP"),passYcutFunc2(Yvalue_misreco,"pixel-pixel"),passYcutFunc2(Yvalue_misreco,"multiPixel")]
             passYcut_misreco=passYcutFunc2(Yvalue_misreco,signal_samples[i])
-            if i == 0:
-                if xi_misreco["arm_mr"][0] == "45":
+            #if i == 0:
+            if i < 0:
+                if xi["arm_mr"][0] == "45":
                     #h_xi1_0_4_tracks_misreco[i].Fill(xi_misreco_1)
                     h_xi1_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[0])
                     #h_gen_xi1_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[0])
-                if xi_misreco["arm_mr"][0] == "56":
+                if xi["arm_mr"][0] == "56":
                     #h_xi2_0_4_tracks_misreco[i].Fill(xi_misreco_2)
                     h_xi2_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[1])
                     #h_gen_xi2_0_4_tracks_misreco[i].Fill(e.gen_proton_xi[1])
-            if xi_misreco_1>0.04 and xi_misreco_2>0.04:
+            if xi_misreco_1 > 0.04 and xi_misreco_2 > 0.04:
                 h_MWW_MX_0_4_tracks_misreco[i].Fill(recoMWW/mrp_misreco,pileupw)
+                h_Y_CMS_minus_RP_0_4_tracks_misreco[i].Fill(recoYCMS-rapidity_misreco,pileupw)
                 if passYcut_misreco:
                     h_MWW_MX_0_4_tracks_misreco_Ycut[i].Fill(recoMWW/mrp_misreco,pileupw)
+                    
 
-
-
-    if not ExclusiveMC and not DATA and mjet_veto and passesBoosted and jet_pruning and pfcand_nextracks<5:
+    if not ExclusiveMC and not DATA and mjet_veto and passesBoosted and jet_pruning and pfcand_nextracks < 5:
         for i in range(1,num_dataev_mixed_in):
             xi_signal = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[],"weight":[],"multi_arm0":[],"multi_arm1":[]}
             #xi_signal = {"3":[],"16":[],"23":[],"103":[],"116":[],"123":[]}
             #protonDataMixing(xi_signal,signal_bin)
-            passPPS_100=passPPSGeneralMixDataMC(e,xi_signal,sample,era)
+            passPPS_100=passPPSGeneralMixDataMC(e,xi_signal,sample,era,evm)
             
             if not passPPS_100[0] and not passPPS_100[1] and not passPPS_100[2]: continue
             #print "xi_signal",xi_signal
@@ -622,7 +631,7 @@ for e in chain:
             yww_100=protonYWWMixing()
             xi_1=max(xi_signal["23"])
             xi_2=max(xi_signal["123"])
-            if xi_1<0.04 or xi_2<0.04:
+            if xi_1 < 0.04 or xi_2 < 0.04:
                 continue
             rapidity_100=0.5*m.log(xi_1/xi_2)
             mrp_100=m.sqrt(169000000*xi_1*xi_2)
@@ -635,6 +644,7 @@ for e in chain:
                     h_MWW_MX_0_4_tracks_100events_Ycut[i].Fill(mww_100/mrp_100,0.01)
 
 
+
     passYcut=[False,False,False]
     for i in range(0,3):
 
@@ -644,8 +654,8 @@ for e in chain:
         xi_mult_56=-999.
         if passesPPS[i]:
             #if mjet_veto and passesBoosted and jet_pruning:
-            if mjet_veto and passesBoosted and tau21<0.6:
-                if len(xi["23"])>0 and len(xi["123"])>0:
+            if mjet_veto and passesBoosted and tau21 < 0.6:
+                if len(xi["23"]) > 0 and len(xi["123"]) > 0:
                     xi_mult_45=max(xi["23"])
                     xi_mult_56=max(xi["123"])
                     #M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
@@ -655,10 +665,10 @@ for e in chain:
 
         elif passPPS2[i]:
             #if mjet_veto and passesBoosted and jet_pruning:
-            if mjet_veto and passesBoosted and tau21<0.6:
+            if mjet_veto and passesBoosted and tau21 < 0.6:
                 xi["23"]=xi_data_mix["23"]
                 xi["123"]=xi_data_mix["123"]
-                if len(xi["23"])>0 and len(xi["123"])>0:
+                if len(xi["23"]) > 0 and len(xi["123"]) > 0:
                     xi_mult_45=max(xi["23"])
                     xi_mult_56=max(xi["123"])
                     #M_RP=m.sqrt(169000000*xi["23"][0]*xi["123"][0])
@@ -668,10 +678,13 @@ for e in chain:
 
         Yvalue=abs(recoYCMS-Rapidity_RP)
         passYcut[i]=passYcutFunc2(Yvalue,signal_samples[i])
-        if len(xi["23"])<1 or len(xi["123"])<1:
+        if ismisreco:
+            continue
+
+        if len(xi["23"]) < 1 or len(xi["123"]) < 1:
             continue
         #passesPPS=False
-        if xi_mult_45<0.04 or xi_mult_56<0.04:
+        if xi_mult_45 < 0.04 or xi_mult_56 < 0.04:
         #passesPPS=False
             continue
         #Yvalue=abs(recoYCMS-Rapidity_RP)
@@ -696,148 +709,148 @@ for e in chain:
             h_MWW_vs_MX_passPPS[i].Fill(M_RP,recoMWW)
 
         if mjet_veto and passesBoosted and jet_pruning and passesPPS[i]:
-            if DATA and pfcand_nextracks>4:
+            if DATA and pfcand_nextracks > 4:
                 h_Y_CMS_minus_RP_vs_MWW_MX_PPS[i].Fill(recoMWW/M_RP,recoYCMS-Rapidity_RP)
                 h_num_extra_tracks_PPS[i].Fill(pfcand_nextracks,pileupw*rw_passPPS)
                 h_num_extra_tracks_PPS_noDRl[i].Fill(pfcand_nextracks_noDRl,pileupw*rw_passPPS)
-                h_num_extra_tracks_PPS_reweight_extra_tracks[i].Fill(pfcand_nextracks,pileupw*rw_extrk*rw_passPPS)
+                h_num_extra_tracks_PPS_reweight_extra_tracks[i].Fill(pfcand_nextracks,pileupw*rw_passPPS)
                 h_extra_tracks_vs_MWW_PPS[i].Fill(recoMWW,pfcand_nextracks,pileupw*rw_passPPS)
                 h_extra_tracks_vs_MX_PPS[i].Fill(M_RP,pfcand_nextracks,pileupw*rw_passPPS)
             if not DATA:
                 h_num_extra_tracks_PPS[i].Fill(pfcand_nextracks,pileupw*rw_passPPS)
-                h_num_extra_tracks_PPS_reweight_extra_tracks[i].Fill(pfcand_nextracks,pileupw*rw_extrk*rw_passPPS)
+                h_num_extra_tracks_PPS_reweight_extra_tracks[i].Fill(pfcand_nextracks,pileupw*rw_passPPS)
                 h_num_extra_tracks_PPS_noDRl[i].Fill(pfcand_nextracks_noDRl,pileupw*rw_passPPS)
 
 
         if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and not DATA:    
-            if pfcand_nextracks<5:
-                h_xi_1_0_4_extratracks[i].Fill(xi["23"][0],pileupw*rw_extrk*rw_passPPS)
-                h_xi_2_0_4_extratracks[i].Fill(xi["123"][0],pileupw*rw_extrk*rw_passPPS)
-                h_MX_0_4_extratracks[i].Fill(M_RP,pileupw*rw_extrk*rw_passPPS)
-                h_MWW_0_4_extratracks[i].Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
-                h_Y_RP_0_4_extratracks[i].Fill(Rapidity_RP,pileupw*rw_extrk*rw_passPPS)
-                h_Y_CMS_minus_RP_0_4_extratracks[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_passPPS) 
+            if pfcand_nextracks < 5:
+                h_xi_1_0_4_extratracks[i].Fill(xi["23"][0],pileupw*rw_passPPS)
+                h_xi_2_0_4_extratracks[i].Fill(xi["123"][0],pileupw*rw_passPPS)
+                h_MX_0_4_extratracks[i].Fill(M_RP,pileupw*rw_passPPS)
+                h_MWW_0_4_extratracks[i].Fill(recoMWW,pileupw*rw_passPPS)
+                h_Y_RP_0_4_extratracks[i].Fill(Rapidity_RP,pileupw*rw_passPPS)
+                h_Y_CMS_minus_RP_0_4_extratracks[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_passPPS) 
                 if ExclusiveMC:
-                    h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS*xi["weight"][0])
-                else:h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
-                h_recoMWhad_0_4_tracks[i].Fill(recoMWhad,pileupw*rw_extrk*rw_passPPS)
+                    h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
+                else:h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
+                h_recoMWhad_0_4_tracks[i].Fill(recoMWhad,pileupw*rw_passPPS)
                 h_tau21_0_4_tracks[i].Fill(tau21,pileupw)
                 h_prunedMass_0_4_tracks[i].Fill(prunedMass,pileupw)
                 if passYcut[i]:
                     if ExclusiveMC:
-                        h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw*xi["weight"][0])
+                        h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw)
                     else:h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw)
 
-        #Signal plots in data, only looking at MWW/MX<0.8
+        #Signal plots in data, only looking at MWW/MX < 0.8
         if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and DATA:    
-            if pfcand_nextracks<5 and (recoMWW/M_RP)<0.8:
-                h_xi_1_0_4_extratracks[i].Fill(xi["23"][0],pileupw*rw_extrk*rw_passPPS)
-                h_xi_2_0_4_extratracks[i].Fill(xi["123"][0],pileupw*rw_extrk*rw_passPPS)
-                h_MX_0_4_extratracks[i].Fill(M_RP,pileupw*rw_extrk*rw_passPPS)
-                h_MWW_0_4_extratracks[i].Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
-                h_Y_RP_0_4_extratracks[i].Fill(Rapidity_RP,pileupw*rw_extrk*rw_passPPS)
-                h_Y_CMS_minus_RP_0_4_extratracks[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_passPPS) 
-                h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+            if pfcand_nextracks < 5 and (recoMWW/M_RP) < 0.8:
+                h_xi_1_0_4_extratracks[i].Fill(xi["23"][0],pileupw*rw_passPPS)
+                h_xi_2_0_4_extratracks[i].Fill(xi["123"][0],pileupw*rw_passPPS)
+                h_MX_0_4_extratracks[i].Fill(M_RP,pileupw*rw_passPPS)
+                h_MWW_0_4_extratracks[i].Fill(recoMWW,pileupw*rw_passPPS)
+                h_Y_RP_0_4_extratracks[i].Fill(Rapidity_RP,pileupw*rw_passPPS)
+                h_Y_CMS_minus_RP_0_4_extratracks[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_passPPS) 
+                h_MWW_MX_0_4_tracks[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
                 h_tau21_0_4_tracks[i].Fill(tau21,pileupw)
                 h_prunedMass_0_4_tracks[i].Fill(prunedMass,pileupw)
                 if passYcut[i]:
                     h_MWW_MX_0_4_tracks_Ycut[i].Fill(recoMWW/M_RP,pileupw)
 
         if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passPPS2[i] and DATA:    
-            if pfcand_nextracks<5:
-                h_xi_1_0_4_extratracks_notPPS[i].Fill(xi["23"][0],pileupw*rw_extrk)
-                h_xi_2_0_4_extratracks_notPPS[i].Fill(xi["123"][0],pileupw*rw_extrk)
-                h_MX_0_4_extratracks_notPPS[i].Fill(M_RP,pileupw*rw_extrk)
-                h_MWW_0_4_extratracks_notPPS[i].Fill(recoMWW,pileupw*rw_extrk)
-                h_Y_RP_0_4_extratracks_notPPS[i].Fill(Rapidity_RP,pileupw*rw_extrk)
-                h_Y_CMS_minus_RP_0_4_extratracks_notPPS[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk)   
-                h_MWW_MX_0_4_tracks_notPPS[i].Fill(recoMWW/M_RP,pileupw*rw_extrk)
-                h_recoMWhad_0_4_tracks_notPPS[i].Fill(recoMWhad,pileupw*rw_extrk)
-                h_tau21_0_4_tracks_notPPS[i].Fill(tau21,pileupw*rw_extrk)
-                h_prunedMass_0_4_tracks_notPPS[i].Fill(prunedMass,pileupw*rw_extrk)
+            if pfcand_nextracks < 5:
+                h_xi_1_0_4_extratracks_notPPS[i].Fill(xi["23"][0],pileupw)
+                h_xi_2_0_4_extratracks_notPPS[i].Fill(xi["123"][0],pileupw)
+                h_MX_0_4_extratracks_notPPS[i].Fill(M_RP,pileupw)
+                h_MWW_0_4_extratracks_notPPS[i].Fill(recoMWW,pileupw)
+                h_Y_RP_0_4_extratracks_notPPS[i].Fill(Rapidity_RP,pileupw)
+                h_Y_CMS_minus_RP_0_4_extratracks_notPPS[i].Fill(recoYCMS-Rapidity_RP,pileupw)   
+                h_MWW_MX_0_4_tracks_notPPS[i].Fill(recoMWW/M_RP,pileupw)
+                h_recoMWhad_0_4_tracks_notPPS[i].Fill(recoMWhad,pileupw)
+                h_tau21_0_4_tracks_notPPS[i].Fill(tau21,pileupw)
+                h_prunedMass_0_4_tracks_notPPS[i].Fill(prunedMass,pileupw)
                 if passYcut[i]:
-                    h_MWW_MX_0_4_tracks_notPPS_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+                    h_MWW_MX_0_4_tracks_notPPS_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
 
 
         ###########################################################
         #Start of looking at control regions
         ###########################################################
         #Inverting the pruned mass cut to get MWW/MX distribution.
-        if mjet_veto and passesBoosted and tau21<0.6 and prunedMass<50 and passesPPS[i]:    
-            h_MWW_invertPrunedMass[i].Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
+        if mjet_veto and passesBoosted and tau21 < 0.6 and prunedMass < 50 and passesPPS[i]:    
+            h_MWW_invertPrunedMass[i].Fill(recoMWW,pileupw*rw_passPPS)
             if passYcut[i]:
-                h_MWW_MX_invertPrunedMass_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+                h_MWW_MX_invertPrunedMass_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
 
 
 
     #Looking large extra tracks passing PPS, this is conrol region for W+jets and ttbar
-        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks<16 and pfcand_nextracks>4:
-            h_xi_1_control[i].Fill(xi["23"][0],pileupw*rw_extrk*rw_passPPS)
-            h_xi_2_control[i].Fill(xi["123"][0],pileupw*rw_extrk*rw_passPPS)
-            h_Y_RP_control[i].Fill(M_RP,pileupw*rw_extrk*rw_passPPS)
-            h_Y_CMS_minus_RP_control[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_passPPS)
-            h_MX_control[i].Fill(M_RP,pileupw*rw_extrk*rw_passPPS)
-            h_MWW_control[i].Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
-            h_MWW_MX_control[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
-            h_recoMWhad_control_control[i].Fill(recoMWhad,pileupw*rw_extrk*rw_passPPS)
-            h_tau21_control_control[i].Fill(tau21,pileupw*rw_extrk*rw_passPPS)
-            h_prunedMass_control_control[i].Fill(prunedMass,pileupw*rw_extrk*rw_passPPS)
+        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks < 16 and pfcand_nextracks > 4:
+            h_xi_1_control[i].Fill(xi["23"][0],pileupw*rw_passPPS)
+            h_xi_2_control[i].Fill(xi["123"][0],pileupw*rw_passPPS)
+            h_Y_RP_control[i].Fill(M_RP,pileupw*rw_passPPS)
+            h_Y_CMS_minus_RP_control[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_passPPS)
+            h_MX_control[i].Fill(M_RP,pileupw*rw_passPPS)
+            h_MWW_control[i].Fill(recoMWW,pileupw*rw_passPPS)
+            h_MWW_MX_control[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
+            h_recoMWhad_control_control[i].Fill(recoMWhad,pileupw*rw_passPPS)
+            h_tau21_control_control[i].Fill(tau21,pileupw*rw_passPPS)
+            h_prunedMass_control_control[i].Fill(prunedMass,pileupw*rw_passPPS)
             if passYcut[i]:
-                h_MWW_MX_control_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+                h_MWW_MX_control_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
 
-        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks>4:
-            h_xi_1_5_up[i].Fill(xi["23"][0],pileupw*rw_extrk*rw_passPPS)
-            h_xi_2_5_up[i].Fill(xi["123"][0],pileupw*rw_extrk*rw_passPPS)
-            h_MX_5_up[i].Fill(M_RP,pileupw*rw_extrk*rw_passPPS)
-            h_MWW_5_up[i].Fill(recoMWW,pileupw*rw_extrk*rw_passPPS)
-            h_Y_RP_5_up[i].Fill(Rapidity_RP,pileupw*rw_extrk*rw_passPPS)
-            h_Y_CMS_minus_RP_5_up[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_passPPS)         
-            h_MWW_MX_5_up[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks > 4:
+            h_xi_1_5_up[i].Fill(xi["23"][0],pileupw*rw_passPPS)
+            h_xi_2_5_up[i].Fill(xi["123"][0],pileupw*rw_passPPS)
+            h_MX_5_up[i].Fill(M_RP,pileupw*rw_passPPS)
+            h_MWW_5_up[i].Fill(recoMWW,pileupw*rw_passPPS)
+            h_Y_RP_5_up[i].Fill(Rapidity_RP,pileupw*rw_passPPS)
+            h_Y_CMS_minus_RP_5_up[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_passPPS)         
+            h_MWW_MX_5_up[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
             if passYcut[i]:
-                h_MWW_MX_control_5_up_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+                h_MWW_MX_control_5_up_Ycut[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
 
-        if mjet_veto and tau21<0.6 and passesBoosted and prunedMass<50 and passesPPS[i] and pfcand_nextracks>4:
-            h_MWW_MX_5_up_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+        if mjet_veto and tau21 < 0.6 and passesBoosted and prunedMass < 50 and passesPPS[i] and pfcand_nextracks > 4:
+            h_MWW_MX_5_up_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
             if passYcut[i]:
-                h_MWW_MX_control_5_up_Ycut_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+                h_MWW_MX_control_5_up_Ycut_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
 
-        if mjet_veto and tau21<0.6 and passesBoosted and prunedMass<50 and passesPPS[i] and pfcand_nextracks<5:
-            h_MWW_MX_0_4_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+        if mjet_veto and tau21 < 0.6 and passesBoosted and prunedMass < 50 and passesPPS[i] and pfcand_nextracks < 5:
+            h_MWW_MX_0_4_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
             if passYcut[i]:
-                h_MWW_MX_control_0_4_Ycut_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+                h_MWW_MX_control_0_4_Ycut_InvertPrunedMass[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
 
 
-        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passPPS2[i] and pfcand_nextracks>4 and DATA:
+        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passPPS2[i] and pfcand_nextracks > 4 and DATA:
             h_MWW_MX_5_up_notPPS[i].Fill(recoMWW/M_RP,pileupw)
             if passYcut[i]:
                 h_MWW_MX_5_up_Ycut_notPPS[i].Fill(recoMWW/M_RP,pileupw)
 
 
-        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passPPS2[i] and pfcand_nextracks<16 and pfcand_nextracks>4 and DATA:
-            h_xi_1_control_notPPS[i].Fill(xi["23"][0],pileupw*rw_extrk*rw_failPPS)
-            h_xi_2_control_notPPS[i].Fill(xi["123"][0],pileupw*rw_extrk*rw_failPPS)
-            h_Y_RP_control_notPPS[i].Fill(M_RP,pileupw*rw_extrk*rw_failPPS)
-            h_Y_CMS_minus_RP_control_notPPS[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_extrk*rw_failPPS)
-            h_MX_control_notPPS[i].Fill(M_RP,pileupw*rw_extrk*rw_failPPS)
-            h_MWW_control_notPPS[i].Fill(recoMWW,pileupw*rw_extrk*rw_failPPS)
-            h_MWW_MX_control_notPPS[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_failPPS)
-            h_recoMWhad_control_control_notPPS[i].Fill(recoMWhad,pileupw*rw_extrk*rw_failPPS)
-            h_tau21_control_control_notPPS[i].Fill(tau21,pileupw*rw_extrk*rw_failPPS)
-            h_prunedMass_control_control_notPPS[i].Fill(prunedMass,pileupw*rw_extrk*rw_failPPS)
+        if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and passPPS2[i] and pfcand_nextracks < 16 and pfcand_nextracks > 4 and DATA:
+            h_xi_1_control_notPPS[i].Fill(xi["23"][0],pileupw*rw_failPPS)
+            h_xi_2_control_notPPS[i].Fill(xi["123"][0],pileupw*rw_failPPS)
+            h_Y_RP_control_notPPS[i].Fill(M_RP,pileupw*rw_failPPS)
+            h_Y_CMS_minus_RP_control_notPPS[i].Fill(recoYCMS-Rapidity_RP,pileupw*rw_failPPS)
+            h_MX_control_notPPS[i].Fill(M_RP,pileupw*rw_failPPS)
+            h_MWW_control_notPPS[i].Fill(recoMWW,pileupw*rw_failPPS)
+            h_MWW_MX_control_notPPS[i].Fill(recoMWW/M_RP,pileupw*rw_failPPS)
+            h_recoMWhad_control_control_notPPS[i].Fill(recoMWhad,pileupw*rw_failPPS)
+            h_tau21_control_control_notPPS[i].Fill(tau21,pileupw*rw_failPPS)
+            h_prunedMass_control_control_notPPS[i].Fill(prunedMass,pileupw*rw_failPPS)
             if passYcut[i]:
-                h_MWW_MX_control_Ycut_notPPS[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_failPPS)
+                h_MWW_MX_control_Ycut_notPPS[i].Fill(recoMWW/M_RP,pileupw*rw_failPPS)
 
         #####################################################
         ##Additional plots that I don't look at very often
         #####################################################
-        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks>14 and pfcand_nextracks<31:
-            h_MWW_MX_control_15_30[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
-        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks>30 and pfcand_nextracks<51:
-            h_MWW_MX_control_30_50[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
-        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks>50 and pfcand_nextracks<71:
-            h_MWW_MX_control_50_70[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
-        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks>70 and pfcand_nextracks<101:
-            h_MWW_MX_control_70_100[i].Fill(recoMWW/M_RP,pileupw*rw_extrk*rw_passPPS)
+        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks > 14 and pfcand_nextracks < 31:
+            h_MWW_MX_control_15_30[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
+        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks > 30 and pfcand_nextracks < 51:
+            h_MWW_MX_control_30_50[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
+        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks > 50 and pfcand_nextracks < 71:
+            h_MWW_MX_control_50_70[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
+        if mjet_veto and passesBoosted and jet_pruning and passesPPS[i] and pfcand_nextracks > 70 and pfcand_nextracks < 101:
+            h_MWW_MX_control_70_100[i].Fill(recoMWW/M_RP,pileupw*rw_passPPS)
 
 
 fout.Write()

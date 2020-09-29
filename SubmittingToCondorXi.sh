@@ -28,8 +28,8 @@ cp ../makeBashScript.sh .
 cp ../base.jdl .
 sed -i "s|REPLACE|$PWD1|g" base.jdl
 
-for i in {1..10}
-#for i in {6..10}
+#for i in {1..10}
+for i in {6..10}
 do
     cat makeBashScript.sh >> "test_$i.sh"
     #output=`sed "${i}q;d" produceHistosSingleMu.txt`

@@ -62,9 +62,15 @@ for f in glob.glob("W1Jets*_ext1.root"):
     print f
 #Need to add up all non-ext files as well.
 for f in glob.glob("W2Jets*pythia8_1.root"):
+    #if "W2JetsToLNu_LHEWpT_150-250" in f:
+    #    subprocess.call("hadd {0}.root {1}_1.root {1}_3.root {1}_4.root {1}_5.root {1}_6.root {1}_7.root".format(f[:-7],f[:-7]),shell=True)
+    #else:
     subprocess.call("hadd {0}.root {1}_1.root {1}_2.root {1}_3.root {1}_4.root {1}_5.root {1}_6.root {1}_7.root".format(f[:-7],f[:-7]),shell=True)
 for f in glob.glob("W2Jets*_ext1_1.root"):
     #subprocess.call("mv {0}.root {1}-original.root".format(f[:-10],f[:-10]),shell=True)
+    #if "250-400" in f or "400-inf" in f:
+    #    subprocess.call("hadd {0}.root {1}*root".format(f[:-12],f[:-7]),shell=True)
+    #    break
     subprocess.call("mv {0}.root {1}-original.root".format(f[:-12],f[:-12]),shell=True)
     #subprocess.call("hadd {0}.root {1}-original.root {2}".format(f[:-10],f[:-10],f),shell=True)
     subprocess.call("hadd {0}.root {1}-original.root {2}*root".format(f[:-12],f[:-12],f[:-7]),shell=True)
@@ -103,6 +109,8 @@ for f in glob.glob("*W1Jets*_ext1.json"):
 
 #This is for W2Jets
 for f in glob.glob("*W2Jets*_ext1_1.json"):
+    #if "250-400" in f or "400-inf" in f:
+    #    continue
     num_events_ext1=0
     #if "ext1" in f:
     #subprocess.call("cp {0}.json {1}-original.json".format(f[:-10],f[:-10]),shell=True)
@@ -117,7 +125,7 @@ for f in glob.glob("*W2Jets*_ext1_1.json"):
         with open(filename_ext, "r") as infile_ext:
             data_ext=json.load(infile_ext)
             num_events_ext1=data_ext[f[13:-7]+"_{0}".format(i)][0]
-            if i==1:
+            if i == 1:
                 cross_section=data_ext[f[13:-7]+"_{0}".format(i)][1]
                 color=data_ext[f[13:-7]+"_{0}".format(i)][2]
         #result.append(json.load(infile))

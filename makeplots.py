@@ -8,22 +8,12 @@ import datetime
 import sys
 
 #rebin=128
-rebin=1
+rebin=2
 channel="muon"
 #channel="electron"
-#hdirectory="histos_muon_withSimPUPropagation"
-#hdirectory="OldHistos/2019-11-08-Electron-MultiRP"
-#hdirectory="2019-11-15-MultiRP"
-#hdirectory="2019-11-19-Electron-MultiRP"
-#hdirectory="2020-03-25-Muon-MultiRP"
-#hdirectory="2020-04-30-MuonAllDataMC-XiCMSCut"
-#hdirectory="2020-06-24-MuonAllDataMC-XiCMSCut-LessStrictMixing"
-hdirectory="2020-07-02-MuonAllDataMC-XiCMSCut"
-#hdirectory="2020-04-30-ElectronAllDataMC"
-#hdirectory="2020-04-30-ElectronAllDataMC-XiCMSCut"
-#hdirectory="Old/2020-04-28-MuonAllDataMC"
-#hdirectory="histos_electron_withDataProtonMixedIn_withBugFix"
-#hdirectory="OldFiles/histos_electron_withDataProtonMixedIn"
+#hdirectory="2020-09-17-MuonAllDataMC"
+hdirectory="2020-09-23-MuonAllDataMC"
+#hdirectory="2020-09-23-ElectronAllDataMC"
 #extra_tracks_weight=2.205
 #extra_tracks_weight=1.042862
 extra_tracks_weight=1/1.0199
@@ -52,11 +42,11 @@ MCsamples=[#"WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8","WJetsToLNu_2J_Tu
 "W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8","W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8",
 "DYJetsToLL_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8","DYJetsToLL_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8",
 "TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8",
-"QCD_Pt_170to300_TuneCP5_13TeV_pythia8","QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
-"QCD_Pt_470to600_TuneCP5_13TeV_pythia8","QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
-"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8","QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
-"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8","QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
-"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8","QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_170to300_TuneCP5_13TeV_pythia8","QCD_Pt_300to470_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_470to600_TuneCP5_13TeV_pythia8","QCD_Pt_600to800_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_800to1000_TuneCP5_13TeV_pythia8","QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8","QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8",
+#"QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8","QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8",
 "ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8","ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
 "ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8","ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
 "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
