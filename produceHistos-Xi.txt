@@ -1,0 +1,9 @@
+python histos_datamixing0.py latest muon SingleMuon crab_Run2018D-justProtons -b
+python histos_datamixing0.py latest electron EGamma crab_Run2018D-justProtons -b
+python histos_datamixing0.py latest muon SingleMuon crab_Run2018A-justProtons -b
+python histos_datamixing0.py latest muon SingleMuon crab_Run2018B-justProtons -b
+python histos_datamixing0.py latest muon SingleMuon crab_Run2018C-justProtons -b
+python histos_datamixing0.py latest electron EGamma crab_Run2018A-justProtons -b
+python histos_datamixing0.py latest electron EGamma crab_Run2018B-justProtons -b
+python histos_datamixing0.py latest electron EGamma crab_Run2018C-justProtons -b
+
