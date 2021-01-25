@@ -16,12 +16,13 @@
 
 2) After all jobs are done there is some postprocessing that needs to be done
 
- a) This combines all the data files from different eras, and combines all the information on number of events, etc. into a single json file
+       a) This combines all the data files from different eras, and combines all the information on number of events, etc. into a single json file
    
- b) To run this on the do: "python postprocess.py 2019-11-08-Electron electron", where electron denotes electron channel
-      or if you are running on the W+jets pt samples "python postprocessManyWJets.py 2019-11-08-Electron electron"
+       b) To run this on the do: "python postprocess.py 2019-11-08-Electron electron", where electron denotes electron channel
+        or if you are running on the W+jets pt samples "python postprocessManyWJets.py 2019-11-08-Electron electron"
 
 3) Once the postprocessing is done then you can make nice plots
-   a) For data vs. MC use the script makeplots.py, this will also make a ratio plot. Can specify to make several plots at the same time or one at a time
+   
+       a) For data vs. MC use the script makeplots.py, this will also make a ratio plot. Can specify to make several plots at the same time or one at a time
 
-   b) For signal prediction plots use makeSignalRegionPlotGeneral.py
+       b) For signal prediction plots use makeSignalRegionPlotGeneral.py
