@@ -828,7 +828,8 @@ def AddFilesToChain(chain,ListOfFiles,DATA):
     return num_events
 
 def GetListOfFiles(sample_name,file_dir,DATA,directory_type):
-    print "Is is Data: ",DATA
+    verbose=False
+    if verbose: print "Is is Data: ",DATA
     mypath_prefix='/hadoop/cms/store/user/rebassoo/'
     #mypath_prefix='/eos/uscms/store/user/rebassoo/'
     #print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
@@ -842,9 +843,9 @@ def GetListOfFiles(sample_name,file_dir,DATA,directory_type):
         m_time_string=0.
         dirs=glob.glob(mypath_prefix+'{0}/{1}/*/'.format(sample_name,file_dir))
         for di in dirs:
-            print di
+            if verbose: print di
             d=di.split("/")[8]
-            print d
+            if verbose: print d
         #for d in os.listdir(mypath_prefix+'{0}/{1}'.format(sample_name,file_dir)):
             date=int(d.split('_')[0])
             date_string=d.split('_')[0]
@@ -862,14 +863,16 @@ def GetListOfFiles(sample_name,file_dir,DATA,directory_type):
                     m_time=t
                     m_time_string=t_string
 
-        print m_date
-        print m_time        
+        if verbose:
+            print m_date
+            print m_time        
         if m_time > 0:
             sub_dir=str(m_date_string)+"_"+str(m_time_string)
         else:
             sub_dir=str(m_date_string)
-        print sub_dir
+        if verbose: print sub_dir
         itt = 0
+        print mypath_prefix+'{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)
         for i in os.listdir(mypath_prefix+'{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)):
             mypath=mypath_prefix+'{0}/{1}/{2}/{3}/'.format(sample_name,file_dir,sub_dir,i)
             ListOfFiles += [mypath_prefix+'{0}/{1}/{2}/{3}/{4}'.format(sample_name,file_dir,sub_dir,i,f) for f in listdir(mypath) if isfile(join(mypath, f))]
