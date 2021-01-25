@@ -5,11 +5,11 @@
 #Analysis steps
 
 #1) Submit to run batch jobs for all data/MC to make histogram files
-#   a) The scripts SubmittingToCondor*sh do this. An example of this is "./SubmittingToCondorE.sh 2021-01-24-Output", 
-#      where 2021-01-24-Output is the output directory all the histograms will be made in
-#   b) The Submit*sh scripts call the files produceHistosSingle*-dilepton.txt, which in them have the commands to run on each sample
-#   c) An example of running on a particular sample is: python histos_quick.py latest muon SingleMuon crab_Run2017F-withDilepton -b
-#       histos_quick.py is what has the code to run over the ntuples, make cuts, and output the histograms to a root file
+  a) The scripts SubmittingToCondor*sh do this. An example of this is "./SubmittingToCondorE.sh 2021-01-24-Output", 
+     where 2021-01-24-Output is the output directory all the histograms will be made in
+   b) The Submit*sh scripts call the files produceHistosSingle*-dilepton.txt, which in them have the commands to run on each sample
+   c) An example of running on a particular sample is: python histos_quick.py latest muon SingleMuon crab_Run2017F-withDilepton -b
+       histos_quick.py is what has the code to run over the ntuples, make cuts, and output the histograms to a root file
 
 #2) After all jobs are done there is some postprocessing that needs to be done
 #   a) This combines all the data files from different eras, and combines all the information on number of events, etc. into a single json file
