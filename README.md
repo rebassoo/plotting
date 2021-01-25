@@ -7,22 +7,28 @@
 1) Submit to run batch jobs for all data/MC to make histogram files
  
        a) The scripts SubmittingToCondor*sh do this. An example of this is "./SubmittingToCondorE.sh 2021-01-24-Output", 
-        where 2021-01-24-Output is the output directory all the histograms will be made in
+          where 2021-01-24-Output is the output directory all the histograms will be made in
 
-       b) The Submit*sh scripts call the files produceHistosSingle*-dilepton.txt, which in theam have the commands to run on each sample
+       b) The Submit*sh scripts call the files produceHistosSingle*-dilepton.txt, 
+          which in theam have the commands to run on each sample
 
-       c) An example of running on a particular sample is: python histos_quick.py latest muon SingleMuon crab_Run2017F-withDilepton -b
-        histos_quick.py is what has the code to run over the ntuples, make cuts, and output the histograms to a root file
+       c) An example of running on a particular sample is: 
+          python histos_quick.py latest muon SingleMuon crab_Run2017F-withDilepton -b
+          histos_quick.py is what has the code to run over the ntuples, make cuts, and output the histograms to a root file
 
 2) After all jobs are done there is some postprocessing that needs to be done
 
-       a) This combines all the data files from different eras, and combines all the information on number of events, etc. into a single json file
+       a) This combines all the data files from different eras, and combines all the information 
+          on number of events, etc. into a single json file
    
-       b) To run this on the do: "python postprocess.py 2019-11-08-Electron electron", where electron denotes electron channel
-        or if you are running on the W+jets pt samples "python postprocessManyWJets.py 2019-11-08-Electron electron"
+       b) To run this on the do: "python postprocess.py 2019-11-08-Electron electron", 
+          where electron denotes electron channel
+          or if you are running on the W+jets pt samples 
+          "python postprocessManyWJets.py 2019-11-08-Electron electron"
 
 3) Once the postprocessing is done then you can make nice plots
    
-       a) For data vs. MC use the script makeplots.py, this will also make a ratio plot. Can specify to make several plots at the same time or one at a time
+       a) For data vs. MC use the script makeplots.py, this will also make a ratio plot. 
+          Can specify to make several plots at the same time or one at a time
 
        b) For signal prediction plots use makeSignalRegionPlotGeneral.py
