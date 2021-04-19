@@ -7,11 +7,12 @@ from htools import *
 import sys
 import time
 
-if len(sys.argv) < 5:
-    print "Need to specify 5 inputs parameters, i.e.:"
-    print "  python histos_mue.py muon latest MuonEG crab_runBv3 multiRP"
+if len(sys.argv) < 6:
+    print "Need to specify 6 inputs parameters, i.e.:"
+    print "python histos_quick.py latest muon SingleMuon crab_Run2018A-withDilepton -nb"
     print "  or"
-    print "  python histos_mue.py muon specific MuonEG crab_runBv3/171116_215828/0001"
+    print "python histos_quick.py muon specific SingleMuon crab_Run2018A-withDilepton/200707_182742/0000 -nb"
+    print "the input parameter latest looks for most recent ntuple in the directory listed"
     sys.exit()
 
 directory_type=sys.argv[1]
@@ -71,21 +72,16 @@ ListOfFiles=[]
 returnedFiles=GetListOfFiles(sample_name,file_dir,DATA,directory_type)
 ListOfFiles=returnedFiles[0]
 output_name=returnedFiles[1]
-if "LHEWpT" in output_name:
-    if "ext1" in file_dir:  
-        output_name=output_name+"_ext1"
-        sample_name=sample_name+"_ext1"
-#fout = TFile('histos_{0}/{1}.root'.format(channel,output_name),'recreate')
-if job_number>0:
-    output_name=output_name+"_"+str(job_number)
-    sample_name=sample_name+"_"+str(job_number)
-
 fout = TFile('{0}.root'.format(output_name),'recreate')
 fout.cd()
 
 
 #Chain Together List Of Files
-chain = TChain('demo/SlimmedNtuple')
+if DATA:
+    chain = TChain('SlimmedNtuple')
+else:
+    chain = TChain('demo/SlimmedNtuple')
+
 num_events=AddFilesToChain(chain,ListOfFiles,DATA)
 if not DATA and (sample_name != "ExclusiveWW"):
     modifyJson(sample_name,num_events,batch)
@@ -93,7 +89,7 @@ if not DATA and (sample_name != "ExclusiveWW"):
 fout.cd()
 
 print("--- %s seconds ---" % (time.time() - start_time))
-
+#This defines all the histograms
 h_deltaR_lepton_jet=TH1F("h_deltaR_lepton_jet",";#deltaR({0},jet);".format(pname),200,0,10)
 h_deltaphi_jet_met=TH1F("h_deltaphi_jet_met",";#delta#Phi(MET,jet);",100,0,5)
 h_deltaphi_jet_Wleptonic=TH1F("h_deltaphi_jet_Wleptonic",";#delta#Phi(MET,jet);",100,0,5)
@@ -155,6 +151,7 @@ h_num_extra_tracks_notPPS=TH1F("h_num_extra_tracks_notPPS",";Number of extra tra
 h_num_extra_tracks_notPPS_reweight_extra_tracks=TH1F("h_num_extra_tracks_notPPS_reweight_extra_tracks",";Number of extra tracks;",20,-0.5,99.5)
 h_num_extra_tracks_notPPS_noDRl=TH1F("h_num_extra_tracks_notPPS_noDRl",";Number of extra tracks;",20,-0.5,99.5)
 
+#For 2018 there is only two signal regions, so the PixelPixel will always be zero
 selection=["MultiRP","PixelPixel","MultiPixel"]
 for i in range(0,3):
     h_extra_tracks_vs_MWW_PPS.append(TH2F("h_extra_tracks_vs_MWW_PPS_{0}".format(selection[i]),";;",100,0,2000,100,-0.5,99.5))
@@ -271,16 +268,8 @@ num_events=chain.GetEntries()
 num_dataev_mixed_in=100
 print num_events
 
-#SetBranchAddress(chain)
-
 it=0
-multiply_factor=seed_input-47
-if multiply_factor>0:
-    r.seed(seed_input+multiply_factor*job_number)
-else:
-    r.seed(seed_input)
-#r.seed(16)
-#r.seed()
+#This defines a dictionary that is used to look for any duplicate events.
 re_dict={}
 era=""
 batch_prefix=""
@@ -293,17 +282,6 @@ else:
         era=RandomEraFine2018()
     if year == "2017":
         era=RandomEra()
-
-#Obtain list of events with corresponding index
-if year == "2018" and DATA:
-    if channel == "muon":
-        fp=open('{0}passingEventsMuonRun{1}-WithIndex.txt'.format(batch_prefix,era[0]),'r')
-    if channel == "electron":
-        fp=open('{0}passingEventsElectronRun{1}-WithIndex.txt'.format(batch_prefix,era[0]),'r')
-    #fp=open('passingEventsMuonRun{0}.txt'.format("B"),'r')
-    long_string=fp.read()
-else:
-    long_string=""
 
 #Obtain ntuple for protons to mix in for data/MC and with proper corrections for data
 f2=TFile()
@@ -319,7 +297,6 @@ elif year == "2017" and channel == "electron":
     f2=TFile("{0}ElectronDataProtonsRun{0}.root".format(batch_prefix,era))
 treeProtons=f2.Get("SlimmedNtuple")
 treeProtonsEntries=treeProtons.GetEntries()
-
 evm=eventListMixing()
 
 print("Just before loop --- %s seconds ---" % (time.time() - start_time))
@@ -521,7 +498,8 @@ for e in chain:
             h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_400_up.Fill(pfcand_nextracks,pileupw)
         if WLeptonicPt > 600:
             h_pfcand_nextracks_MjetVeto_WleptonicCuts_Wpt_600_up.Fill(pfcand_nextracks,pileupw)
-    
+
+    #Up until now have only looked at CMS information, no PPS information
     #Only look at CMS stuff
     #continue
 
@@ -560,7 +538,7 @@ for e in chain:
             #passPPSNewPixel(e,xi_det)
             #passPPSNewStrip(e,xi_det)
         if sample == "Data":
-            passesPPS=passPPSGeneralData(e,xi,era,sample_name,year,long_string,treeProtons)
+            passesPPS=passPPSGeneralData(e,xi,era,sample_name,year)
         if sample == "MC":
             passesPPS=passPPSGeneralMixDataMC(e,xi,sample,era,year,treeProtons,treeProtonsEntries,evm)
 
@@ -615,7 +593,7 @@ for e in chain:
         else:
             h_num_extra_tracks_notPPS_reweight_extra_tracks.Fill(pfcand_nextracks,pileupw*rw_extrk*rw_failPPS)
 
-    #print passesPPSMisReco
+    #This block is for misreconstructed signal, one proton from signal, one from pileup
     signal_samples=["multiRP","pixel-pixel","multiPixel"]
     for i in range(0,3):
         if mjet_veto and passesBoosted and jet_pruning and failsAllPPS and \
@@ -640,11 +618,10 @@ for e in chain:
                 h_MWW_MX_0_4_tracks_misreco[i].Fill(recoMWW/mrp_misreco,pileupw)
                 if passYcut_misreco:
                     h_MWW_MX_0_4_tracks_misreco_Ycut[i].Fill(recoMWW/mrp_misreco,pileupw)
-
-
     if ismisreco:
         continue
 
+    #This is to produce background prediction from MC mixed with data protons
     if not ExclusiveMC and not DATA and mjet_veto and passesBoosted and \
        jet_pruning and pfcand_nextracks < 5:
         for i in range(1,num_dataev_mixed_in):
@@ -672,10 +649,8 @@ for e in chain:
                     h_MWW_MX_0_4_tracks_100events_Ycut[i].Fill(mww_100/mrp_100,0.01)
 
 
-
     passYcut=[False,False,False]
     for i in range(0,3):
-
         M_RP=-999.
         Rapidity_RP=-999.
         xi_mult_45=-999.

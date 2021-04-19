@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#Finn Rebassoo, LLNL 10-16-2017
+#Finn Rebassoo, LLNL 10-16-2019
 import math as m
 import random as r
 import os
@@ -114,11 +114,11 @@ def RandomEra2018():
 def addPileupProtons(e,xi,era,sample,year,evm,tree=0,entries=0):
     nVerticesCMS=e.nVertices
     if sample != "DATA":
-        if e.muon_pt.size()>0:
-            f=TFile("xiEventsRun{0}-2018.root".format(era[0]))
-        if e.electron_pt.size()>0:
-            f=TFile("xiEventsRun{0}-2018-e.root".format(era[0]))
-        #f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
+        #if e.muon_pt.size()>0:
+        #    f=TFile("xiEventsRun{0}-2018.root".format(era[0]))
+        #if e.electron_pt.size()>0:
+        #    f=TFile("xiEventsRun{0}-2018-e.root".format(era[0]))
+        f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
         #f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
         tree=f.Get("SlimmedNtuple")
         entries=tree.GetEntries()
@@ -231,60 +231,6 @@ def pixelLimits2018(x,y,era,rpid):
     else:
         return False
 
-
-
-def calculateMultiRPEffic2017(x_strip,y_strip,era,arm):
-    f=TFile("pixelEfficiencies_multiRP.root")
-    effic45=1.
-    effic56=1.
-    r1=0.
-    r2=0.
-    if era == "C":
-        if r.random<0.6179316777:
-            era = "C1"
-        else:
-            era = "C2"
-    if era == "F":
-        ran1=r.random
-        if ran1<0.128651:
-            era = "F1"
-        elif ran1>0.128651 and ran1<0.7252057066:
-            era = "F2"
-        else:
-            era = "F3"
-    #print era
-    if len(x_strip["3"])>0:
-        x45=x_strip["3"][0]
-        y45=y_strip["3"][0]
-        #print "x45: ",x45
-        #print "y45: ",y45
-        #if not pixelLimits(x45,y45,era,"45"):
-        #    return 0.
-        #r1=r.random()
-        h45=f.Get("Pixel/2017/2017{0}/h45_220_2017{1}_all_2D".format(era,era))
-        #h45=f.Get("Pixels/2017/2017{0}/h45_220_2017{1}_all_2D".format("all",""))
-        effic45=h45.GetBinContent(h45.FindBin(x45,y45))
-        #print effic45
-        if arm == "45":
-            return effic45
-    if len(x_strip["103"])>0:
-        x56=x_strip["103"][0]
-        y56=y_strip["103"][0]
-        #print "x56: ",x56
-        #print "y56: ",y56
-        #if not pixelLimits(x56,y56,era,"56"):
-        #    return 0.
-        #r2=r.random()
-        h56=f.Get("Pixel/2017/2017{0}/h56_220_2017{1}_all_2D".format(era,era))
-        #h56=f.Get("Pixels/2017/2017{0}/h56_220_2017{1}_all_2D".format("all",""))
-        effic56=h56.GetBinContent(h56.FindBin(x56,y56))
-        #print effic56
-        if arm == "56":
-            return effic56
-
-    weight=effic45*effic56
-    return weight
-
 def passYcutFunc2(Yvalue_,signal_bin):
     #print Yvalue_
     #print signal_bin
@@ -356,42 +302,10 @@ def calculatePixelRadEffic2018(x_pixel,y_pixel,era,rp):
     print "Rp number is not 3 or 103, something is incorrect in pixel radiation correctoin"
     return False
 
-def passPPSGeneralData(e,xi,era,sample,year,long_string,tree2):
+def passPPSGeneralData(e,xi,era,sample,year):
     passPPSMultiRP=False
     era=findEra(e.run)
-    if sample == "SingleElectron" or year == "2018":
-        if year == "2018":
-            str_event="{0}:{1}:{2}\n".format(e.run,e.lumiblock,e.event)
-            #print str_event
-            index=int(long_string.find(str_event))
-            #print index
-            entry=0
-            if index < 0:
-                print "Run, event lumiblock not found"
-                print "Run, etc.: {0}:{1}:{2}".format(e.run,e.lumiblock,e.event)
-            elif index < 10 and index >-1: 
-                print long_string[:index-1]
-                entry = int(long_string[:index-1])
-            else:
-            #if str_event in long_string:
-                sub_string=long_string[index-8:index-1]
-                #entry=0
-                if "\n" in sub_string:
-                    entry = int(sub_string.split("\n")[1])
-                else:
-                    #print sub_string
-                    #print str_event
-                    entry = int(sub_string)
-                if entry == 0: "Looking for the substring didn't work"
-
-            tree2.GetEntry(entry-2)
-            if index > -1:
-                passPPSMultiRP=passPPSMulti(tree2,xi,era)
-            else:
-                return [False,False,False]
-        else:
-            print "Problem with year in passPPSGeneralData"
-
+    passPPSMultiRP=passPPSMulti(e,xi,era)
     passMultiRP=False
     passMultiPixel=False
     if passPPSMultiRP and len(xi["multi_arm0"]) == 1 and len(xi["multi_arm1"]) == 1:
@@ -409,8 +323,6 @@ def passPPSGeneralData(e,xi,era,sample,year,long_string,tree2):
     passPPS=[passMultiRP,False,passMultiPixel]
     #print passPPS
     return passPPS
-
-
 
 def passPPSGeneralMixDataMC(e,xi,sample,era,year,tree,entries,evm):
     if sample != "Data":
@@ -648,6 +560,65 @@ def AddFilesToChain(chain,ListOfFiles,DATA):
     return num_events
 
 def GetListOfFiles(sample_name,file_dir,DATA,directory_type):
+    verbose=False
+    if verbose: print "Is is Data: ",DATA
+    mypath_prefix='/hadoop/cms/store/user/rebassoo/'
+    #mypath_prefix='/eos/uscms/store/user/rebassoo/'
+    #print os.listdir('/hadoop/cms/store/user/rebassoo/{0}/{1}'.format(sample_name,file_dir))
+    print("directory_type: ",directory_type)
+    ListOfFiles=[]
+    if directory_type == 'latest':
+        if DATA: output_name=sample_name+'_'+file_dir.split('_')[1]
+        else: output_name=sample_name
+        m_date=0.
+        m_date_string=0.
+        m_time=0.
+        m_time_string=0.
+        dirs=glob.glob(mypath_prefix+'{0}/{1}/*/'.format(sample_name,file_dir))
+        for di in dirs:
+            if verbose: print di
+            d=di.split("/")[8]
+            if verbose: print d
+        #for d in os.listdir(mypath_prefix+'{0}/{1}'.format(sample_name,file_dir)):
+            date=int(d.split('_')[0])
+            date_string=d.split('_')[0]
+            t=0
+            t_string=''
+            if '_' in d:
+                t=int(d.split('_')[1])
+                t_string=d.split('_')[1]
+            if date >= m_date: 
+                m_date=date
+                m_date_string=date_string
+                m_time=t
+                m_time_string=t_string
+                if t > m_time: 
+                    m_time=t
+                    m_time_string=t_string
+
+        if verbose:
+            print m_date
+            print m_time        
+        if m_time > 0:
+            sub_dir=str(m_date_string)+"_"+str(m_time_string)
+        else:
+            sub_dir=str(m_date_string)
+        if verbose: print sub_dir
+        itt = 0
+        print mypath_prefix+'{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)
+        for i in os.listdir(mypath_prefix+'{0}/{1}/{2}'.format(sample_name,file_dir,sub_dir)):
+            mypath=mypath_prefix+'{0}/{1}/{2}/{3}/'.format(sample_name,file_dir,sub_dir,i)
+            ListOfFiles += [mypath_prefix+'{0}/{1}/{2}/{3}/{4}'.format(sample_name,file_dir,sub_dir,i,f) for f in listdir(mypath) if isfile(join(mypath, f))]
+
+    if directory_type == 'specific':
+        mypath=mypath_prefix+'{0}/{1}/'.format(sample_name,file_dir)
+        ListOfFiles = [mypath_prefix+'{0}/{1}/{2}'.format(sample_name,file_dir,f) for f in listdir(mypath) if isfile(join(mypath, f))]
+        output_name=sample_name+'_'+file_dir.split('_')[1].split('/')[0]+'_'+file_dir.split('/')[2]
+
+    return ListOfFiles,output_name
+
+
+def GetListOfFilesOLD(sample_name,file_dir,DATA,directory_type):
     print "Is is Data: ",DATA
     mypath_prefix='/hadoop/cms/store/user/rebassoo/'
     #mypath_prefix='/eos/uscms/store/user/rebassoo/'
