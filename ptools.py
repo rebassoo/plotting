@@ -49,6 +49,7 @@ def writePlots(c,Ycut,channel,signal_region,background_method,year,justSignal=Fa
         latex.DrawLatex(0.61,0.75,"#frac{MC background predictions}{}")
         latex.DrawLatex(0.61,0.52,"#frac{Signal predictions}{}")
         c.Print("BackgroundPrediction_{0}_{1}{2}_{3}_{4}.pdf".format(signal_region,background_method,ycut_str,channel,year))
+        #c.Print("BackgroundPrediction_{0}_{1}{2}_{3}_{4}.C".format(signal_region,background_method,ycut_str,channel,year))
 
 def calcAco(phi1,phi2):
     result = phi1-phi2
