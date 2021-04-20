@@ -61,6 +61,21 @@ else:
 print "ExclusiveMC", ExclusiveMC
 print "Sample: ",sample
 
+era=""
+batch_prefix=""
+if not batch: batch_prefix="inputfiles/"
+if DATA:
+    if directory_type == "local":
+        era=file_dir[32]
+    else:
+        era=file_dir[12]
+    #era=findEra(e.run)
+else:
+    if year == "2018":
+        era=RandomEraFine2018()
+    if year == "2017":
+        era=RandomEra()
+
 
 ListOfFiles=[]
 output_name=""
@@ -68,6 +83,7 @@ output_name=""
 if DATA and directory_type == "local":
     chain = TChain('SlimmedNtuple')
     ListOfFiles.append(file_dir)
+    output_name="SingleMuon_Run2018{0}-withDilepton".format(era)
 else:
     #Get List Of Files
     returnedFiles=GetListOfFiles(sample_name,file_dir,DATA,directory_type)
@@ -267,20 +283,6 @@ print num_events
 it=0
 #This defines a dictionary that is used to look for any duplicate events.
 re_dict={}
-era=""
-batch_prefix=""
-if not batch: batch_prefix="inputfiles/"
-if DATA:
-    if directory_type == "local":
-        era=file_dir[32]
-    else:
-        era=file_dir[12]
-    #era=findEra(e.run)
-else:
-    if year == "2018":
-        era=RandomEraFine2018()
-    if year == "2017":
-        era=RandomEra()
 
 #Obtain ntuple for protons to mix in for data/MC and with proper corrections for data
 f2=TFile()
