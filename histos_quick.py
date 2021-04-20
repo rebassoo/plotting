@@ -11,7 +11,9 @@ if len(sys.argv) < 6:
     print "Need to specify 6 inputs parameters, i.e.:"
     print "python histos_quick.py latest muon SingleMuon crab_Run2018A-withDilepton -nb"
     print "  or"
-    print "python histos_quick.py muon specific SingleMuon crab_Run2018A-withDilepton/200707_182742/0000 -nb"
+    print "python histos_quick.py specific muon SingleMuon crab_Run2018A-withDilepton/200707_182742/0000 -nb"
+    print " or"
+    print "python histos_quick.py local muon SingleMuon SlimmedNtuple_SingleMuon2018-RunA.root -nb"
     print "the input parameter latest looks for most recent ntuple in the directory listed"
     sys.exit()
 
@@ -24,20 +26,12 @@ file_dir=sys.argv[4]
 print file_dir
 batch=False
 #signal_bin="multiRP"
+#This denotes whether it is a batch submission or not
 if len(sys.argv) > 4:
     if sys.argv[5] == "-b":
         batch=True
 if len(sys.argv) < 6:
-    print "Need to specify if batch submission and if it is multiRP, pixel-pixel, or multiPixel"
-#channel="electron"
-#if len(sys.argv) > 6:
-#    signal_bin=sys.argv[6]
-seed_input=0
-if len(sys.argv) > 6:
-    seed_input=int(sys.argv[6])
-job_number=0
-if len(sys.argv) > 7:
-    job_number=int(sys.argv[7])
+    print "Need to specify 6 input parameters"
 
 METCUT=0
 pname="l"
@@ -67,20 +61,22 @@ else:
 print "ExclusiveMC", ExclusiveMC
 print "Sample: ",sample
 
-#Get List Of Files
+
 ListOfFiles=[]
-returnedFiles=GetListOfFiles(sample_name,file_dir,DATA,directory_type)
-ListOfFiles=returnedFiles[0]
-output_name=returnedFiles[1]
+output_name=""
+#Chain Together List Of Files
+if DATA and directory_type == "local":
+    chain = TChain('SlimmedNtuple')
+    ListOfFiles.append(file_dir)
+else:
+    #Get List Of Files
+    returnedFiles=GetListOfFiles(sample_name,file_dir,DATA,directory_type)
+    ListOfFiles=returnedFiles[0]
+    output_name=returnedFiles[1]
+    chain = TChain('demo/SlimmedNtuple')
+
 fout = TFile('{0}.root'.format(output_name),'recreate')
 fout.cd()
-
-
-#Chain Together List Of Files
-if DATA:
-    chain = TChain('SlimmedNtuple')
-else:
-    chain = TChain('demo/SlimmedNtuple')
 
 num_events=AddFilesToChain(chain,ListOfFiles,DATA)
 if not DATA and (sample_name != "ExclusiveWW"):
@@ -275,7 +271,10 @@ era=""
 batch_prefix=""
 if not batch: batch_prefix="inputfiles/"
 if DATA:
-    era=file_dir[12]
+    if directory_type == "local":
+        era=file_dir[32]
+    else:
+        era=file_dir[12]
     #era=findEra(e.run)
 else:
     if year == "2018":
@@ -315,13 +314,6 @@ for e in chain:
     if it == 0:
         print "Get to first event in loop"
     it=it+1
-    event_itt=5e6
-    if job_number>0 and job_number<7:
-        if not (it>=(job_number-1)*event_itt and it<(job_number*event_itt)):
-            continue
-    if job_number==7:
-        if not (it>=(job_number-1)*event_itt):
-            continue
     #if it>500:
     #    break
     run=e.run
