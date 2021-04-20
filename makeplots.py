@@ -8,13 +8,9 @@ import datetime
 import sys
 
 #rebin=128
-rebin=5
-#channel="muon"
-channel="electron"
-#hdirectory="2020-07-17-JustMCBackground-JustCMS"
-#hdirectory="2020-07-20-MuonMCOnly"
-#hdirectory="2020-08-31-MuonAllDataMC"
-#hdirectory="2020-09-23-MuonAllDataMC"
+rebin=2
+channel="muon"
+#channel="electron"
 hdirectory="2020-09-23-ElectronAllDataMC"
 #extra_tracks_weight=2.205
 #extra_tracks_weight=1.042862
@@ -32,7 +28,7 @@ MCsignalsamples=[
 #"ExclusiveWW_a0w2p5e-6-SingleLepton-2017",
 #"ExclusiveWW_a0w1e-6-SingleLepton-2017",
 #"ExclusiveWW_SM_FPMC-SingleLepton-2017"#,
-#"GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6-2018"
+"GGToWW_bSM-A0W2e-6_13TeV-fpmc-herwig6-2018"
 ]
 
 MCsamples2=["WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8"]
@@ -134,7 +130,7 @@ toppad=TPad()
 bottompad=TPad()
 thisPad.Divide(1,2,0,0)
 toppad = thisPad.cd(1)
-#toppad.SetLogy()
+toppad.SetLogy()
 #toppad.SetBottomMargin(0.02)
 toppad.SetBottomMargin(0.0375)
 toppad.SetTopMargin(0.05)
@@ -181,6 +177,7 @@ for i in range(min,max+1):
     h_data.GetYaxis().SetTitle("Events")
     #maxhisto=hstack.GetMaximum()
     print maxhisto
+    h_data.SetMinimum(0.3)
     h_data.Draw("e")
     leg.AddEntry(h_data,"Data","p")
     print "Get out of data samples"
