@@ -6,9 +6,9 @@ To run on the data ntuples to produce histograms for 2018 RunA Single Muon chann
 python histos_quick.py local muon SingleMuon SlimmedNtuple_SingleMuon2018-RunA.root -nb
 
 "histos_quick.py" is the script that will make all the histograms
-"local" means that the ntuple is in the git directory. This is only the case for the Data RunA and RunB
-"muon" is for the muon channel, "electron" for electron channel
-"SingleMuon" is the data stream
+"local" means that the ntuple is in the git directory. This is only the case for the Data RunA. 
+"muon" is for the muon channel, "electron" for electron channel. 
+"SingleMuon" is the data stream. 
 "-nb" means that you are running the job interactivaly (not batch submission)
 
 To see the commands to run the rest of the samples you can look in this file for the muon channel:
