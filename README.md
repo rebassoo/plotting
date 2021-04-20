@@ -1,6 +1,5 @@
 # plotting
-#All this code was developed a couple years ago so is currently using python2, have not yet updated it to python3
-#Assumes that you can run root in python
+All this code was developed a couple years ago so is currently using python2, have not yet updated it to python3. Assumes that you can run root in python
 
 To run on the data ntuples to produce histograms for 2018 RunA Single Muon channel do the command:
 python histos_quick.py local muon SingleMuon SlimmedNtuple_SingleMuon2018-RunA.root -nb
@@ -17,3 +16,4 @@ You will need to change this in htools.py L565 to whatever the path is for you f
 
 Once you make all the histograms then you can make stacked plots comparing data and MC:
 python makeplots.py
+You will need to change the line hdirectory in makeplots.py to whatever directory all the histograms files for the different data and MC samples are. You will also have to combine the data from different eras into one file (SingleMuonTotal.root for the muon channel, SingleElectronTotal.root for the electron channel).
