@@ -113,12 +113,12 @@ def RandomEra2018():
 
 def addPileupProtons(e,xi,era,sample,year,evm,tree=0,entries=0):
     nVerticesCMS=e.nVertices
-    if sample != "DATA":
-        #if e.muon_pt.size()>0:
-        #    f=TFile("xiEventsRun{0}-2018.root".format(era[0]))
-        #if e.electron_pt.size()>0:
-        #    f=TFile("xiEventsRun{0}-2018-e.root".format(era[0]))
-        f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
+    if sample != "Data":
+        if e.muon_pt.size()>0:
+            f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era[0]))
+        if e.electron_pt.size()>0:
+            f=TFile("inputfiles/xiEventsRun{0}-2018-e.root".format(era[0]))
+        #f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
         #f=TFile("inputfiles/xiEventsRun{0}-2018.root".format(era))
         tree=f.Get("SlimmedNtuple")
         entries=tree.GetEntries()
